@@ -129,6 +129,18 @@ impl<'de> serde::Deserialize<'de> for CreateContentImportSourceRequestAudienceId
     }
 }
 
+impl ::std::convert::From<i64> for CreateContentImportSourceRequestAudienceIds {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+
+impl ::std::convert::From<Vec<i64>> for CreateContentImportSourceRequestAudienceIds {
+    fn from(value: Vec<i64>) -> Self {
+        Self::IntegerArray(value)
+    }
+}
+
 /// You can add an Content Import Source to your Fin Content Library.
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct CreateContentImportSourceRequest {
@@ -392,6 +404,18 @@ impl<'de> serde::Deserialize<'de> for UpdateContentImportSourceRequestAudienceId
     }
 }
 
+impl ::std::convert::From<i64> for UpdateContentImportSourceRequestAudienceIds {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+
+impl ::std::convert::From<Vec<i64>> for UpdateContentImportSourceRequestAudienceIds {
+    fn from(value: Vec<i64>) -> Self {
+        Self::IntegerArray(value)
+    }
+}
+
 /// You can modify a Content Import Source of your Fin Content Library.
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct UpdateContentImportSourceRequest {
@@ -452,24 +476,5 @@ impl serde::Serialize for UpdateExternalPageRequestLocaleEnum {
         S: serde::Serializer,
     {
         serializer.serialize_str(self.as_str())
-    }
-}
-
-impl<'de> serde::Deserialize<'de> for UpdateExternalPageRequestLocaleEnum {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let value = <String as serde::Deserialize>::deserialize(deserializer)?;
-        Ok(match value.as_str() {
-            "en" => Self::En,
-            _ => Self::Unknown(value),
-        })
-    }
-}
-
-impl std::fmt::Display for UpdateExternalPageRequestLocaleEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(self.as_str())
     }
 }

@@ -7,11 +7,92 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{
     AttachContactToConversationRequestCustomer, Conversation, ConversationDeleted,
-    ConversationList, ConversationParticipantsResponse, CustomAttributesRequest, HandlingEventList,
-    HitlEventList, IntercomVersion, ReplyConversationRequest, SearchRequestQuery,
-    SideConversationList, StartingAfterPaging,
+    ConversationList, ConversationParticipantsResponse, CustomAttributesRequest, IntercomVersion,
+    ReplyConversationRequest, SearchRequestQuery, StartingAfterPaging,
 };
-use crate::validation::{validate_range, RangeOpts};
+
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveConversationParams {
+    pub conversation_id: i64,
+    pub display_as: Option<String>,
+    pub include_translations: Option<bool>,
+    pub include_monitors: Option<bool>,
+    pub include_scorecards: Option<bool>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
+/// Retrieves a single conversation with its conversation parts. Use `display_as` to request plain-text messages, `include_translations` to request translated parts, or the QA parameters to include monitor and scorecard results. The response includes at most the 500 most recent conversation parts.
+///
+/// You can fetch the details of a single conversation. This will return a single Conversation model with all its conversation parts. {% admonition type="warning" name="Hard limit of 500 parts" %} The maximum number of conversation parts that can be returned via the API is 500\. If you have more than that we will return the 500 most recent conversation parts. {% /admonition %} For AI agent conversation metadata, please note that you need to have the agent enabled in your workspace, which is a [paid feature](https://www.intercom.com/help/en/articles/8205718-fin-resolutions#h_97f8c2e671).
+///
+/// # Arguments
+///
+/// * `conversation_id` - The id of the conversation to target
+/// * `display_as` - Set to plaintext to retrieve conversation messages in plain
+///   text. This affects both the body and subject fields. Inline links are
+///   rendered as `label (url)`, preserving the link URL alongside the visible
+///   text.
+/// * `include_translations` - If set to true, conversation parts will be
+///   translated to the detected language of the conversation.
+/// * `include_monitors` - If set to true, the response will include a
+///   `monitor_evaluations` array with any QA monitor results that flagged this
+///   conversation.
+/// * `include_scorecards` - If set to true, the response will include a
+///   `scorecards` array with any QA scorecard results for this conversation.
+pub fn retrieve_conversation(
+    config: &ClientConfig,
+    params: RetrieveConversationParams,
+    options: Option<&RequestOptions>,
+) -> Result<Conversation, SdkError> {
+    let RetrieveConversationParams {
+        conversation_id,
+        display_as,
+        include_translations,
+        include_monitors,
+        include_scorecards,
+        intercom_version,
+    } = params;
+    let mut __query: Vec<(&str, String)> = Vec::with_capacity(4);
+    if let Some(ref v) = display_as {
+        __query.push(("display_as", crate::client::query_value(v)));
+    }
+    if let Some(ref v) = include_translations {
+        __query.push(("include_translations", crate::client::query_value(v)));
+    }
+    if let Some(ref v) = include_monitors {
+        __query.push(("include_monitors", crate::client::query_value(v)));
+    }
+    if let Some(ref v) = include_scorecards {
+        __query.push(("include_scorecards", crate::client::query_value(v)));
+    }
+
+    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
+    if let Some(ref value) = intercom_version {
+        __headers.push((
+            "Intercom-Version".to_string(),
+            crate::client::header_value(value, false),
+        ));
+    }
+
+    Ok(sdk_request::<Conversation>(
+        "GET",
+        &format!(
+            "/conversations/{}",
+            crate::client::encode_path_segment(&conversation_id)
+        ),
+        config,
+        RequestOpts {
+            query: &__query,
+            headers: __headers,
+            decoder: crate::client::ResponseDecoder::Json,
+            operation_id: "retrieve_conversation",
+            options,
+            errors: &[("401", "Error2"), ("403", "Error2"), ("404", "Error2")],
+            ..Default::default()
+        },
+    )?
+    .data)
+}
 
 #[derive(Debug, Clone, Default)]
 pub struct UpdateConversationParams {
@@ -513,150 +594,6 @@ pub fn detach_conversations_contact(
                 ("404", "Error2"),
                 ("422", "Error2"),
             ],
-            ..Default::default()
-        },
-    )?
-    .data)
-}
-
-/// Lists pause and resume handling events for a conversation, including the teammate and timestamp for each event. Use this operation when you need to review when teammates paused or resumed handling. Access requires the `read_conversations` OAuth scope.
-///
-/// List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation. Requires the `read_conversations` OAuth scope.
-///
-/// # Arguments
-///
-/// * `id` - The identifier for the conversation as given by Intercom.
-pub fn list_handling_events(
-    config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
-    options: Option<&RequestOptions>,
-) -> Result<HandlingEventList, SdkError> {
-    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
-    if let Some(ref value) = intercom_version {
-        __headers.push((
-            "Intercom-Version".to_string(),
-            crate::client::header_value(value, false),
-        ));
-    }
-
-    Ok(sdk_request::<HandlingEventList>(
-        "GET",
-        &format!(
-            "/conversations/{}/handling_events",
-            crate::client::encode_path_segment(&id)
-        ),
-        config,
-        RequestOpts {
-            headers: __headers,
-            decoder: crate::client::ResponseDecoder::Json,
-            operation_id: "list_handling_events",
-            options,
-            errors: &[("401", "Error2"), ("404", "Error2")],
-            ..Default::default()
-        },
-    )?
-    .data)
-}
-
-/// Lists human-in-the-loop events from Fin consultations on a conversation, ordered from oldest to newest. Use the events to review consultation steps and their associated data; a consultation appears only after it has ended. Access requires the `read_conversations` OAuth scope and permission to access the conversation.
-///
-/// List the human-in-the-loop (HITL) events for a conversation. When Fin is unsure of an answer it can consult a teammate before replying, proposing a draft that the teammate approves, steers with free-text feedback, or takes over. Each consultation is returned as a series of events, oldest first, across every consultation on the conversation. Requires the `read_conversations` OAuth scope, and the caller must be able to access the conversation. Events are only recorded once a consultation has ended, so a consultation still awaiting a teammate does not appear. Which fields appear in `data` depends on `event_type`: | `event_type` | `data` fields | |---|---| | `fin_consultation_started` | `channel`, `rule_threshold_percent`, `confidence_percent`, `sharp_ask`, `ask_rationale`, `issue_summary`, `customer_question` | | `fin_draft_proposed` | `draft` | | `fin_teammate_input_received` | `round_index`, `teammate_input`, `reviewer_admin_id`, `regeneration_outcome` | | `fin_draft_revised` | `round_index`, `revised_draft`, `regeneration_outcome` | | `fin_consultation_finished` | `outcome`, `approved_draft_type`, `final_draft`, `sent_text`, `reviewer_admin_id`, `duration_seconds`, `rounds_count`, `payload_truncated` | A consultation always produces a `fin_consultation_started` and a `fin_consultation_finished` event. `fin_draft_proposed` appears when Fin proposed a draft. `fin_teammate_input_received` appears once per round of teammate feedback, and `fin_draft_revised` once per round where Fin produced a revised draft in response. Notes on interpreting the response: \- `hitl_cycle_id` identifies the consultation, so it is the same on every event of one consultation. It is not unique per event. A conversation can hold several consultations — a consultation that replaces an outstanding one finishes with an `outcome` of `superseded`. \- `conversation_part_id` links an event to a conversation part where one exists. It is `null` in ordinary cases: teammate feedback given through the…
-///
-/// # Arguments
-///
-/// * `id` - The identifier for the conversation as given by Intercom.
-pub fn list_hitl_events(
-    config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
-    options: Option<&RequestOptions>,
-) -> Result<HitlEventList, SdkError> {
-    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
-    if let Some(ref value) = intercom_version {
-        __headers.push((
-            "Intercom-Version".to_string(),
-            crate::client::header_value(value, false),
-        ));
-    }
-
-    Ok(sdk_request::<HitlEventList>(
-        "GET",
-        &format!(
-            "/conversations/{}/hitl_events",
-            crate::client::encode_path_segment(&id)
-        ),
-        config,
-        RequestOpts {
-            headers: __headers,
-            decoder: crate::client::ResponseDecoder::Json,
-            operation_id: "list_hitl_events",
-            options,
-            errors: &[("401", "Error2"), ("404", "Error2")],
-            ..Default::default()
-        },
-    )?
-    .data)
-}
-
-/// Lists internal side conversations and their conversation parts for a given conversation. Use `page` and `per_page` to paginate the results. Access requires the `read_conversations` OAuth scope.
-///
-/// List side conversations for a given conversation. Side conversations are internal threads created by teammates from within a conversation. Each side conversation includes its conversation parts (messages). Results are paginated. Requires the `read_conversations` OAuth scope.
-///
-/// # Arguments
-///
-/// * `id` - The identifier for the conversation as given by Intercom.
-/// * `page` - The page number of results to return (starting from 1).
-/// * `per_page` - The number of side conversations to return per page (max 50).
-pub fn list_side_conversations(
-    config: &ClientConfig,
-    id: String,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
-    options: Option<&RequestOptions>,
-) -> Result<SideConversationList, SdkError> {
-    if let Some(ref per_page_v) = per_page {
-        validate_range(
-            "per_page",
-            *per_page_v as f64,
-            RangeOpts {
-                max: Some(50_f64),
-                ..Default::default()
-            },
-        )?;
-    }
-
-    let mut __query: Vec<(&str, String)> = Vec::with_capacity(2);
-    if let Some(ref v) = page {
-        __query.push(("page", crate::client::query_value(v)));
-    }
-    if let Some(ref v) = per_page {
-        __query.push(("per_page", crate::client::query_value(v)));
-    }
-
-    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
-    if let Some(ref value) = intercom_version {
-        __headers.push((
-            "Intercom-Version".to_string(),
-            crate::client::header_value(value, false),
-        ));
-    }
-
-    Ok(sdk_request::<SideConversationList>(
-        "GET",
-        &format!(
-            "/conversations/{}/side_conversations",
-            crate::client::encode_path_segment(&id)
-        ),
-        config,
-        RequestOpts {
-            query: &__query,
-            headers: __headers,
-            decoder: crate::client::ResponseDecoder::Json,
-            operation_id: "list_side_conversations",
-            options,
-            errors: &[("401", "Error2"), ("404", "Error2")],
             ..Default::default()
         },
     )?
