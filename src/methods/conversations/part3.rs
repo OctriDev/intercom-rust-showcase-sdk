@@ -5,10 +5,154 @@ use crate::client::ClientConfig;
 use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{
-    Conversation, DeletedConversationList, IntercomVersion, RedactConversationRequest, Ticket,
-    TicketRequestCustomAttributes,
+    Conversation, DeletedConversationList, HandlingEventList, HitlEventList, IntercomVersion,
+    RedactConversationRequest, SideConversationList, Ticket, TicketRequestCustomAttributes,
 };
 use crate::validation::{validate_range, RangeOpts};
+
+/// Lists pause and resume handling events for a conversation, including the teammate and timestamp for each event. Use this operation when you need to review when teammates paused or resumed handling. Access requires the `read_conversations` OAuth scope.
+///
+/// List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation. Requires the `read_conversations` OAuth scope.
+///
+/// # Arguments
+///
+/// * `id` - The identifier for the conversation as given by Intercom.
+pub fn list_handling_events(
+    config: &ClientConfig,
+    id: String,
+    intercom_version: Option<IntercomVersion>,
+    options: Option<&RequestOptions>,
+) -> Result<HandlingEventList, SdkError> {
+    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
+    if let Some(ref value) = intercom_version {
+        __headers.push((
+            "Intercom-Version".to_string(),
+            crate::client::header_value(value, false),
+        ));
+    }
+
+    Ok(sdk_request::<HandlingEventList>(
+        "GET",
+        &format!(
+            "/conversations/{}/handling_events",
+            crate::client::encode_path_segment(&id)
+        ),
+        config,
+        RequestOpts {
+            headers: __headers,
+            decoder: crate::client::ResponseDecoder::Json,
+            operation_id: "list_handling_events",
+            options,
+            errors: &[("401", "Error2"), ("404", "Error2")],
+            ..Default::default()
+        },
+    )?
+    .data)
+}
+
+/// Lists human-in-the-loop events from Fin consultations on a conversation, ordered from oldest to newest. Use the events to review consultation steps and their associated data; a consultation appears only after it has ended. Access requires the `read_conversations` OAuth scope and permission to access the conversation.
+///
+/// List the human-in-the-loop (HITL) events for a conversation. When Fin is unsure of an answer it can consult a teammate before replying, proposing a draft that the teammate approves, steers with free-text feedback, or takes over. Each consultation is returned as a series of events, oldest first, across every consultation on the conversation. Requires the `read_conversations` OAuth scope, and the caller must be able to access the conversation. Events are only recorded once a consultation has ended, so a consultation still awaiting a teammate does not appear. Which fields appear in `data` depends on `event_type`: | `event_type` | `data` fields | |---|---| | `fin_consultation_started` | `channel`, `rule_threshold_percent`, `confidence_percent`, `sharp_ask`, `ask_rationale`, `issue_summary`, `customer_question` | | `fin_draft_proposed` | `draft` | | `fin_teammate_input_received` | `round_index`, `teammate_input`, `reviewer_admin_id`, `regeneration_outcome` | | `fin_draft_revised` | `round_index`, `revised_draft`, `regeneration_outcome` | | `fin_consultation_finished` | `outcome`, `approved_draft_type`, `final_draft`, `sent_text`, `reviewer_admin_id`, `duration_seconds`, `rounds_count`, `payload_truncated` | A consultation always produces a `fin_consultation_started` and a `fin_consultation_finished` event. `fin_draft_proposed` appears when Fin proposed a draft. `fin_teammate_input_received` appears once per round of teammate feedback, and `fin_draft_revised` once per round where Fin produced a revised draft in response. Notes on interpreting the response: \- `hitl_cycle_id` identifies the consultation, so it is the same on every event of one consultation. It is not unique per event. A conversation can hold several consultations — a consultation that replaces an outstanding one finishes with an `outcome` of `superseded`. \- `conversation_part_id` links an event to a conversation part where one exists. It is `null` in ordinary cases: teammate feedback given through the…
+///
+/// # Arguments
+///
+/// * `id` - The identifier for the conversation as given by Intercom.
+pub fn list_hitl_events(
+    config: &ClientConfig,
+    id: String,
+    intercom_version: Option<IntercomVersion>,
+    options: Option<&RequestOptions>,
+) -> Result<HitlEventList, SdkError> {
+    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
+    if let Some(ref value) = intercom_version {
+        __headers.push((
+            "Intercom-Version".to_string(),
+            crate::client::header_value(value, false),
+        ));
+    }
+
+    Ok(sdk_request::<HitlEventList>(
+        "GET",
+        &format!(
+            "/conversations/{}/hitl_events",
+            crate::client::encode_path_segment(&id)
+        ),
+        config,
+        RequestOpts {
+            headers: __headers,
+            decoder: crate::client::ResponseDecoder::Json,
+            operation_id: "list_hitl_events",
+            options,
+            errors: &[("401", "Error2"), ("404", "Error2")],
+            ..Default::default()
+        },
+    )?
+    .data)
+}
+
+/// Lists internal side conversations and their conversation parts for a given conversation. Use `page` and `per_page` to paginate the results. Access requires the `read_conversations` OAuth scope.
+///
+/// List side conversations for a given conversation. Side conversations are internal threads created by teammates from within a conversation. Each side conversation includes its conversation parts (messages). Results are paginated. Requires the `read_conversations` OAuth scope.
+///
+/// # Arguments
+///
+/// * `id` - The identifier for the conversation as given by Intercom.
+/// * `page` - The page number of results to return (starting from 1).
+/// * `per_page` - The number of side conversations to return per page (max 50).
+pub fn list_side_conversations(
+    config: &ClientConfig,
+    id: String,
+    page: Option<i64>,
+    per_page: Option<i64>,
+    intercom_version: Option<IntercomVersion>,
+    options: Option<&RequestOptions>,
+) -> Result<SideConversationList, SdkError> {
+    if let Some(ref per_page_v) = per_page {
+        validate_range(
+            "per_page",
+            *per_page_v as f64,
+            RangeOpts {
+                max: Some(50_f64),
+                ..Default::default()
+            },
+        )?;
+    }
+
+    let mut __query: Vec<(&str, String)> = Vec::with_capacity(2);
+    if let Some(ref v) = page {
+        __query.push(("page", crate::client::query_value(v)));
+    }
+    if let Some(ref v) = per_page {
+        __query.push(("per_page", crate::client::query_value(v)));
+    }
+
+    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
+    if let Some(ref value) = intercom_version {
+        __headers.push((
+            "Intercom-Version".to_string(),
+            crate::client::header_value(value, false),
+        ));
+    }
+
+    Ok(sdk_request::<SideConversationList>(
+        "GET",
+        &format!(
+            "/conversations/{}/side_conversations",
+            crate::client::encode_path_segment(&id)
+        ),
+        config,
+        RequestOpts {
+            query: &__query,
+            headers: __headers,
+            decoder: crate::client::ResponseDecoder::Json,
+            operation_id: "list_side_conversations",
+            options,
+            errors: &[("401", "Error2"), ("404", "Error2")],
+            ..Default::default()
+        },
+    )?
+    .data)
+}
 
 /// Redacts a conversation part or the source message of a conversation. Choose the resource type and provide its identifiers; a conversation part must have a body, and a source message must have been created by a contact. Redacting a conversation also removes the associated HITL event data.
 ///

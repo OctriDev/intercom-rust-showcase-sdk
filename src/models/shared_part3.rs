@@ -3,6 +3,28 @@
 
 // shared domain models (part 3)
 
+impl PagesLink {
+    pub(super) fn validate_constraints(&self) -> Result<(), crate::errors::SdkError> {
+        if let Some(Some(value)) = self.next.as_ref() {
+            crate::validation::validate_uri("next", value)?;
+        }
+        Ok(())
+    }
+
+    #[allow(clippy::new_without_default)]
+    pub fn new() -> Result<Self, crate::errors::SdkError> {
+        let value = Self {
+            type_: None,
+            page: None,
+            next: None,
+            per_page: None,
+            total_pages: None,
+        };
+        value.validate_constraints()?;
+        Ok(value)
+    }
+}
+
 /// The file attached to a part
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct PartAttachment {
@@ -185,6 +207,18 @@ impl<'de> serde::Deserialize<'de> for SingleFilterSearchRequestValueVariant3Item
     }
 }
 
+impl ::std::convert::From<String> for SingleFilterSearchRequestValueVariant3Item {
+    fn from(value: String) -> Self {
+        Self::String(value)
+    }
+}
+
+impl ::std::convert::From<i64> for SingleFilterSearchRequestValueVariant3Item {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+
 #[derive(Debug, Clone, serde::Serialize)]
 #[serde(untagged)]
 pub enum SingleFilterSearchRequestValue {
@@ -233,6 +267,32 @@ impl<'de> serde::Deserialize<'de> for SingleFilterSearchRequestValue {
                 "no SingleFilterSearchRequestValue branch accepts this payload",
             )
         })
+    }
+}
+
+impl ::std::convert::From<String> for SingleFilterSearchRequestValue {
+    fn from(value: String) -> Self {
+        Self::String(value)
+    }
+}
+
+impl ::std::convert::From<i64> for SingleFilterSearchRequestValue {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+
+impl ::std::convert::From<bool> for SingleFilterSearchRequestValue {
+    fn from(value: bool) -> Self {
+        Self::Bool(value)
+    }
+}
+
+impl ::std::convert::From<Vec<SingleFilterSearchRequestValueVariant3Item>>
+    for SingleFilterSearchRequestValue
+{
+    fn from(value: Vec<SingleFilterSearchRequestValueVariant3Item>) -> Self {
+        Self::Variant3ItemArray(value)
     }
 }
 
@@ -446,60 +506,4 @@ impl StartingAfterPaging {
             starting_after: None,
         }
     }
-}
-
-/// The type of the object
-#[derive(Debug, Clone, PartialEq, Default)]
-pub enum SubscriptionTypeListTypeEnum {
-    #[default]
-    List,
-    Unknown(String),
-}
-
-impl SubscriptionTypeListTypeEnum {
-    pub fn as_str(&self) -> &str {
-        match self {
-            Self::List => "list",
-            Self::Unknown(value) => value.as_str(),
-        }
-    }
-}
-
-impl serde::Serialize for SubscriptionTypeListTypeEnum {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_str(self.as_str())
-    }
-}
-
-impl<'de> serde::Deserialize<'de> for SubscriptionTypeListTypeEnum {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let value = <String as serde::Deserialize>::deserialize(deserializer)?;
-        Ok(match value.as_str() {
-            "list" => Self::List,
-            _ => Self::Unknown(value),
-        })
-    }
-}
-
-impl std::fmt::Display for SubscriptionTypeListTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(self.as_str())
-    }
-}
-
-/// A list of subscription type objects.
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
-pub struct SubscriptionTypeList {
-    /// The type of the object
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
-    pub type_: Option<SubscriptionTypeListTypeEnum>,
-    /// A list of subscription type objects associated with the workspace .
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Vec<SubscriptionType>>,
 }

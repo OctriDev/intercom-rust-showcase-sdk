@@ -73,6 +73,18 @@ impl<'de> serde::Deserialize<'de> for TicketPartUpdatedAttributeDataValueId {
     }
 }
 
+impl ::std::convert::From<String> for TicketPartUpdatedAttributeDataValueId {
+    fn from(value: String) -> Self {
+        Self::String(value)
+    }
+}
+
+impl ::std::convert::From<Vec<i64>> for TicketPartUpdatedAttributeDataValueId {
+    fn from(value: Vec<i64>) -> Self {
+        Self::IntegerArray(value)
+    }
+}
+
 #[derive(Debug, Clone, serde::Serialize)]
 #[serde(untagged)]
 pub enum TicketPartUpdatedAttributeDataValueLabel {
@@ -103,6 +115,18 @@ impl<'de> serde::Deserialize<'de> for TicketPartUpdatedAttributeDataValueLabel {
                 "no TicketPartUpdatedAttributeDataValueLabel branch accepts this payload",
             )
         })
+    }
+}
+
+impl ::std::convert::From<String> for TicketPartUpdatedAttributeDataValueLabel {
+    fn from(value: String) -> Self {
+        Self::String(value)
+    }
+}
+
+impl ::std::convert::From<Vec<String>> for TicketPartUpdatedAttributeDataValueLabel {
+    fn from(value: Vec<String>) -> Self {
+        Self::StringArray(value)
     }
 }
 
@@ -460,35 +484,5 @@ impl TicketStateDetailed {
             archived: None,
             ticket_types: None,
         }
-    }
-}
-
-/// Category of the Ticket Type.
-#[derive(Debug, Clone, PartialEq, Default)]
-pub enum TicketTypeCategoryEnum {
-    #[default]
-    Customer,
-    BackOffice,
-    Tracker,
-    Unknown(String),
-}
-
-impl TicketTypeCategoryEnum {
-    pub fn as_str(&self) -> &str {
-        match self {
-            Self::Customer => "Customer",
-            Self::BackOffice => "Back-office",
-            Self::Tracker => "Tracker",
-            Self::Unknown(value) => value.as_str(),
-        }
-    }
-}
-
-impl serde::Serialize for TicketTypeCategoryEnum {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_str(self.as_str())
     }
 }

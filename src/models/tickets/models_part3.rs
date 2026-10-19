@@ -3,6 +3,36 @@
 
 // tagged_models_tickets domain models (part 3)
 
+/// Category of the Ticket Type.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum TicketTypeCategoryEnum {
+    #[default]
+    Customer,
+    BackOffice,
+    Tracker,
+    Unknown(String),
+}
+
+impl TicketTypeCategoryEnum {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Customer => "Customer",
+            Self::BackOffice => "Back-office",
+            Self::Tracker => "Tracker",
+            Self::Unknown(value) => value.as_str(),
+        }
+    }
+}
+
+impl serde::Serialize for TicketTypeCategoryEnum {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serializer.serialize_str(self.as_str())
+    }
+}
+
 impl<'de> serde::Deserialize<'de> for TicketTypeCategoryEnum {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

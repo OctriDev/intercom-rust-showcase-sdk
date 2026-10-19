@@ -80,6 +80,24 @@ impl<'de> serde::Deserialize<'de> for ListDataEvents {
     }
 }
 
+impl ::std::convert::From<Box<ListDataEventsVariant0>> for ListDataEvents {
+    fn from(value: Box<ListDataEventsVariant0>) -> Self {
+        Self::UserIdQueryParameter(value)
+    }
+}
+
+impl ::std::convert::From<Box<ListDataEventsVariant1>> for ListDataEvents {
+    fn from(value: Box<ListDataEventsVariant1>) -> Self {
+        Self::IntercomUserIdQueryParameter(value)
+    }
+}
+
+impl ::std::convert::From<Box<ListDataEventsVariant2>> for ListDataEvents {
+    fn from(value: Box<ListDataEventsVariant2>) -> Self {
+        Self::EmailQueryParameter(value)
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct CreateDataEventParams {
     pub intercom_version: Option<IntercomVersion>,
