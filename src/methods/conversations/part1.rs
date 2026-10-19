@@ -5,7 +5,7 @@ use crate::client::ClientConfig;
 use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{
-    AssignConversationRequest, CloseConversationRequest, Conversation, ConversationList,
+    AssignConversationRequest, CloseConversationRequest, ConversationList,
     CreateConversationRequestFrom, IntercomVersion, OpenConversationRequest,
     SnoozeConversationRequest,
 };
@@ -152,6 +152,30 @@ impl<'de> serde::Deserialize<'de> for ManageConversation {
         lossy.ok_or_else(|| {
             serde::de::Error::custom("no ManageConversation branch accepts this payload")
         })
+    }
+}
+
+impl ::std::convert::From<Box<CloseConversationRequest>> for ManageConversation {
+    fn from(value: Box<CloseConversationRequest>) -> Self {
+        Self::CloseConversationRequest(value)
+    }
+}
+
+impl ::std::convert::From<Box<SnoozeConversationRequest>> for ManageConversation {
+    fn from(value: Box<SnoozeConversationRequest>) -> Self {
+        Self::SnoozeConversationRequest(value)
+    }
+}
+
+impl ::std::convert::From<Box<OpenConversationRequest>> for ManageConversation {
+    fn from(value: Box<OpenConversationRequest>) -> Self {
+        Self::OpenConversationRequest(value)
+    }
+}
+
+impl ::std::convert::From<Box<AssignConversationRequest>> for ManageConversation {
+    fn from(value: Box<AssignConversationRequest>) -> Self {
+        Self::AssignConversationRequest(value)
     }
 }
 
@@ -375,89 +399,6 @@ pub fn create_conversation(
             body: Some(__body),
             decoder: crate::client::ResponseDecoder::Json,
             operation_id: "create_conversation",
-            options,
-            errors: &[("401", "Error2"), ("403", "Error2"), ("404", "Error2")],
-            ..Default::default()
-        },
-    )?
-    .data)
-}
-
-#[derive(Debug, Clone, Default)]
-pub struct RetrieveConversationParams {
-    pub conversation_id: i64,
-    pub display_as: Option<String>,
-    pub include_translations: Option<bool>,
-    pub include_monitors: Option<bool>,
-    pub include_scorecards: Option<bool>,
-    pub intercom_version: Option<IntercomVersion>,
-}
-
-/// Retrieves a single conversation with its conversation parts. Use `display_as` to request plain-text messages, `include_translations` to request translated parts, or the QA parameters to include monitor and scorecard results. The response includes at most the 500 most recent conversation parts.
-///
-/// You can fetch the details of a single conversation. This will return a single Conversation model with all its conversation parts. {% admonition type="warning" name="Hard limit of 500 parts" %} The maximum number of conversation parts that can be returned via the API is 500\. If you have more than that we will return the 500 most recent conversation parts. {% /admonition %} For AI agent conversation metadata, please note that you need to have the agent enabled in your workspace, which is a [paid feature](https://www.intercom.com/help/en/articles/8205718-fin-resolutions#h_97f8c2e671).
-///
-/// # Arguments
-///
-/// * `conversation_id` - The id of the conversation to target
-/// * `display_as` - Set to plaintext to retrieve conversation messages in plain
-///   text. This affects both the body and subject fields. Inline links are
-///   rendered as `label (url)`, preserving the link URL alongside the visible
-///   text.
-/// * `include_translations` - If set to true, conversation parts will be
-///   translated to the detected language of the conversation.
-/// * `include_monitors` - If set to true, the response will include a
-///   `monitor_evaluations` array with any QA monitor results that flagged this
-///   conversation.
-/// * `include_scorecards` - If set to true, the response will include a
-///   `scorecards` array with any QA scorecard results for this conversation.
-pub fn retrieve_conversation(
-    config: &ClientConfig,
-    params: RetrieveConversationParams,
-    options: Option<&RequestOptions>,
-) -> Result<Conversation, SdkError> {
-    let RetrieveConversationParams {
-        conversation_id,
-        display_as,
-        include_translations,
-        include_monitors,
-        include_scorecards,
-        intercom_version,
-    } = params;
-    let mut __query: Vec<(&str, String)> = Vec::with_capacity(4);
-    if let Some(ref v) = display_as {
-        __query.push(("display_as", crate::client::query_value(v)));
-    }
-    if let Some(ref v) = include_translations {
-        __query.push(("include_translations", crate::client::query_value(v)));
-    }
-    if let Some(ref v) = include_monitors {
-        __query.push(("include_monitors", crate::client::query_value(v)));
-    }
-    if let Some(ref v) = include_scorecards {
-        __query.push(("include_scorecards", crate::client::query_value(v)));
-    }
-
-    let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
-    if let Some(ref value) = intercom_version {
-        __headers.push((
-            "Intercom-Version".to_string(),
-            crate::client::header_value(value, false),
-        ));
-    }
-
-    Ok(sdk_request::<Conversation>(
-        "GET",
-        &format!(
-            "/conversations/{}",
-            crate::client::encode_path_segment(&conversation_id)
-        ),
-        config,
-        RequestOpts {
-            query: &__query,
-            headers: __headers,
-            decoder: crate::client::ResponseDecoder::Json,
-            operation_id: "retrieve_conversation",
             options,
             errors: &[("401", "Error2"), ("403", "Error2"), ("404", "Error2")],
             ..Default::default()

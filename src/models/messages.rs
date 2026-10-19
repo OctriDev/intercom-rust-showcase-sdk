@@ -146,6 +146,18 @@ impl<'de> serde::Deserialize<'de> for CreateMessageRequestTo {
     }
 }
 
+impl ::std::convert::From<Box<Recipient>> for CreateMessageRequestTo {
+    fn from(value: Box<Recipient>) -> Self {
+        Self::Recipient(value)
+    }
+}
+
+impl ::std::convert::From<Vec<Recipient>> for CreateMessageRequestTo {
+    fn from(value: Vec<Recipient>) -> Self {
+        Self::RecipientArray(value)
+    }
+}
+
 #[derive(Debug, Clone, serde::Serialize)]
 #[serde(untagged)]
 pub enum CreateMessageRequestCc {
@@ -177,6 +189,18 @@ impl<'de> serde::Deserialize<'de> for CreateMessageRequestCc {
     }
 }
 
+impl ::std::convert::From<Box<Recipient>> for CreateMessageRequestCc {
+    fn from(value: Box<Recipient>) -> Self {
+        Self::Recipient(value)
+    }
+}
+
+impl ::std::convert::From<Vec<Recipient>> for CreateMessageRequestCc {
+    fn from(value: Vec<Recipient>) -> Self {
+        Self::RecipientArray(value)
+    }
+}
+
 #[derive(Debug, Clone, serde::Serialize)]
 #[serde(untagged)]
 pub enum CreateMessageRequestBcc {
@@ -205,6 +229,18 @@ impl<'de> serde::Deserialize<'de> for CreateMessageRequestBcc {
         lossy.ok_or_else(|| {
             serde::de::Error::custom("no CreateMessageRequestBcc branch accepts this payload")
         })
+    }
+}
+
+impl ::std::convert::From<Box<Recipient>> for CreateMessageRequestBcc {
+    fn from(value: Box<Recipient>) -> Self {
+        Self::Recipient(value)
+    }
+}
+
+impl ::std::convert::From<Vec<Recipient>> for CreateMessageRequestBcc {
+    fn from(value: Vec<Recipient>) -> Self {
+        Self::RecipientArray(value)
     }
 }
 
@@ -431,46 +467,4 @@ pub struct WhatsappMessageStatus {
         with = "crate::client::double_option"
     )]
     pub error: Option<Option<WhatsappMessageStatusError>>,
-}
-
-impl WhatsappMessageStatus {
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
-        Self {
-            conversation_id: None,
-            status: None,
-            type_: None,
-            created_at: None,
-            updated_at: None,
-            template_name: None,
-            message_id: None,
-            error: None,
-        }
-    }
-}
-
-/// Required enumerated value serialized in the `type` wire field.
-#[derive(Debug, Clone, PartialEq, Default)]
-pub enum WhatsappMessageStatusListTypeEnum {
-    #[default]
-    List,
-    Unknown(String),
-}
-
-impl WhatsappMessageStatusListTypeEnum {
-    pub fn as_str(&self) -> &str {
-        match self {
-            Self::List => "list",
-            Self::Unknown(value) => value.as_str(),
-        }
-    }
-}
-
-impl serde::Serialize for WhatsappMessageStatusListTypeEnum {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_str(self.as_str())
-    }
 }

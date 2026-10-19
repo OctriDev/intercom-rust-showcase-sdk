@@ -3,6 +3,48 @@
 
 // messages domain models (part 2)
 
+impl WhatsappMessageStatus {
+    #[allow(clippy::new_without_default)]
+    pub fn new() -> Self {
+        Self {
+            conversation_id: None,
+            status: None,
+            type_: None,
+            created_at: None,
+            updated_at: None,
+            template_name: None,
+            message_id: None,
+            error: None,
+        }
+    }
+}
+
+/// Required enumerated value serialized in the `type` wire field.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum WhatsappMessageStatusListTypeEnum {
+    #[default]
+    List,
+    Unknown(String),
+}
+
+impl WhatsappMessageStatusListTypeEnum {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::List => "list",
+            Self::Unknown(value) => value.as_str(),
+        }
+    }
+}
+
+impl serde::Serialize for WhatsappMessageStatusListTypeEnum {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serializer.serialize_str(self.as_str())
+    }
+}
+
 impl<'de> serde::Deserialize<'de> for WhatsappMessageStatusListTypeEnum {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

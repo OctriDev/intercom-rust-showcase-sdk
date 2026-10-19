@@ -54,6 +54,30 @@ impl<'de> serde::Deserialize<'de> for CreateTag {
     }
 }
 
+impl ::std::convert::From<Box<CreateOrUpdateTagRequest>> for CreateTag {
+    fn from(value: Box<CreateOrUpdateTagRequest>) -> Self {
+        Self::CreateOrUpdateTagRequest(value)
+    }
+}
+
+impl ::std::convert::From<Box<TagCompanyRequest>> for CreateTag {
+    fn from(value: Box<TagCompanyRequest>) -> Self {
+        Self::TagCompanyRequest(value)
+    }
+}
+
+impl ::std::convert::From<Box<UntagCompanyRequest>> for CreateTag {
+    fn from(value: Box<UntagCompanyRequest>) -> Self {
+        Self::UntagCompanyRequest(value)
+    }
+}
+
+impl ::std::convert::From<Box<TagMultipleUsersRequest>> for CreateTag {
+    fn from(value: Box<TagMultipleUsersRequest>) -> Self {
+        Self::TagMultipleUsersRequest(value)
+    }
+}
+
 /// Adds a tag to a contact. Supply the tag's `id` in the request body to identify which tag to apply; the response returns the applied tag.
 ///
 /// You can tag a specific contact. This will return a tag object for the tag that was added to the contact.

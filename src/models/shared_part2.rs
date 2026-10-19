@@ -320,6 +320,18 @@ impl<'de> serde::Deserialize<'de> for MultipleFilterSearchRequestValue {
     }
 }
 
+impl ::std::convert::From<Vec<MultipleFilterSearchRequest>> for MultipleFilterSearchRequestValue {
+    fn from(value: Vec<MultipleFilterSearchRequest>) -> Self {
+        Self::MultipleFilterSearchRequestArray(value)
+    }
+}
+
+impl ::std::convert::From<Vec<SingleFilterSearchRequest>> for MultipleFilterSearchRequestValue {
+    fn from(value: Vec<SingleFilterSearchRequest>) -> Self {
+        Self::SingleFilterSearchRequestArray(value)
+    }
+}
+
 /// Search using Intercoms Search APIs with more than one filter.
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct MultipleFilterSearchRequest {
@@ -467,26 +479,4 @@ pub struct PagesLink {
     /// Optional `integer` value serialized in the `total_pages` wire field.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total_pages: Option<i64>,
-}
-
-impl PagesLink {
-    pub(super) fn validate_constraints(&self) -> Result<(), crate::errors::SdkError> {
-        if let Some(Some(value)) = self.next.as_ref() {
-            crate::validation::validate_uri("next", value)?;
-        }
-        Ok(())
-    }
-
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Result<Self, crate::errors::SdkError> {
-        let value = Self {
-            type_: None,
-            page: None,
-            next: None,
-            per_page: None,
-            total_pages: None,
-        };
-        value.validate_constraints()?;
-        Ok(value)
-    }
 }
