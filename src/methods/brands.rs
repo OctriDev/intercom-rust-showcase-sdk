@@ -6,14 +6,20 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{Brand, BrandList, IntercomVersion};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListBrandsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists all brands configured for the workspace, including the default brand. Use this operation to retrieve brand identifiers and configuration details. The default brand's ID matches the workspace ID.
 ///
 /// Retrieves all brands for the workspace, including the default brand. The default brand id always matches the workspace
 pub fn list_brands(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListBrandsParams,
     options: Option<&RequestOptions>,
 ) -> Result<BrandList, SdkError> {
+    let ListBrandsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -38,6 +44,12 @@ pub fn list_brands(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveBrandParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a brand by its unique identifier. Use this operation to inspect a specific brand's configuration, including whether it is the workspace's default brand. The response includes the brand's associated help center and default email settings identifiers.
 ///
 /// Fetches a specific brand by its unique identifier
@@ -47,10 +59,13 @@ pub fn list_brands(
 /// * `id` - The unique identifier of the brand
 pub fn retrieve_brand(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveBrandParams,
     options: Option<&RequestOptions>,
 ) -> Result<Brand, SdkError> {
+    let RetrieveBrandParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

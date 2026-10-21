@@ -140,6 +140,14 @@ impl UpdateFolderFolder {
     }
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListFoldersParams {
+    pub page: Option<i64>,
+    pub per_page: Option<i64>,
+    pub parent_folder_id: Option<i64>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists folders used to organize content. Use `parent_folder_id` to list only the direct children of a specific folder, and use `page` and `per_page` to paginate the results.
 ///
 /// You can fetch a list of all folders for organizing content by making a GET request to `https://api.intercom.io/folders`.
@@ -152,12 +160,15 @@ impl UpdateFolderFolder {
 ///   only direct children of a specific folder.
 pub fn list_folders(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    parent_folder_id: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListFoldersParams,
     options: Option<&RequestOptions>,
 ) -> Result<ListFoldersResponse, SdkError> {
+    let ListFoldersParams {
+        page,
+        per_page,
+        parent_folder_id,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(3);
     if let Some(ref v) = page {
         __query.push(("page", crate::client::query_value(v)));
@@ -194,15 +205,24 @@ pub fn list_folders(
     .data)
 }
 
+#[derive(Debug, Clone)]
+pub struct CreateFolderParams {
+    pub folder: CreateFolderFolder,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Creates a folder for organizing content. Include a `folder` object with a `name`; optionally provide a description, emoji, or parent folder ID.
 ///
 /// You can create a new folder for organizing content by making a POST request to `https://api.intercom.io/folders`.
 pub fn create_folder(
     config: &ClientConfig,
-    folder: CreateFolderFolder,
-    intercom_version: Option<IntercomVersion>,
+    params: CreateFolderParams,
     options: Option<&RequestOptions>,
 ) -> Result<Folder, SdkError> {
+    let CreateFolderParams {
+        folder,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -240,6 +260,12 @@ pub fn create_folder(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveFolderParams {
+    pub id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a folder by its unique identifier. Use the `id` path parameter to select the folder whose details you need.
 ///
 /// You can fetch the details of a single folder by making a GET request to `https://api.intercom.io/folders/<id\>`.
@@ -249,10 +275,13 @@ pub fn create_folder(
 /// * `id` - The unique identifier for the folder
 pub fn retrieve_folder(
     config: &ClientConfig,
-    id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveFolderParams,
     options: Option<&RequestOptions>,
 ) -> Result<Folder, SdkError> {
+    let RetrieveFolderParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -277,6 +306,13 @@ pub fn retrieve_folder(
     .data)
 }
 
+#[derive(Debug, Clone)]
+pub struct UpdateFolderParams {
+    pub id: i64,
+    pub folder: UpdateFolderFolder,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Updates a folder's details, including its name, description, emoji, or parent folder. Supply the `folder` object with the properties you want to change; `id` selects the folder to update.
 ///
 /// You can update a folder by making a PUT request to `https://api.intercom.io/folders/<id\>`.
@@ -286,11 +322,14 @@ pub fn retrieve_folder(
 /// * `id` - The unique identifier for the folder
 pub fn update_folder(
     config: &ClientConfig,
-    id: i64,
-    folder: UpdateFolderFolder,
-    intercom_version: Option<IntercomVersion>,
+    params: UpdateFolderParams,
     options: Option<&RequestOptions>,
 ) -> Result<Folder, SdkError> {
+    let UpdateFolderParams {
+        id,
+        folder,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -328,6 +367,12 @@ pub fn update_folder(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteFolderParams {
+    pub id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes a folder that contains no content. Use the `id` path parameter to select the folder; folders with content cannot be deleted until that content is removed or moved.
 ///
 /// You can delete a folder (if it contains no content) by making a DELETE request to `https://api.intercom.io/folders/<id\>`.
@@ -337,10 +382,13 @@ pub fn update_folder(
 /// * `id` - The unique identifier for the folder
 pub fn delete_folder(
     config: &ClientConfig,
-    id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteFolderParams,
     options: Option<&RequestOptions>,
 ) -> Result<DeletedFolderObject, SdkError> {
+    let DeleteFolderParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

@@ -6,6 +6,12 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{BannerDismiss, BannerList, IntercomVersion};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListContactBannersParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the banners that a contact currently matches so you can display them outside the Messenger. Call this endpoint when you are about to show the banners, because requesting them records an impression for each returned banner. Use each banner's `view_id` with the dismiss endpoint to record a dismissal.
 ///
 /// Returns the banners a contact currently matches, so you can display them on surfaces outside the Messenger (native mobile apps, kiosks, embedded tools). Each banner in the response includes a `view_id`. Use it to record a dismissal with the dismiss endpoint. A returned banner is treated as shown: requesting this endpoint records an impression for each banner returned, so call it at the point you are about to display the banners, not speculatively.
@@ -15,10 +21,13 @@ use crate::types::{BannerDismiss, BannerList, IntercomVersion};
 /// * `id` - The unique identifier of a contact.
 pub fn list_contact_banners(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: ListContactBannersParams,
     options: Option<&RequestOptions>,
 ) -> Result<BannerList, SdkError> {
+    let ListContactBannersParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -46,6 +55,13 @@ pub fn list_contact_banners(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DismissContactBannerParams {
+    pub id: String,
+    pub view_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Records that a contact has dismissed a banner, with dismissals shared across surfaces for that contact. Supply the banner's `view_id` from the list banners response. Dismissing a banner that is already dismissed succeeds and returns the same response.
 ///
 /// Records that a contact has dismissed a banner. Dismissals are shared across surfaces, so a banner dismissed through this endpoint will also stop appearing in the web Messenger for that contact, and vice versa. The request is idempotent: dismissing an already-dismissed banner succeeds and returns the same response.
@@ -57,11 +73,14 @@ pub fn list_contact_banners(
 ///   list banners endpoint.
 pub fn dismiss_contact_banner(
     config: &ClientConfig,
-    id: String,
-    view_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DismissContactBannerParams,
     options: Option<&RequestOptions>,
 ) -> Result<BannerDismiss, SdkError> {
+    let DismissContactBannerParams {
+        id,
+        view_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

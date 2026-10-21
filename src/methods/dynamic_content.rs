@@ -10,6 +10,13 @@ use crate::types::{
 };
 use crate::validation::{validate_items, validate_length, LengthOpts};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListDynamicContentsParams {
+    pub page: Option<i64>,
+    pub per_page: Option<i64>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists dynamic content for a workspace, ordered from most recently updated to least recently updated. Use `page` and `per_page` to paginate the results; access requires the `read_dynamic_content` scope.
 ///
 /// You can fetch a list of all dynamic content for a workspace, most recently updated first. Requires the `read_dynamic_content` scope.
@@ -20,11 +27,14 @@ use crate::validation::{validate_items, validate_length, LengthOpts};
 /// * `per_page` - The number of results to return per page. Max value of 50.
 pub fn list_dynamic_contents(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListDynamicContentsParams,
     options: Option<&RequestOptions>,
 ) -> Result<DynamicContentList, SdkError> {
+    let ListDynamicContentsParams {
+        page,
+        per_page,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(2);
     if let Some(ref v) = page {
         __query.push(("page", crate::client::query_value(v)));
@@ -68,19 +78,25 @@ pub fn list_dynamic_contents(
 /// * `per_page` - The number of results to return per page. Max value of 50.
 pub fn list_dynamic_contents_paginated(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListDynamicContentsParams,
     options: Option<&RequestOptions>,
     mut yield_fn: impl FnMut(&DynamicContent) -> bool,
 ) -> Result<(), SdkError> {
+    let ListDynamicContentsParams {
+        page,
+        per_page,
+        intercom_version,
+    } = params;
+
     let mut _page_number: i64 = page.unwrap_or(1);
     loop {
         let _page = list_dynamic_contents(
             config,
-            Some(_page_number),
-            per_page,
-            intercom_version.clone(),
+            ListDynamicContentsParams {
+                page: Some(_page_number),
+                per_page,
+                intercom_version: intercom_version.clone(),
+            },
             options,
         )?;
         if match _page.data.as_ref() {
@@ -109,19 +125,25 @@ pub struct ListDynamicContentsPage<'a> {
 
 pub fn list_dynamic_contents_pages(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListDynamicContentsParams,
     options: Option<&RequestOptions>,
     mut yield_page: impl FnMut(ListDynamicContentsPage<'_>) -> bool,
 ) -> Result<(), SdkError> {
+    let ListDynamicContentsParams {
+        page,
+        per_page,
+        intercom_version,
+    } = params;
+
     let mut _page_number: i64 = page.unwrap_or(1);
     loop {
         let _page = list_dynamic_contents(
             config,
-            Some(_page_number),
-            per_page,
-            intercom_version.clone(),
+            ListDynamicContentsParams {
+                page: Some(_page_number),
+                per_page,
+                intercom_version: intercom_version.clone(),
+            },
             options,
         )?;
         if match _page.data.as_ref() {
@@ -265,6 +287,12 @@ pub fn create_dynamic_content(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetDynamicContentParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a single reusable dynamic content item by its unique identifier. Use the `id` path parameter to select the item and the `Intercom-Version` header to choose an API version. The authenticated user needs the `read_dynamic_content` scope.
 ///
 /// You can fetch a single dynamic content by its id. Requires the `read_dynamic_content` scope.
@@ -274,10 +302,13 @@ pub fn create_dynamic_content(
 /// * `id` - The unique identifier for the dynamic content.
 pub fn get_dynamic_content(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: GetDynamicContentParams,
     options: Option<&RequestOptions>,
 ) -> Result<DynamicContent, SdkError> {
+    let GetDynamicContentParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -430,6 +461,12 @@ pub fn update_dynamic_content(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteDynamicContentParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes a reusable dynamic content item by its unique identifier. You cannot delete dynamic content that is still used in an article, so remove its article references before attempting deletion. The authenticated user needs the `read_write_dynamic_content` scope.
 ///
 /// You can delete a single dynamic content by its id. Dynamic content that is still used in an article can't be deleted. Requires the `read_write_dynamic_content` scope.
@@ -439,10 +476,13 @@ pub fn update_dynamic_content(
 /// * `id` - The unique identifier for the dynamic content.
 pub fn delete_dynamic_content(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteDynamicContentParams,
     options: Option<&RequestOptions>,
 ) -> Result<serde_json::Value, SdkError> {
+    let DeleteDynamicContentParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

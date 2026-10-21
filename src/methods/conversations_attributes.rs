@@ -9,6 +9,12 @@ use crate::types::{
     IntercomVersion, UpdateConversationAttributeRequestReference,
 };
 
+#[derive(Debug, Clone, Default)]
+pub struct ListConversationAttributesParams {
+    pub include_archived: Option<bool>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists conversation attributes defined for the workspace. Set `include_archived` to include archived attributes; by default, the list excludes them.
 ///
 /// You can fetch a list of all conversation attributes for your workspace.
@@ -19,10 +25,13 @@ use crate::types::{
 ///   `false`.
 pub fn list_conversation_attributes(
     config: &ClientConfig,
-    include_archived: Option<bool>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListConversationAttributesParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttributeList, SdkError> {
+    let ListConversationAttributesParams {
+        include_archived,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     if let Some(ref v) = include_archived {
         __query.push(("include_archived", crate::client::query_value(v)));
@@ -53,15 +62,24 @@ pub fn list_conversation_attributes(
     .data)
 }
 
+#[derive(Debug, Clone)]
+pub struct CreateConversationAttributeParams {
+    pub body: CreateConversationAttributeRequest,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Creates a conversation attribute for the workspace. Provide `name` and `data_type` to define the attribute; supported attribute types determine which additional configuration fields apply.
 ///
 /// Create a new conversation attribute.
 pub fn create_conversation_attribute(
     config: &ClientConfig,
-    body: CreateConversationAttributeRequest,
-    intercom_version: Option<IntercomVersion>,
+    params: CreateConversationAttributeParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttribute, SdkError> {
+    let CreateConversationAttributeParams {
+        body,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -94,6 +112,12 @@ pub fn create_conversation_attribute(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetConversationAttributeParams {
+    pub id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a conversation attribute by its ID. Use the attribute ID to fetch its definition and type-specific configuration.
 ///
 /// Retrieve a single conversation attribute by ID.
@@ -103,10 +127,13 @@ pub fn create_conversation_attribute(
 /// * `id` - The conversation attribute id
 pub fn get_conversation_attribute(
     config: &ClientConfig,
-    id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: GetConversationAttributeParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttribute, SdkError> {
+    let GetConversationAttributeParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -274,6 +301,12 @@ pub fn update_conversation_attribute(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteConversationAttributeParams {
+    pub id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Archives a conversation attribute without permanently deleting it. Use this operation when the attribute should no longer be active but its record must remain available.
 ///
 /// Archive a conversation attribute (soft delete). The attribute is marked as archived but not permanently deleted.
@@ -283,10 +316,13 @@ pub fn update_conversation_attribute(
 /// * `id` - The conversation attribute id
 pub fn delete_conversation_attribute(
     config: &ClientConfig,
-    id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteConversationAttributeParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttribute, SdkError> {
+    let DeleteConversationAttributeParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -314,6 +350,13 @@ pub fn delete_conversation_attribute(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct CreateConversationAttributeOptionParams {
+    pub id: i64,
+    pub label: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Adds an option to a list-type conversation attribute. Provide `label` for the new option; the response includes the full attribute with its updated options.
 ///
 /// Add a new option to a list-type conversation attribute. Returns the full attribute with the updated options array.
@@ -324,11 +367,14 @@ pub fn delete_conversation_attribute(
 /// * `label` - The label for the new option.
 pub fn create_conversation_attribute_option(
     config: &ClientConfig,
-    id: i64,
-    label: String,
-    intercom_version: Option<IntercomVersion>,
+    params: CreateConversationAttributeOptionParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttribute, SdkError> {
+    let CreateConversationAttributeOptionParams {
+        id,
+        label,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -369,6 +415,14 @@ pub fn create_conversation_attribute_option(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct UpdateConversationAttributeOptionParams {
+    pub id: i64,
+    pub option_id: String,
+    pub label: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Updates the label of an option on a list-type conversation attribute. Supply the option's UUID in `option_id` and the replacement text in `label`; the response includes the full attribute with its updated options.
 ///
 /// Update the label of a single option on a list-type conversation attribute. Returns the full attribute with the updated options array.
@@ -381,12 +435,15 @@ pub fn create_conversation_attribute_option(
 /// * `label` - The updated label for the option.
 pub fn update_conversation_attribute_option(
     config: &ClientConfig,
-    id: i64,
-    option_id: String,
-    label: String,
-    intercom_version: Option<IntercomVersion>,
+    params: UpdateConversationAttributeOptionParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttribute, SdkError> {
+    let UpdateConversationAttributeOptionParams {
+        id,
+        option_id,
+        label,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -428,6 +485,13 @@ pub fn update_conversation_attribute_option(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteConversationAttributeOptionParams {
+    pub id: i64,
+    pub option_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Archives an option on a list-type conversation attribute without removing it. Use `id` and `option_id` to identify the attribute and option; the response retains the option with `archived: true` and includes the updated options array.
 ///
 /// Archive a single option on a list-type conversation attribute (soft delete). The option remains in the response with `archived: true`. Returns the full attribute with the updated options array.
@@ -439,11 +503,14 @@ pub fn update_conversation_attribute_option(
 ///   in the options array)
 pub fn delete_conversation_attribute_option(
     config: &ClientConfig,
-    id: i64,
-    option_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteConversationAttributeOptionParams,
     options: Option<&RequestOptions>,
 ) -> Result<ConversationAttribute, SdkError> {
+    let DeleteConversationAttributeOptionParams {
+        id,
+        option_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

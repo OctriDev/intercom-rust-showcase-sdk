@@ -221,6 +221,13 @@ pub fn list_custom_object_instances(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteCustomObjectInstancesByIdParams {
+    pub custom_object_type_identifier: String,
+    pub external_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes a custom object instance using its external ID. Supply the custom object type identifier and the instance's `external_id` to identify the instance to delete.
 ///
 /// Delete a single Custom Object instance by external_id.
@@ -231,11 +238,14 @@ pub fn list_custom_object_instances(
 ///   object type that defines the structure of the custom object instance.
 pub fn delete_custom_object_instances_by_id(
     config: &ClientConfig,
-    custom_object_type_identifier: String,
-    external_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteCustomObjectInstancesByIdParams,
     options: Option<&RequestOptions>,
 ) -> Result<CustomObjectInstanceDeleted, SdkError> {
+    let DeleteCustomObjectInstancesByIdParams {
+        custom_object_type_identifier,
+        external_id,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     __query.extend([("external_id", crate::client::query_value(&external_id))]);
 
@@ -267,6 +277,13 @@ pub fn delete_custom_object_instances_by_id(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetCustomObjectInstancesByIdParams {
+    pub custom_object_type_identifier: String,
+    pub custom_object_instance_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a custom object instance by its Intercom-defined ID or external ID. Use `custom_object_type_identifier` to specify the instance type and `custom_object_instance_id` to identify the instance.
 ///
 /// Fetch a Custom Object Instance by id.
@@ -279,11 +296,14 @@ pub fn delete_custom_object_instances_by_id(
 ///   instance
 pub fn get_custom_object_instances_by_id(
     config: &ClientConfig,
-    custom_object_type_identifier: String,
-    custom_object_instance_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: GetCustomObjectInstancesByIdParams,
     options: Option<&RequestOptions>,
 ) -> Result<CustomObjectInstance, SdkError> {
+    let GetCustomObjectInstancesByIdParams {
+        custom_object_type_identifier,
+        custom_object_instance_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -312,6 +332,13 @@ pub fn get_custom_object_instances_by_id(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteCustomObjectInstancesByExternalIdParams {
+    pub custom_object_type_identifier: String,
+    pub custom_object_instance_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes a custom object instance using its Intercom-defined ID. Use `custom_object_type_identifier` and `custom_object_instance_id` to identify the type and instance to delete.
 ///
 /// Delete a single Custom Object instance using the Intercom defined id.
@@ -324,11 +351,14 @@ pub fn get_custom_object_instances_by_id(
 ///   instance
 pub fn delete_custom_object_instances_by_external_id(
     config: &ClientConfig,
-    custom_object_type_identifier: String,
-    custom_object_instance_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteCustomObjectInstancesByExternalIdParams,
     options: Option<&RequestOptions>,
 ) -> Result<CustomObjectInstanceDeleted, SdkError> {
+    let DeleteCustomObjectInstancesByExternalIdParams {
+        custom_object_type_identifier,
+        custom_object_instance_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

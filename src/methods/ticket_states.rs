@@ -6,14 +6,20 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{IntercomVersion, TicketStateList};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListTicketStatesParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the ticket states associated with ticket types in the workspace. Use the returned state details to see their labels, categories, and ticket type associations.
 ///
 /// You can get a list of all ticket states for a workspace.
 pub fn list_ticket_states(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListTicketStatesParams,
     options: Option<&RequestOptions>,
 ) -> Result<TicketStateList, SdkError> {
+    let ListTicketStatesParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

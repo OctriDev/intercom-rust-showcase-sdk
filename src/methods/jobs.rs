@@ -6,6 +6,12 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{IntercomVersion, Jobs};
 
+#[derive(Debug, Clone, Default)]
+pub struct JobsStatusParams {
+    pub job_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the execution status and result details for an asynchronous job. Use the `job_id` provided by Intercom to check whether the job is pending, successful, or failed. When the job creates a resource, the response can include its type, identifier, and URL.
 ///
 /// Retrieve the status of job execution.
@@ -15,10 +21,13 @@ use crate::types::{IntercomVersion, Jobs};
 /// * `job_id` - The unique identifier for the job which is given by Intercom
 pub fn jobs_status(
     config: &ClientConfig,
-    job_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: JobsStatusParams,
     options: Option<&RequestOptions>,
 ) -> Result<Jobs, SdkError> {
+    let JobsStatusParams {
+        job_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

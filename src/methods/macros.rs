@@ -7,6 +7,12 @@ use crate::errors::SdkError;
 use crate::types::{IntercomVersion, Macro, MacroList};
 use crate::validation::{validate_range, RangeOpts};
 
+#[derive(Debug, Clone, Default)]
+pub struct GetMacroParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a single macro (saved reply) by its identifier. The macro is returned only when its visibility settings allow the authenticated user to view it. The response transforms placeholders in `body` to an XML-like format and HTML-escapes their default values.
 ///
 /// You can fetch a single macro (saved reply) by its ID. The macro will only be returned if it is visible to the authenticated user based on its visibility settings. \*\*Visibility Rules\*\* A macro is returned based on its `visible_to` setting: \- `everyone`: Always visible to all team members \- `specific_teams`: Only visible if the authenticated user belongs to one of the teams specified in `visible_to_team_ids` If a macro exists but is not visible to the authenticated user, a 404 error is returned. \*\*Placeholder Transformation\*\* The API transforms Intercom placeholders to a more standard XML-like format in the `body` field: \- From: `{{user.name | fallback: 'there'}}` \- To: `<attribute key="user.name" default="there"/\>` Default values in placeholders are HTML-escaped for security.
@@ -16,10 +22,13 @@ use crate::validation::{validate_range, RangeOpts};
 /// * `id` - The unique identifier of the macro
 pub fn get_macro(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: GetMacroParams,
     options: Option<&RequestOptions>,
 ) -> Result<Macro, SdkError> {
+    let GetMacroParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -44,6 +53,14 @@ pub fn get_macro(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListMacrosParams {
+    pub per_page: Option<i64>,
+    pub starting_after: Option<String>,
+    pub updated_since: Option<i64>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists macros (saved replies) in the workspace, ordered by most recently updated. Use `starting_after` to continue from the previous page and `updated_since` to filter by update time. The `starting_after` cursor is a Base64-encoded JSON array containing the previous page's last `updated_at` and `id` values.
 ///
 /// You can fetch a list of all macros (saved replies) in your workspace for use in automating responses. The macros are returned in descending order by updated_at. \*\*Pagination\*\* This endpoint uses cursor-based pagination via the `starting_after` parameter. The cursor is a Base64-encoded JSON array containing `[updated_at, id]` of the last item from the previous page. \*\*Placeholder Transformation\*\* The API transforms Intercom placeholders to a more standard XML-like format: \- From: `{{user.name | fallback: 'there'}}` \- To: `<attribute key="user.name" default="there"/\>`
@@ -56,12 +73,15 @@ pub fn get_macro(
 /// * `updated_since` - Unix timestamp to filter macros updated after this time
 pub fn list_macros(
     config: &ClientConfig,
-    per_page: Option<i64>,
-    starting_after: Option<String>,
-    updated_since: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListMacrosParams,
     options: Option<&RequestOptions>,
 ) -> Result<MacroList, SdkError> {
+    let ListMacrosParams {
+        per_page,
+        starting_after,
+        updated_since,
+        intercom_version,
+    } = params;
     if let Some(ref per_page_v) = per_page {
         validate_range(
             "per_page",

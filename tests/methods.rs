@@ -137,8 +137,10 @@ fn archive_contact_archive_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::archive_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ArchiveContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("archive_contact request failed");
@@ -232,10 +234,12 @@ fn attach_articles_tag_attach_articles_tag_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = articles::attach_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        articles::AttachArticlesTagParams {
+            article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: None,
+        },
         None,
     )
     .expect("attach_articles_tag request failed");
@@ -262,10 +266,12 @@ fn attach_articles_tag_attach_articles_tag_401_decodes_declared_error() {
     };
     let result = articles::attach_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        articles::AttachArticlesTagParams {
+            article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -290,9 +296,11 @@ fn attach_companies_contact_attach_companies_contact_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = companies::attach_companies_contact(
         &config,
-        decode(fixture(r#""contact-1""#)),
-        decode(fixture(r#""6762f09a1bb69f9f2193bb34""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::AttachCompaniesContactParams {
+            contact_id: decode(fixture(r#""contact-1""#)),
+            id: decode(fixture(r#""6762f09a1bb69f9f2193bb34""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("attach_companies_contact request failed");
@@ -319,9 +327,11 @@ fn attach_companies_contact_attach_companies_contact_400_decodes_declared_error(
     };
     let result = companies::attach_companies_contact(
         &config,
-        decode(fixture(r#""contact-1""#)),
-        decode(fixture(r#""6762f09a1bb69f9f2193bb34""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::AttachCompaniesContactParams {
+            contact_id: decode(fixture(r#""contact-1""#)),
+            id: decode(fixture(r#""6762f09a1bb69f9f2193bb34""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -346,10 +356,12 @@ fn attach_content_snippets_tag_attach_content_snippets_tag_reaches_mock_and_deco
     let _ = &config;
     let actual = content_snippets::attach_content_snippets_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        content_snippets::AttachContentSnippetsTagParams {
+            content_snippet_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: None,
+        },
         None,
     )
     .expect("attach_content_snippets_tag request failed");
@@ -376,10 +388,12 @@ fn attach_content_snippets_tag_attach_content_snippets_tag_401_decodes_declared_
     };
     let result = content_snippets::attach_content_snippets_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        content_snippets::AttachContentSnippetsTagParams {
+            content_snippet_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -404,12 +418,14 @@ fn attach_conversations_contact_attach_conversations_contact_reaches_mock_and_de
     let _ = &config;
     let actual = conversations::attach_conversations_contact(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""12345""#))),
-        Some(decode(fixture(
-            r#"{"intercom_user_id":"6762f19b1bb69f9f2193bbd4"}"#,
-        ))),
+        conversations::AttachConversationsContactParams {
+            conversation_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: Some(decode(fixture(r#""12345""#))),
+            customer: Some(decode(fixture(
+                r#"{"intercom_user_id":"6762f19b1bb69f9f2193bbd4"}"#,
+            ))),
+        },
         None,
     )
     .expect("attach_conversations_contact request failed");
@@ -434,12 +450,14 @@ fn attach_conversations_contact_attach_conversations_contact_401_decodes_declare
     };
     let result = conversations::attach_conversations_contact(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""12345""#))),
-        Some(decode(fixture(
-            r#"{"intercom_user_id":"6762f19b1bb69f9f2193bbd4"}"#,
-        ))),
+        conversations::AttachConversationsContactParams {
+            conversation_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: Some(decode(fixture(r#""12345""#))),
+            customer: Some(decode(fixture(
+                r#"{"intercom_user_id":"6762f19b1bb69f9f2193bbd4"}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -464,10 +482,12 @@ fn attach_internal_articles_tag_attach_internal_articles_tag_reaches_mock_and_de
     let _ = &config;
     let actual = internal_articles::attach_internal_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        internal_articles::AttachInternalArticlesTagParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: None,
+        },
         None,
     )
     .expect("attach_internal_articles_tag request failed");
@@ -494,10 +514,12 @@ fn attach_internal_articles_tag_attach_internal_articles_tag_401_decodes_declare
     };
     let result = internal_articles::attach_internal_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        internal_articles::AttachInternalArticlesTagParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -523,10 +545,12 @@ fn attach_subscription_type_to_contact_attach_subscription_type_to_contact_reach
     let _ = &config;
     let actual = subscription_types::attach_subscription_type_to_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""37846""#)),
-        decode(fixture(r#""opt_in""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        subscription_types::AttachSubscriptionTypeToContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            id: decode(fixture(r#""37846""#)),
+            consent_type: decode(fixture(r#""opt_in""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("attach_subscription_type_to_contact request failed");
@@ -554,10 +578,12 @@ fn attach_subscription_type_to_contact_attach_subscription_type_to_contact_401_d
     };
     let result = subscription_types::attach_subscription_type_to_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""37846""#)),
-        decode(fixture(r#""opt_in""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        subscription_types::AttachSubscriptionTypeToContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            id: decode(fixture(r#""37846""#)),
+            consent_type: decode(fixture(r#""opt_in""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -582,9 +608,11 @@ fn attach_tag_to_contact_attach_tag_to_contact_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = tags::attach_tag_to_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::AttachTagToContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("attach_tag_to_contact request failed");
@@ -611,9 +639,11 @@ fn attach_tag_to_contact_attach_tag_to_contact_401_decodes_declared_error() {
     };
     let result = tags::attach_tag_to_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::AttachTagToContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -638,10 +668,12 @@ fn attach_tag_to_conversation_attach_tag_to_conversation_reaches_mock_and_decode
     let _ = &config;
     let actual = tags::attach_tag_to_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""780""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::AttachTagToConversationParams {
+            conversation_id: decode(fixture(r#""64619700005694""#)),
+            id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""780""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("attach_tag_to_conversation request failed");
@@ -668,10 +700,12 @@ fn attach_tag_to_conversation_attach_tag_to_conversation_401_decodes_declared_er
     };
     let result = tags::attach_tag_to_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""780""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::AttachTagToConversationParams {
+            conversation_id: decode(fixture(r#""64619700005694""#)),
+            id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""780""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -696,10 +730,12 @@ fn attach_tag_to_ticket_attach_tag_to_ticket_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = tags::attach_tag_to_ticket(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""780""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::AttachTagToTicketParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""780""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("attach_tag_to_ticket request failed");
@@ -726,10 +762,12 @@ fn attach_tag_to_ticket_attach_tag_to_ticket_401_decodes_declared_error() {
     };
     let result = tags::attach_tag_to_ticket(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""780""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::AttachTagToTicketParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""780""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -754,8 +792,10 @@ fn block_contact_block_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::block_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::BlockContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("block_contact request failed");
@@ -843,9 +883,11 @@ fn bulk_create_contacts_bulk_create_contacts_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = contacts::bulk_create_contacts(
         &config,
-        decode(fixture(r#"[{"external_id":"abc123","email":"joe@bloggs.com","name":"Joe Bloggs","role":"user","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","signed_up_at":1571672154,"last_seen_at":1571672154,"owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}]}}]"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        contacts::BulkCreateContactsParams {
+            contacts: decode(fixture(r#"[{"external_id":"abc123","email":"joe@bloggs.com","name":"Joe Bloggs","role":"user","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","signed_up_at":1571672154,"last_seen_at":1571672154,"owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}]}}]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            job: None,
+        },
         None,
     )
     .expect("bulk_create_contacts request failed");
@@ -872,11 +914,13 @@ fn bulk_create_contacts_bulk_create_contacts_401_decodes_declared_error() {
     };
     let result = contacts::bulk_create_contacts(
         &config,
-        decode(fixture(
-            r#"[{"external_id":"abc123","email":"joe@bloggs.com","name":"Joe Bloggs","role":"user","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","signed_up_at":1571672154,"last_seen_at":1571672154,"owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}]}}]"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        contacts::BulkCreateContactsParams {
+            contacts: decode(fixture(
+                r#"[{"external_id":"abc123","email":"joe@bloggs.com","name":"Joe Bloggs","role":"user","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","signed_up_at":1571672154,"last_seen_at":1571672154,"owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}]}}]"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            job: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -901,9 +945,11 @@ fn bulk_delete_contacts_bulk_delete_contacts_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = contacts::bulk_delete_contacts(
         &config,
-        decode(fixture(r#"[{"id":"abc123"},{"id":"def456"}]"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        contacts::BulkDeleteContactsParams {
+            contacts: decode(fixture(r#"[{"id":"abc123"},{"id":"def456"}]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            job: None,
+        },
         None,
     )
     .expect("bulk_delete_contacts request failed");
@@ -930,9 +976,11 @@ fn bulk_delete_contacts_bulk_delete_contacts_401_decodes_declared_error() {
     };
     let result = contacts::bulk_delete_contacts(
         &config,
-        decode(fixture(r#"[{"id":"abc123"},{"id":"def456"}]"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        contacts::BulkDeleteContactsParams {
+            contacts: decode(fixture(r#"[{"id":"abc123"},{"id":"def456"}]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            job: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -957,9 +1005,11 @@ fn bulk_update_contacts_bulk_update_contacts_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = contacts::bulk_update_contacts(
         &config,
-        decode(fixture(r#"[{"id":"abc123","external_id":"ext123","email":"joe@bloggs.com","name":"Joe Bloggs","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}],"remove":[{"id":"987"}]}}]"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        contacts::BulkUpdateContactsParams {
+            contacts: decode(fixture(r#"[{"id":"abc123","external_id":"ext123","email":"joe@bloggs.com","name":"Joe Bloggs","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}],"remove":[{"id":"987"}]}}]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            job: None,
+        },
         None,
     )
     .expect("bulk_update_contacts request failed");
@@ -986,11 +1036,13 @@ fn bulk_update_contacts_bulk_update_contacts_401_decodes_declared_error() {
     };
     let result = contacts::bulk_update_contacts(
         &config,
-        decode(fixture(
-            r#"[{"id":"abc123","external_id":"ext123","email":"joe@bloggs.com","name":"Joe Bloggs","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}],"remove":[{"id":"987"}]}}]"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        contacts::BulkUpdateContactsParams {
+            contacts: decode(fixture(
+                r#"[{"id":"abc123","external_id":"ext123","email":"joe@bloggs.com","name":"Joe Bloggs","phone":"+353871234567","avatar":"https://www.example.com/avatar_image.jpg","owner_id":"321","unsubscribed_from_emails":false,"language_override":"fr","custom_attributes":{"plan":"pro"},"companies":[{"company_id":"6","name":"Blue Sun"}],"tags":{"add":[{"id":"123"}],"remove":[{"id":"987"}]}}]"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            job: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1015,8 +1067,10 @@ fn cancel_data_export_cancel_data_export_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = data_export::cancel_data_export(
         &config,
-        decode(fixture(r#""job_identifier""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_export::CancelDataExportParams {
+            job_identifier: decode(fixture(r#""job_identifier""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("cancel_data_export request failed");
@@ -1103,7 +1157,9 @@ fn collect_fin_voice_call_by_external_id_collect_fin_voice_call_by_external_id_r
     let _ = &config;
     let actual = calls::collect_fin_voice_call_by_external_id(
         &config,
-        decode(fixture(r#""external-1""#)),
+        calls::CollectFinVoiceCallByExternalIdParams {
+            external_id: decode(fixture(r#""external-1""#)),
+        },
         None,
     )
     .expect("collect_fin_voice_call_by_external_id request failed");
@@ -1131,7 +1187,9 @@ fn collect_fin_voice_call_by_external_id_collect_fin_voice_call_by_external_id_4
     };
     let result = calls::collect_fin_voice_call_by_external_id(
         &config,
-        decode(fixture(r#""external-1""#)),
+        calls::CollectFinVoiceCallByExternalIdParams {
+            external_id: decode(fixture(r#""external-1""#)),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1154,8 +1212,14 @@ fn collect_fin_voice_call_by_id_collect_fin_voice_call_by_id_reaches_mock_and_de
         return;
     };
     let _ = &config;
-    let actual = calls::collect_fin_voice_call_by_id(&config, decode(fixture(r#"1"#)), None)
-        .expect("collect_fin_voice_call_by_id request failed");
+    let actual = calls::collect_fin_voice_call_by_id(
+        &config,
+        calls::CollectFinVoiceCallByIdParams {
+            id: decode(fixture(r#"1"#)),
+        },
+        None,
+    )
+    .expect("collect_fin_voice_call_by_id request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"id":12345,"app_id":12345,"user_phone_number":"+1234567890","status":"registered","intercom_call_id":"1234","external_call_id":"call-123-abc","intercom_conversation_id":"5678","call_transcript":[],"call_summary":"Customer called about billing issue...","intent":[],"data":{"masterContactID":"abc123","DNIS":"+18005551212"}}"#,
@@ -1177,7 +1241,13 @@ fn collect_fin_voice_call_by_id_collect_fin_voice_call_by_id_404_decodes_declare
             .map(|base_url| format!("{base_url}/__mockStatus/404")),
         ..config
     };
-    let result = calls::collect_fin_voice_call_by_id(&config, decode(fixture(r#"1"#)), None);
+    let result = calls::collect_fin_voice_call_by_id(
+        &config,
+        calls::CollectFinVoiceCallByIdParams {
+            id: decode(fixture(r#"1"#)),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("collect_fin_voice_call_by_id did not fail with SdkError::Http on 404");
     };
@@ -1201,7 +1271,9 @@ fn collect_fin_voice_call_by_phone_number_collect_fin_voice_call_by_phone_number
     let _ = &config;
     let actual = calls::collect_fin_voice_call_by_phone_number(
         &config,
-        decode(fixture(r#""+15555550100""#)),
+        calls::CollectFinVoiceCallByPhoneNumberParams {
+            phone_number: decode(fixture(r#""+15555550100""#)),
+        },
         None,
     )
     .expect("collect_fin_voice_call_by_phone_number request failed");
@@ -1229,7 +1301,9 @@ fn collect_fin_voice_call_by_phone_number_collect_fin_voice_call_by_phone_number
     };
     let result = calls::collect_fin_voice_call_by_phone_number(
         &config,
-        decode(fixture(r#""+15555550100""#)),
+        calls::CollectFinVoiceCallByPhoneNumberParams {
+            phone_number: decode(fixture(r#""+15555550100""#)),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1255,7 +1329,9 @@ fn collect_fin_voice_calls_by_conversation_id_collect_fin_voice_calls_by_convers
     let _ = &config;
     let actual = calls::collect_fin_voice_calls_by_conversation_id(
         &config,
-        decode(fixture(r#""conversation-1""#)),
+        calls::CollectFinVoiceCallsByConversationIdParams {
+            conversation_id: decode(fixture(r#""conversation-1""#)),
+        },
         None,
     )
     .expect("collect_fin_voice_calls_by_conversation_id request failed");
@@ -1283,7 +1359,9 @@ fn collect_fin_voice_calls_by_conversation_id_collect_fin_voice_calls_by_convers
     };
     let result = calls::collect_fin_voice_calls_by_conversation_id(
         &config,
-        decode(fixture(r#""conversation-1""#)),
+        calls::CollectFinVoiceCallsByConversationIdParams {
+            conversation_id: decode(fixture(r#""conversation-1""#)),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1375,12 +1453,14 @@ fn convert_visitor_convert_visitor_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = visitors::convert_visitor(
         &config,
-        decode(fixture(r#""user""#)),
-        decode(fixture(r#"{"email":"foo@bar.com"}"#)),
-        decode(fixture(
-            r#"{"user_id":"3ecf64d0-9ed1-4e9f-88e1-da7d6e6782f3"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        visitors::ConvertVisitorParams {
+            type_: decode(fixture(r#""user""#)),
+            user: decode(fixture(r#"{"email":"foo@bar.com"}"#)),
+            visitor: decode(fixture(
+                r#"{"user_id":"3ecf64d0-9ed1-4e9f-88e1-da7d6e6782f3"}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("convert_visitor request failed");
@@ -1407,12 +1487,14 @@ fn convert_visitor_convert_visitor_401_decodes_declared_error() {
     };
     let result = visitors::convert_visitor(
         &config,
-        decode(fixture(r#""user""#)),
-        decode(fixture(r#"{"email":"foo@bar.com"}"#)),
-        decode(fixture(
-            r#"{"user_id":"3ecf64d0-9ed1-4e9f-88e1-da7d6e6782f3"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        visitors::ConvertVisitorParams {
+            type_: decode(fixture(r#""user""#)),
+            user: decode(fixture(r#"{"email":"foo@bar.com"}"#)),
+            visitor: decode(fixture(
+                r#"{"user_id":"3ecf64d0-9ed1-4e9f-88e1-da7d6e6782f3"}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1527,10 +1609,12 @@ fn create_audience_create_audience_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = audiences::create_audience(
         &config,
-        decode(fixture(r#""VIP Customers""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"[{"attribute":"company.name","type":"string","comparison":"contains","value":"Acme"}]"#))),
-        Some(decode(fixture(r#"[{"attribute":"role","type":"role","comparison":"eq","value":"user"}]"#))),
+        audiences::CreateAudienceParams {
+            name: decode(fixture(r#""VIP Customers""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            predicates: Some(decode(fixture(r#"[{"attribute":"company.name","type":"string","comparison":"contains","value":"Acme"}]"#))),
+            role_predicates: Some(decode(fixture(r#"[{"attribute":"role","type":"role","comparison":"eq","value":"user"}]"#))),
+        },
         None,
     )
     .expect("create_audience request failed");
@@ -1557,14 +1641,16 @@ fn create_audience_create_audience_401_decodes_declared_error() {
     };
     let result = audiences::create_audience(
         &config,
-        decode(fixture(r#""VIP Customers""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"[{"attribute":"company.name","type":"string","comparison":"contains","value":"Acme"}]"#,
-        ))),
-        Some(decode(fixture(
-            r#"[{"attribute":"role","type":"role","comparison":"eq","value":"user"}]"#,
-        ))),
+        audiences::CreateAudienceParams {
+            name: decode(fixture(r#""VIP Customers""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            predicates: Some(decode(fixture(
+                r#"[{"attribute":"company.name","type":"string","comparison":"contains","value":"Acme"}]"#,
+            ))),
+            role_predicates: Some(decode(fixture(
+                r#"[{"attribute":"role","type":"role","comparison":"eq","value":"user"}]"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1655,10 +1741,12 @@ fn create_company_note_create_company_note_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = notes::create_company_note(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        decode(fixture(r#""Hello""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""991267583""#))),
+        notes::CreateCompanyNoteParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            body: decode(fixture(r#""Hello""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: Some(decode(fixture(r#""991267583""#))),
+        },
         None,
     )
     .expect("create_company_note request failed");
@@ -1685,10 +1773,12 @@ fn create_company_note_create_company_note_401_decodes_declared_error() {
     };
     let result = notes::create_company_note(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        decode(fixture(r#""Hello""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""991267583""#))),
+        notes::CreateCompanyNoteParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            body: decode(fixture(r#""Hello""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: Some(decode(fixture(r#""991267583""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1713,8 +1803,10 @@ fn create_contact_create_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::create_contact(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"{"email":"joebloggs@intercom.io"}"#))),
+        contacts::CreateContactParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(r#"{"email":"joebloggs@intercom.io"}"#))),
+        },
         None,
     )
     .expect("create_contact request failed");
@@ -1741,8 +1833,10 @@ fn create_contact_create_contact_401_decodes_declared_error() {
     };
     let result = contacts::create_contact(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"{"email":"joebloggs@intercom.io"}"#))),
+        contacts::CreateContactParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(r#"{"email":"joebloggs@intercom.io"}"#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -1977,10 +2071,10 @@ fn create_conversation_attribute_create_conversation_attribute_reaches_mock_and_
     let _ = &config;
     let actual = conversations_attributes::create_conversation_attribute(
         &config,
-        decode(fixture(
-            r#"{"name":"api_test_attr","data_type":"string","description":"Created via API test"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::CreateConversationAttributeParams {
+            body: decode(fixture(r#"{"name":"api_test_attr","data_type":"string","description":"Created via API test"}"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("create_conversation_attribute request failed");
@@ -2007,10 +2101,12 @@ fn create_conversation_attribute_create_conversation_attribute_401_decodes_decla
     };
     let result = conversations_attributes::create_conversation_attribute(
         &config,
-        decode(fixture(
-            r#"{"name":"api_test_attr","data_type":"string","description":"Created via API test"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::CreateConversationAttributeParams {
+            body: decode(fixture(
+                r#"{"name":"api_test_attr","data_type":"string","description":"Created via API test"}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -2036,9 +2132,11 @@ fn create_conversation_attribute_option_create_conversation_attribute_option_rea
     let _ = &config;
     let actual = conversations_attributes::create_conversation_attribute_option(
         &config,
-        decode(fixture(r#"2"#)),
-        decode(fixture(r#""High""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::CreateConversationAttributeOptionParams {
+            id: decode(fixture(r#"2"#)),
+            label: decode(fixture(r#""High""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("create_conversation_attribute_option request failed");
@@ -2066,9 +2164,11 @@ fn create_conversation_attribute_option_create_conversation_attribute_option_401
     };
     let result = conversations_attributes::create_conversation_attribute_option(
         &config,
-        decode(fixture(r#"2"#)),
-        decode(fixture(r#""High""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::CreateConversationAttributeOptionParams {
+            id: decode(fixture(r#"2"#)),
+            label: decode(fixture(r#""High""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -2380,9 +2480,11 @@ fn create_data_export_create_data_export_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = data_export::create_data_export(
         &config,
-        decode(fixture(r#"1734519776"#)),
-        decode(fixture(r#"1734537776"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_export::CreateDataExportParams {
+            created_at_after: decode(fixture(r#"1734519776"#)),
+            created_at_before: decode(fixture(r#"1734537776"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("create_data_export request failed");
@@ -2608,8 +2710,10 @@ fn create_folder_create_folder_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = folders::create_folder(
         &config,
-        decode(fixture(r#"{"name":"Product Documentation","description":"Internal product docs","emoji":"📚"}"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::CreateFolderParams {
+            folder: decode(fixture(r#"{"name":"Product Documentation","description":"Internal product docs","emoji":"📚"}"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("create_folder request failed");
@@ -2636,10 +2740,12 @@ fn create_folder_create_folder_400_decodes_declared_error() {
     };
     let result = folders::create_folder(
         &config,
-        decode(fixture(
-            r#"{"name":"Product Documentation","description":"Internal product docs","emoji":"📚"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::CreateFolderParams {
+            folder: decode(fixture(
+                r#"{"name":"Product Documentation","description":"Internal product docs","emoji":"📚"}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -2966,10 +3072,12 @@ fn create_note_create_note_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = notes::create_note(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""Hello""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""123""#))),
+        notes::CreateNoteParams {
+            contact_id: decode(fixture(r#"123"#)),
+            body: decode(fixture(r#""Hello""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: Some(decode(fixture(r#""123""#))),
+        },
         None,
     )
     .expect("create_note request failed");
@@ -2996,10 +3104,12 @@ fn create_note_create_note_404_decodes_declared_error() {
     };
     let result = notes::create_note(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""Hello""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""123""#))),
+        notes::CreateNoteParams {
+            contact_id: decode(fixture(r#"123"#)),
+            body: decode(fixture(r#""Hello""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            admin_id: Some(decode(fixture(r#""123""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3092,10 +3202,12 @@ fn create_office_hours_schedule_create_office_hours_schedule_reaches_mock_and_de
     let _ = &config;
     let actual = office_hours::create_office_hours_schedule(
         &config,
-        decode(fixture(r#""Standard Support Hours""#)),
-        decode(fixture(r#""America/New_York""#)),
-        decode(fixture(r#"[{"start_minute":540,"end_minute":1020}]"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::CreateOfficeHoursScheduleParams {
+            name: decode(fixture(r#""Standard Support Hours""#)),
+            time_zone_name: decode(fixture(r#""America/New_York""#)),
+            time_intervals: decode(fixture(r#"[{"start_minute":540,"end_minute":1020}]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("create_office_hours_schedule request failed");
@@ -3122,10 +3234,12 @@ fn create_office_hours_schedule_create_office_hours_schedule_401_decodes_declare
     };
     let result = office_hours::create_office_hours_schedule(
         &config,
-        decode(fixture(r#""Standard Support Hours""#)),
-        decode(fixture(r#""America/New_York""#)),
-        decode(fixture(r#"[{"start_minute":540,"end_minute":1020}]"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::CreateOfficeHoursScheduleParams {
+            name: decode(fixture(r#""Standard Support Hours""#)),
+            time_zone_name: decode(fixture(r#""America/New_York""#)),
+            time_intervals: decode(fixture(r#"[{"start_minute":540,"end_minute":1020}]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3226,11 +3340,13 @@ fn create_phone_switch_create_phone_switch_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = switch::create_phone_switch(
         &config,
-        decode(fixture(r#""+353832345678""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"issue_type":"Billing","priority":"High"}"#,
-        ))),
+        switch::CreatePhoneSwitchParams {
+            phone: decode(fixture(r#""+353832345678""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            custom_attributes: Some(decode(fixture(
+                r#"{"issue_type":"Billing","priority":"High"}"#,
+            ))),
+        },
         None,
     )
     .expect("create_phone_switch request failed");
@@ -3255,11 +3371,13 @@ fn create_phone_switch_create_phone_switch_401_decodes_declared_error() {
     };
     let result = switch::create_phone_switch(
         &config,
-        decode(fixture(r#""+353832345678""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"issue_type":"Billing","priority":"High"}"#,
-        ))),
+        switch::CreatePhoneSwitchParams {
+            phone: decode(fixture(r#""+353832345678""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            custom_attributes: Some(decode(fixture(
+                r#"{"issue_type":"Billing","priority":"High"}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3284,8 +3402,10 @@ fn create_tag_create_tag_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = tags::create_tag(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"{"name":"test"}"#))),
+        tags::CreateTagParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(r#"{"name":"test"}"#))),
+        },
         None,
     )
     .expect("create_tag request failed");
@@ -3312,8 +3432,10 @@ fn create_tag_create_tag_400_decodes_declared_error() {
     };
     let result = tags::create_tag(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"{"name":"test"}"#))),
+        tags::CreateTagParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(r#"{"name":"test"}"#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3560,11 +3682,13 @@ fn data_event_summaries_data_event_summaries_reaches_mock_and_decodes_response()
     let _ = &config;
     data_events::data_event_summaries(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""314159""#))),
-        Some(decode(fixture(
-            r#"{"event_name":"invited-friend","count":1,"first":1671028894,"last":1671028894}"#,
-        ))),
+        data_events::DataEventSummariesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            user_id: Some(decode(fixture(r#""314159""#))),
+            event_summaries: Some(decode(fixture(
+                r#"{"event_name":"invited-friend","count":1,"first":1671028894,"last":1671028894}"#,
+            ))),
+        },
         None,
     )
     .expect("data_event_summaries request failed");
@@ -3583,11 +3707,13 @@ fn data_event_summaries_data_event_summaries_401_decodes_declared_error() {
     };
     let result = data_events::data_event_summaries(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""314159""#))),
-        Some(decode(fixture(
-            r#"{"event_name":"invited-friend","count":1,"first":1671028894,"last":1671028894}"#,
-        ))),
+        data_events::DataEventSummariesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            user_id: Some(decode(fixture(r#""314159""#))),
+            event_summaries: Some(decode(fixture(
+                r#"{"event_name":"invited-friend","count":1,"first":1671028894,"last":1671028894}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3612,8 +3738,10 @@ fn delete_article_delete_article_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = articles::delete_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::DeleteArticleParams {
+            article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_article request failed");
@@ -3638,8 +3766,10 @@ fn delete_article_delete_article_401_decodes_declared_error() {
     };
     let result = articles::delete_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::DeleteArticleParams {
+            article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3664,8 +3794,10 @@ fn delete_audience_delete_audience_reaches_mock_and_decodes_response() {
     let _ = &config;
     audiences::delete_audience(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        audiences::DeleteAudienceParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_audience request failed");
@@ -3684,8 +3816,10 @@ fn delete_audience_delete_audience_401_decodes_declared_error() {
     };
     let result = audiences::delete_audience(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        audiences::DeleteAudienceParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3710,8 +3844,10 @@ fn delete_collection_delete_collection_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = help_center::delete_collection(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::DeleteCollectionParams {
+            collection_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_collection request failed");
@@ -3736,8 +3872,10 @@ fn delete_collection_delete_collection_401_decodes_declared_error() {
     };
     let result = help_center::delete_collection(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::DeleteCollectionParams {
+            collection_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3762,8 +3900,10 @@ fn delete_company_delete_company_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = companies::delete_company(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::DeleteCompanyParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_company request failed");
@@ -3789,8 +3929,10 @@ fn delete_company_delete_company_401_decodes_declared_error() {
     };
     let result = companies::delete_company(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::DeleteCompanyParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3815,8 +3957,10 @@ fn delete_contact_delete_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::delete_contact(
         &config,
-        decode(fixture(r#""contact-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::DeleteContactParams {
+            contact_id: decode(fixture(r#""contact-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_contact request failed");
@@ -3843,8 +3987,10 @@ fn delete_contact_delete_contact_401_decodes_declared_error() {
     };
     let result = contacts::delete_contact(
         &config,
-        decode(fixture(r#""contact-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::DeleteContactParams {
+            contact_id: decode(fixture(r#""contact-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3869,8 +4015,10 @@ fn delete_content_import_source_delete_content_import_source_reaches_mock_and_de
     let _ = &config;
     ai_content::delete_content_import_source(
         &config,
-        decode(fixture(r#""source-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::DeleteContentImportSourceParams {
+            source_id: decode(fixture(r#""source-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_content_import_source request failed");
@@ -3889,8 +4037,10 @@ fn delete_content_import_source_delete_content_import_source_401_decodes_declare
     };
     let result = ai_content::delete_content_import_source(
         &config,
-        decode(fixture(r#""source-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::DeleteContentImportSourceParams {
+            source_id: decode(fixture(r#""source-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3915,8 +4065,10 @@ fn delete_content_snippet_delete_content_snippet_reaches_mock_and_decodes_respon
     let _ = &config;
     content_snippets::delete_content_snippet(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::DeleteContentSnippetParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_content_snippet request failed");
@@ -3935,8 +4087,10 @@ fn delete_content_snippet_delete_content_snippet_404_decodes_declared_error() {
     };
     let result = content_snippets::delete_content_snippet(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::DeleteContentSnippetParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -3961,9 +4115,11 @@ fn delete_conversation_delete_conversation_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = conversations::delete_conversation(
         &config,
-        decode(fixture(r#"1"#)),
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::DeleteConversationParams {
+            conversation_id: decode(fixture(r#"1"#)),
+            retain_metrics: Some(decode(fixture(r#"true"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_conversation request failed");
@@ -3988,9 +4144,11 @@ fn delete_conversation_delete_conversation_401_decodes_declared_error() {
     };
     let result = conversations::delete_conversation(
         &config,
-        decode(fixture(r#"1"#)),
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::DeleteConversationParams {
+            conversation_id: decode(fixture(r#"1"#)),
+            retain_metrics: Some(decode(fixture(r#"true"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4015,8 +4173,10 @@ fn delete_conversation_attribute_delete_conversation_attribute_reaches_mock_and_
     let _ = &config;
     let actual = conversations_attributes::delete_conversation_attribute(
         &config,
-        decode(fixture(r#"8"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::DeleteConversationAttributeParams {
+            id: decode(fixture(r#"8"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_conversation_attribute request failed");
@@ -4043,8 +4203,10 @@ fn delete_conversation_attribute_delete_conversation_attribute_401_decodes_decla
     };
     let result = conversations_attributes::delete_conversation_attribute(
         &config,
-        decode(fixture(r#"8"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::DeleteConversationAttributeParams {
+            id: decode(fixture(r#"8"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4070,9 +4232,11 @@ fn delete_conversation_attribute_option_delete_conversation_attribute_option_rea
     let _ = &config;
     let actual = conversations_attributes::delete_conversation_attribute_option(
         &config,
-        decode(fixture(r#"2"#)),
-        decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::DeleteConversationAttributeOptionParams {
+            id: decode(fixture(r#"2"#)),
+            option_id: decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_conversation_attribute_option request failed");
@@ -4100,9 +4264,11 @@ fn delete_conversation_attribute_option_delete_conversation_attribute_option_401
     };
     let result = conversations_attributes::delete_conversation_attribute_option(
         &config,
-        decode(fixture(r#"2"#)),
-        decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::DeleteConversationAttributeOptionParams {
+            id: decode(fixture(r#"2"#)),
+            option_id: decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4128,9 +4294,11 @@ fn delete_custom_object_instances_by_external_id_delete_custom_object_instances_
     let _ = &config;
     let actual = custom_object_instances::delete_custom_object_instances_by_external_id(
         &config,
-        decode(fixture(r#""Order""#)),
-        decode(fixture(r#""custom_object_instance-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        custom_object_instances::DeleteCustomObjectInstancesByExternalIdParams {
+            custom_object_type_identifier: decode(fixture(r#""Order""#)),
+            custom_object_instance_id: decode(fixture(r#""custom_object_instance-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_custom_object_instances_by_external_id request failed");
@@ -4156,9 +4324,11 @@ fn delete_custom_object_instances_by_external_id_delete_custom_object_instances_
     };
     let result = custom_object_instances::delete_custom_object_instances_by_external_id(
         &config,
-        decode(fixture(r#""Order""#)),
-        decode(fixture(r#""custom_object_instance-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        custom_object_instances::DeleteCustomObjectInstancesByExternalIdParams {
+            custom_object_type_identifier: decode(fixture(r#""Order""#)),
+            custom_object_instance_id: decode(fixture(r#""custom_object_instance-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4186,9 +4356,11 @@ fn delete_custom_object_instances_by_id_delete_custom_object_instances_by_id_rea
     let _ = &config;
     let actual = custom_object_instances::delete_custom_object_instances_by_id(
         &config,
-        decode(fixture(r#""Order""#)),
-        decode(fixture(r#""external-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        custom_object_instances::DeleteCustomObjectInstancesByIdParams {
+            custom_object_type_identifier: decode(fixture(r#""Order""#)),
+            external_id: decode(fixture(r#""external-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_custom_object_instances_by_id request failed");
@@ -4214,9 +4386,11 @@ fn delete_custom_object_instances_by_id_delete_custom_object_instances_by_id_401
     };
     let result = custom_object_instances::delete_custom_object_instances_by_id(
         &config,
-        decode(fixture(r#""Order""#)),
-        decode(fixture(r#""external-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        custom_object_instances::DeleteCustomObjectInstancesByIdParams {
+            custom_object_type_identifier: decode(fixture(r#""Order""#)),
+            external_id: decode(fixture(r#""external-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4241,8 +4415,10 @@ fn delete_data_connector_delete_data_connector_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = data_connectors::delete_data_connector(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::DeleteDataConnectorParams {
+            id: decode(fixture(r#""12345""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_data_connector request failed");
@@ -4267,8 +4443,10 @@ fn delete_data_connector_delete_data_connector_401_decodes_declared_error() {
     };
     let result = data_connectors::delete_data_connector(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::DeleteDataConnectorParams {
+            id: decode(fixture(r#""12345""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4293,8 +4471,10 @@ fn delete_dynamic_content_delete_dynamic_content_reaches_mock_and_decodes_respon
     let _ = &config;
     dynamic_content::delete_dynamic_content(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        dynamic_content::DeleteDynamicContentParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_dynamic_content request failed");
@@ -4313,8 +4493,10 @@ fn delete_dynamic_content_delete_dynamic_content_401_decodes_declared_error() {
     };
     let result = dynamic_content::delete_dynamic_content(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        dynamic_content::DeleteDynamicContentParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4339,8 +4521,10 @@ fn delete_external_page_delete_external_page_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = ai_content::delete_external_page(
         &config,
-        decode(fixture(r#""page-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::DeleteExternalPageParams {
+            page_id: decode(fixture(r#""page-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_external_page request failed");
@@ -4367,8 +4551,10 @@ fn delete_external_page_delete_external_page_401_decodes_declared_error() {
     };
     let result = ai_content::delete_external_page(
         &config,
-        decode(fixture(r#""page-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::DeleteExternalPageParams {
+            page_id: decode(fixture(r#""page-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4393,8 +4579,10 @@ fn delete_folder_delete_folder_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = folders::delete_folder(
         &config,
-        decode(fixture(r#"6"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::DeleteFolderParams {
+            id: decode(fixture(r#"6"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_folder request failed");
@@ -4419,8 +4607,10 @@ fn delete_folder_delete_folder_401_decodes_declared_error() {
     };
     let result = folders::delete_folder(
         &config,
-        decode(fixture(r#"6"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::DeleteFolderParams {
+            id: decode(fixture(r#"6"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4445,9 +4635,11 @@ fn delete_help_center_redirect_delete_help_center_redirect_reaches_mock_and_deco
     let _ = &config;
     let actual = help_center::delete_help_center_redirect(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""26""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::DeleteHelpCenterRedirectParams {
+            help_center_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""26""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_help_center_redirect request failed");
@@ -4472,9 +4664,11 @@ fn delete_help_center_redirect_delete_help_center_redirect_401_decodes_declared_
     };
     let result = help_center::delete_help_center_redirect(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""26""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::DeleteHelpCenterRedirectParams {
+            help_center_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""26""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4499,8 +4693,10 @@ fn delete_internal_article_delete_internal_article_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = internal_articles::delete_internal_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::DeleteInternalArticleParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_internal_article request failed");
@@ -4525,8 +4721,10 @@ fn delete_internal_article_delete_internal_article_401_decodes_declared_error() 
     };
     let result = internal_articles::delete_internal_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::DeleteInternalArticleParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4551,8 +4749,10 @@ fn delete_news_item_delete_news_item_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = news::delete_news_item(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::DeleteNewsItemParams {
+            news_item_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_news_item request failed");
@@ -4577,8 +4777,10 @@ fn delete_news_item_delete_news_item_401_decodes_declared_error() {
     };
     let result = news::delete_news_item(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::DeleteNewsItemParams {
+            news_item_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4603,8 +4805,10 @@ fn delete_note_delete_note_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = notes::delete_note(
         &config,
-        decode(fixture(r#"1"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::DeleteNoteParams {
+            note_id: decode(fixture(r#"1"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_note request failed");
@@ -4629,8 +4833,10 @@ fn delete_note_delete_note_400_decodes_declared_error() {
     };
     let result = notes::delete_note(
         &config,
-        decode(fixture(r#"1"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::DeleteNoteParams {
+            note_id: decode(fixture(r#"1"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4655,9 +4861,11 @@ fn delete_office_hours_exception_delete_office_hours_exception_reaches_mock_and_
     let _ = &config;
     let actual = office_hours::delete_office_hours_exception(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""456""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::DeleteOfficeHoursExceptionParams {
+            office_hours_schedule_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""456""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_office_hours_exception request failed");
@@ -4682,9 +4890,11 @@ fn delete_office_hours_exception_delete_office_hours_exception_401_decodes_decla
     };
     let result = office_hours::delete_office_hours_exception(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""456""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::DeleteOfficeHoursExceptionParams {
+            office_hours_schedule_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""456""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4709,8 +4919,10 @@ fn delete_office_hours_schedule_delete_office_hours_schedule_reaches_mock_and_de
     let _ = &config;
     let actual = office_hours::delete_office_hours_schedule(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::DeleteOfficeHoursScheduleParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_office_hours_schedule request failed");
@@ -4735,8 +4947,10 @@ fn delete_office_hours_schedule_delete_office_hours_schedule_401_decodes_declare
     };
     let result = office_hours::delete_office_hours_schedule(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::DeleteOfficeHoursScheduleParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4761,8 +4975,10 @@ fn delete_tag_delete_tag_reaches_mock_and_decodes_response() {
     let _ = &config;
     tags::delete_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DeleteTagParams {
+            tag_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_tag request failed");
@@ -4781,8 +4997,10 @@ fn delete_tag_delete_tag_400_decodes_declared_error() {
     };
     let result = tags::delete_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DeleteTagParams {
+            tag_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4807,8 +5025,10 @@ fn delete_ticket_delete_ticket_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = tickets::delete_ticket(
         &config,
-        decode(fixture(r#""ticket-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::DeleteTicketParams {
+            ticket_id: decode(fixture(r#""ticket-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("delete_ticket request failed");
@@ -4833,8 +5053,10 @@ fn delete_ticket_delete_ticket_401_decodes_declared_error() {
     };
     let result = tickets::delete_ticket(
         &config,
-        decode(fixture(r#""ticket-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::DeleteTicketParams {
+            ticket_id: decode(fixture(r#""ticket-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4859,9 +5081,11 @@ fn detach_articles_tag_detach_articles_tag_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = articles::detach_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::DetachArticlesTagParams {
+            article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_articles_tag request failed");
@@ -4888,9 +5112,11 @@ fn detach_articles_tag_detach_articles_tag_401_decodes_declared_error() {
     };
     let result = articles::detach_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::DetachArticlesTagParams {
+            article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4915,9 +5141,11 @@ fn detach_companies_contact_detach_companies_contact_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = companies::detach_companies_contact(
         &config,
-        decode(fixture(r#""58a430d35458202d41b1e65b""#)),
-        decode(fixture(r#""58a430d35458202d41b1e65b""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::DetachCompaniesContactParams {
+            contact_id: decode(fixture(r#""58a430d35458202d41b1e65b""#)),
+            company_id: decode(fixture(r#""58a430d35458202d41b1e65b""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_companies_contact request failed");
@@ -4944,9 +5172,11 @@ fn detach_companies_contact_detach_companies_contact_401_decodes_declared_error(
     };
     let result = companies::detach_companies_contact(
         &config,
-        decode(fixture(r#""58a430d35458202d41b1e65b""#)),
-        decode(fixture(r#""58a430d35458202d41b1e65b""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::DetachCompaniesContactParams {
+            contact_id: decode(fixture(r#""58a430d35458202d41b1e65b""#)),
+            company_id: decode(fixture(r#""58a430d35458202d41b1e65b""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -4971,9 +5201,11 @@ fn detach_content_snippets_tag_detach_content_snippets_tag_reaches_mock_and_deco
     let _ = &config;
     let actual = content_snippets::detach_content_snippets_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::DetachContentSnippetsTagParams {
+            content_snippet_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_content_snippets_tag request failed");
@@ -5000,9 +5232,11 @@ fn detach_content_snippets_tag_detach_content_snippets_tag_401_decodes_declared_
     };
     let result = content_snippets::detach_content_snippets_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::DetachContentSnippetsTagParams {
+            content_snippet_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5027,10 +5261,12 @@ fn detach_conversations_contact_detach_conversations_contact_reaches_mock_and_de
     let _ = &config;
     let actual = conversations::detach_conversations_contact(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""5017690""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::DetachConversationsContactParams {
+            conversation_id: decode(fixture(r#""123""#)),
+            contact_id: decode(fixture(r#""123""#)),
+            admin_id: decode(fixture(r#""5017690""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_conversations_contact request failed");
@@ -5055,10 +5291,12 @@ fn detach_conversations_contact_detach_conversations_contact_401_decodes_declare
     };
     let result = conversations::detach_conversations_contact(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""5017690""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::DetachConversationsContactParams {
+            conversation_id: decode(fixture(r#""123""#)),
+            contact_id: decode(fixture(r#""123""#)),
+            admin_id: decode(fixture(r#""5017690""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5083,9 +5321,11 @@ fn detach_internal_articles_tag_detach_internal_articles_tag_reaches_mock_and_de
     let _ = &config;
     let actual = internal_articles::detach_internal_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::DetachInternalArticlesTagParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_internal_articles_tag request failed");
@@ -5112,9 +5352,11 @@ fn detach_internal_articles_tag_detach_internal_articles_tag_401_decodes_declare
     };
     let result = internal_articles::detach_internal_articles_tag(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::DetachInternalArticlesTagParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5140,9 +5382,11 @@ fn detach_subscription_type_to_contact_detach_subscription_type_to_contact_reach
     let _ = &config;
     let actual = subscription_types::detach_subscription_type_to_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""37846""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        subscription_types::DetachSubscriptionTypeToContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            subscription_id: decode(fixture(r#""37846""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_subscription_type_to_contact request failed");
@@ -5170,9 +5414,11 @@ fn detach_subscription_type_to_contact_detach_subscription_type_to_contact_401_d
     };
     let result = subscription_types::detach_subscription_type_to_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""37846""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        subscription_types::DetachSubscriptionTypeToContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            subscription_id: decode(fixture(r#""37846""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5197,9 +5443,11 @@ fn detach_tag_from_contact_detach_tag_from_contact_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = tags::detach_tag_from_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DetachTagFromContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            tag_id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_tag_from_contact request failed");
@@ -5226,9 +5474,11 @@ fn detach_tag_from_contact_detach_tag_from_contact_401_decodes_declared_error() 
     };
     let result = tags::detach_tag_from_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        decode(fixture(r#""7522907""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DetachTagFromContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            tag_id: decode(fixture(r#""7522907""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5253,10 +5503,12 @@ fn detach_tag_from_conversation_detach_tag_from_conversation_reaches_mock_and_de
     let _ = &config;
     let actual = tags::detach_tag_from_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DetachTagFromConversationParams {
+            conversation_id: decode(fixture(r#""64619700005694""#)),
+            tag_id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_tag_from_conversation request failed");
@@ -5283,10 +5535,12 @@ fn detach_tag_from_conversation_detach_tag_from_conversation_401_decodes_declare
     };
     let result = tags::detach_tag_from_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DetachTagFromConversationParams {
+            conversation_id: decode(fixture(r#""64619700005694""#)),
+            tag_id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5311,10 +5565,12 @@ fn detach_tag_from_ticket_detach_tag_from_ticket_reaches_mock_and_decodes_respon
     let _ = &config;
     let actual = tags::detach_tag_from_ticket(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DetachTagFromTicketParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            tag_id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("detach_tag_from_ticket request failed");
@@ -5341,10 +5597,12 @@ fn detach_tag_from_ticket_detach_tag_from_ticket_401_decodes_declared_error() {
     };
     let result = tags::detach_tag_from_ticket(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""7522907""#)),
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::DetachTagFromTicketParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            tag_id: decode(fixture(r#""7522907""#)),
+            admin_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5369,9 +5627,11 @@ fn dismiss_contact_banner_dismiss_contact_banner_reaches_mock_and_decodes_respon
     let _ = &config;
     let actual = banners::dismiss_contact_banner(
         &config,
-        decode(fixture(r#""id-1""#)),
-        decode(fixture(r#""view-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        banners::DismissContactBannerParams {
+            id: decode(fixture(r#""id-1""#)),
+            view_id: decode(fixture(r#""view-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("dismiss_contact_banner request failed");
@@ -5396,9 +5656,11 @@ fn dismiss_contact_banner_dismiss_contact_banner_404_decodes_declared_error() {
     };
     let result = banners::dismiss_contact_banner(
         &config,
-        decode(fixture(r#""id-1""#)),
-        decode(fixture(r#""view-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        banners::DismissContactBannerParams {
+            id: decode(fixture(r#""id-1""#)),
+            view_id: decode(fixture(r#""view-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5423,8 +5685,10 @@ fn download_data_export_download_data_export_reaches_mock_and_decodes_response()
     let _ = &config;
     data_export::download_data_export(
         &config,
-        decode(fixture(r#""job_identifier""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_export::DownloadDataExportParams {
+            job_identifier: decode(fixture(r#""job_identifier""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("download_data_export request failed");
@@ -5516,12 +5780,14 @@ fn escalate_fin_conversation_escalate_fin_conversation_reaches_mock_and_decodes_
     let _ = &config;
     let actual = fin_agent::escalate_fin_conversation(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""ext-123""#))),
-        None,
-        Some(decode(fixture(
-            r#""Customer is requesting a refund and is frustrated.""#,
-        ))),
+        fin_agent::EscalateFinConversationParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            conversation_id: Some(decode(fixture(r#""ext-123""#))),
+            user: None,
+            context: Some(decode(fixture(
+                r#""Customer is requesting a refund and is frustrated.""#,
+            ))),
+        },
         None,
     )
     .expect("escalate_fin_conversation request failed");
@@ -5548,12 +5814,14 @@ fn escalate_fin_conversation_escalate_fin_conversation_400_decodes_declared_erro
     };
     let result = fin_agent::escalate_fin_conversation(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#""ext-123""#))),
-        None,
-        Some(decode(fixture(
-            r#""Customer is requesting a refund and is frustrated.""#,
-        ))),
+        fin_agent::EscalateFinConversationParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            conversation_id: Some(decode(fixture(r#""ext-123""#))),
+            user: None,
+            context: Some(decode(fixture(
+                r#""Customer is requesting a refund and is frustrated.""#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5578,8 +5846,10 @@ fn export_workflow_export_workflow_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = workflows::export_workflow(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        workflows::ExportWorkflowParams {
+            id: decode(fixture(r#""12345""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("export_workflow request failed");
@@ -5606,8 +5876,10 @@ fn export_workflow_export_workflow_403_decodes_declared_error() {
     };
     let result = workflows::export_workflow(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        workflows::ExportWorkflowParams {
+            id: decode(fixture(r#""12345""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5632,8 +5904,10 @@ fn find_tag_find_tag_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = tags::find_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::FindTagParams {
+            tag_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("find_tag request failed");
@@ -5658,8 +5932,10 @@ fn find_tag_find_tag_401_decodes_declared_error() {
     };
     let result = tags::find_tag(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tags::FindTagParams {
+            tag_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5684,8 +5960,10 @@ fn get_content_import_source_get_content_import_source_reaches_mock_and_decodes_
     let _ = &config;
     let actual = ai_content::get_content_import_source(
         &config,
-        decode(fixture(r#""source-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::GetContentImportSourceParams {
+            source_id: decode(fixture(r#""source-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_content_import_source request failed");
@@ -5712,8 +5990,10 @@ fn get_content_import_source_get_content_import_source_401_decodes_declared_erro
     };
     let result = ai_content::get_content_import_source(
         &config,
-        decode(fixture(r#""source-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::GetContentImportSourceParams {
+            source_id: decode(fixture(r#""source-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5738,8 +6018,10 @@ fn get_content_snippet_get_content_snippet_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = content_snippets::get_content_snippet(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::GetContentSnippetParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_content_snippet request failed");
@@ -5766,8 +6048,10 @@ fn get_content_snippet_get_content_snippet_404_decodes_declared_error() {
     };
     let result = content_snippets::get_content_snippet(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::GetContentSnippetParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5792,8 +6076,10 @@ fn get_conversation_attribute_get_conversation_attribute_reaches_mock_and_decode
     let _ = &config;
     let actual = conversations_attributes::get_conversation_attribute(
         &config,
-        decode(fixture(r#"3"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::GetConversationAttributeParams {
+            id: decode(fixture(r#"3"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_conversation_attribute request failed");
@@ -5820,8 +6106,10 @@ fn get_conversation_attribute_get_conversation_attribute_401_decodes_declared_er
     };
     let result = conversations_attributes::get_conversation_attribute(
         &config,
-        decode(fixture(r#"3"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::GetConversationAttributeParams {
+            id: decode(fixture(r#"3"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5847,9 +6135,11 @@ fn get_custom_object_instances_by_id_get_custom_object_instances_by_id_reaches_m
     let _ = &config;
     let actual = custom_object_instances::get_custom_object_instances_by_id(
         &config,
-        decode(fixture(r#""Order""#)),
-        decode(fixture(r#""custom_object_instance-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        custom_object_instances::GetCustomObjectInstancesByIdParams {
+            custom_object_type_identifier: decode(fixture(r#""Order""#)),
+            custom_object_instance_id: decode(fixture(r#""custom_object_instance-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_custom_object_instances_by_id request failed");
@@ -5877,9 +6167,11 @@ fn get_custom_object_instances_by_id_get_custom_object_instances_by_id_401_decod
     };
     let result = custom_object_instances::get_custom_object_instances_by_id(
         &config,
-        decode(fixture(r#""Order""#)),
-        decode(fixture(r#""custom_object_instance-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        custom_object_instances::GetCustomObjectInstancesByIdParams {
+            custom_object_type_identifier: decode(fixture(r#""Order""#)),
+            custom_object_instance_id: decode(fixture(r#""custom_object_instance-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5904,8 +6196,10 @@ fn get_data_export_get_data_export_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = data_export::get_data_export(
         &config,
-        decode(fixture(r#""job_identifier""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_export::GetDataExportParams {
+            job_identifier: decode(fixture(r#""job_identifier""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_data_export request failed");
@@ -5927,8 +6221,10 @@ fn get_dynamic_content_get_dynamic_content_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = dynamic_content::get_dynamic_content(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        dynamic_content::GetDynamicContentParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_dynamic_content request failed");
@@ -5955,8 +6251,10 @@ fn get_dynamic_content_get_dynamic_content_401_decodes_declared_error() {
     };
     let result = dynamic_content::get_dynamic_content(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        dynamic_content::GetDynamicContentParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -5981,8 +6279,10 @@ fn get_external_page_get_external_page_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = ai_content::get_external_page(
         &config,
-        decode(fixture(r#""page-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::GetExternalPageParams {
+            page_id: decode(fixture(r#""page-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_external_page request failed");
@@ -6009,8 +6309,10 @@ fn get_external_page_get_external_page_401_decodes_declared_error() {
     };
     let result = ai_content::get_external_page(
         &config,
-        decode(fixture(r#""page-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ai_content::GetExternalPageParams {
+            page_id: decode(fixture(r#""page-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6033,8 +6335,14 @@ fn get_ip_allowlist_get_ip_allowlist_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = ip_allowlist::get_ip_allowlist(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("get_ip_allowlist request failed");
+    let actual = ip_allowlist::get_ip_allowlist(
+        &config,
+        ip_allowlist::GetIpAllowlistParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("get_ip_allowlist request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"ip_allowlist","enabled":true,"ip_allowlist":["192.168.1.0/24","10.0.0.1"]}"#,
@@ -6056,7 +6364,13 @@ fn get_ip_allowlist_get_ip_allowlist_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = ip_allowlist::get_ip_allowlist(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = ip_allowlist::get_ip_allowlist(
+        &config,
+        ip_allowlist::GetIpAllowlistParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("get_ip_allowlist did not fail with SdkError::Http on 401");
     };
@@ -6079,8 +6393,10 @@ fn get_macro_get_macro_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = macros::get_macro(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        macros::GetMacroParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_macro request failed");
@@ -6107,8 +6423,10 @@ fn get_macro_get_macro_401_decodes_declared_error() {
     };
     let result = macros::get_macro(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        macros::GetMacroParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6133,9 +6451,11 @@ fn get_office_hours_exception_get_office_hours_exception_reaches_mock_and_decode
     let _ = &config;
     let actual = office_hours::get_office_hours_exception(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""456""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::GetOfficeHoursExceptionParams {
+            office_hours_schedule_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""456""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_office_hours_exception request failed");
@@ -6162,9 +6482,11 @@ fn get_office_hours_exception_get_office_hours_exception_401_decodes_declared_er
     };
     let result = office_hours::get_office_hours_exception(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""456""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::GetOfficeHoursExceptionParams {
+            office_hours_schedule_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""456""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6189,8 +6511,10 @@ fn get_office_hours_schedule_get_office_hours_schedule_reaches_mock_and_decodes_
     let _ = &config;
     let actual = office_hours::get_office_hours_schedule(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::GetOfficeHoursScheduleParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_office_hours_schedule request failed");
@@ -6217,8 +6541,10 @@ fn get_office_hours_schedule_get_office_hours_schedule_401_decodes_declared_erro
     };
     let result = office_hours::get_office_hours_schedule(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::GetOfficeHoursScheduleParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6363,9 +6689,11 @@ fn get_team_metrics_get_team_metrics_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = teams::get_team_metrics(
         &config,
-        decode(fixture(r#""42""#)),
-        Some(decode(fixture(r#"1800"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        teams::GetTeamMetricsParams {
+            team_id: decode(fixture(r#""42""#)),
+            idle_threshold: Some(decode(fixture(r#"1800"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_team_metrics request failed");
@@ -6392,9 +6720,11 @@ fn get_team_metrics_get_team_metrics_401_decodes_declared_error() {
     };
     let result = teams::get_team_metrics(
         &config,
-        decode(fixture(r#""42""#)),
-        Some(decode(fixture(r#"1800"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        teams::GetTeamMetricsParams {
+            team_id: decode(fixture(r#""42""#)),
+            idle_threshold: Some(decode(fixture(r#"1800"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6419,8 +6749,10 @@ fn get_ticket_get_ticket_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = tickets::get_ticket(
         &config,
-        decode(fixture(r#""ticket-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::GetTicketParams {
+            ticket_id: decode(fixture(r#""ticket-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_ticket request failed");
@@ -6447,8 +6779,10 @@ fn get_ticket_get_ticket_401_decodes_declared_error() {
     };
     let result = tickets::get_ticket(
         &config,
-        decode(fixture(r#""ticket-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::GetTicketParams {
+            ticket_id: decode(fixture(r#""ticket-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6473,8 +6807,10 @@ fn get_ticket_type_get_ticket_type_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = ticket_types::get_ticket_type(
         &config,
-        decode(fixture(r#""ticket_type-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ticket_types::GetTicketTypeParams {
+            ticket_type_id: decode(fixture(r#""ticket_type-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_ticket_type request failed");
@@ -6501,8 +6837,10 @@ fn get_ticket_type_get_ticket_type_401_decodes_declared_error() {
     };
     let result = ticket_types::get_ticket_type(
         &config,
-        decode(fixture(r#""ticket_type-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        ticket_types::GetTicketTypeParams {
+            ticket_type_id: decode(fixture(r#""ticket_type-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6527,10 +6865,12 @@ fn get_whats_app_message_status_get_whats_app_message_status_reaches_mock_and_de
     let _ = &config;
     let actual = messages::get_whats_app_message_status(
         &config,
-        decode(fixture(r#""ruleset-1""#)),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        messages::GetWhatsAppMessageStatusParams {
+            ruleset_id: decode(fixture(r#""ruleset-1""#)),
+            per_page: Some(decode(fixture(r#"50"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("get_whats_app_message_status request failed");
@@ -6557,10 +6897,12 @@ fn get_whats_app_message_status_get_whats_app_message_status_401_decodes_declare
     };
     let result = messages::get_whats_app_message_status(
         &config,
-        decode(fixture(r#""ruleset-1""#)),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        messages::GetWhatsAppMessageStatusParams {
+            ruleset_id: decode(fixture(r#""ruleset-1""#)),
+            per_page: Some(decode(fixture(r#"50"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6583,8 +6925,14 @@ fn identify_admin_identify_admin_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = admins::identify_admin(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("identify_admin request failed");
+    let actual = admins::identify_admin(
+        &config,
+        admins::IdentifyAdminParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("identify_admin request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"admin","id":"991267459","email":"admin1@email.com","name":"Ciaran1 Lee","email_verified":true,"app":{"type":"app","id_code":"this_is_an_id1_that_should_be_at_least_40","name":"MyApp 1","created_at":1734537243,"identity_verification":false,"timezone":"America/Los_Angeles","region":"US"},"avatar":{"type":"avatar","image_url":"https://static.intercomassets.com/assets/default-avatars/admins/128.png"},"has_inbox_seat":true}"#,
@@ -6603,8 +6951,10 @@ fn jobs_status_jobs_status_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = jobs::jobs_status(
         &config,
-        decode(fixture(r#""job-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        jobs::JobsStatusParams {
+            job_id: decode(fixture(r#""job-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("jobs_status request failed");
@@ -6631,8 +6981,10 @@ fn jobs_status_jobs_status_401_decodes_declared_error() {
     };
     let result = jobs::jobs_status(
         &config,
-        decode(fixture(r#""job-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        jobs::JobsStatusParams {
+            job_id: decode(fixture(r#""job-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6657,9 +7009,11 @@ fn link_tickets_conversation_link_tickets_conversation_reaches_mock_and_decodes_
     let _ = &config;
     let actual = tickets::link_tickets_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""204""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::LinkTicketsConversationParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            conversation_id: decode(fixture(r#""204""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("link_tickets_conversation request failed");
@@ -6686,9 +7040,11 @@ fn link_tickets_conversation_link_tickets_conversation_400_decodes_declared_erro
     };
     let result = tickets::link_tickets_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""204""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::LinkTicketsConversationParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            conversation_id: decode(fixture(r#""204""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6711,9 +7067,14 @@ fn list_activity_log_event_types_list_activity_log_event_types_reaches_mock_and_
         return;
     };
     let _ = &config;
-    let actual =
-        admins::list_activity_log_event_types(&config, Some(decode(fixture(r#""2.17""#))), None)
-            .expect("list_activity_log_event_types request failed");
+    let actual = admins::list_activity_log_event_types(
+        &config,
+        admins::ListActivityLogEventTypesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_activity_log_event_types request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"activity_log_event_type.list","event_types":["admin_conversation_assignment_limit_change","admin_ticket_assignment_limit_change","admin_avatar_change","admin_away_mode_change","admin_deletion","admin_deprovisioned","admin_impersonation_end","admin_impersonation_start","admin_invite_change","admin_invite_creation","admin_invite_deletion","admin_login_failure","admin_login_success","admin_logout","admin_occupancy_setting_change","admin_occupancy_state_change","admin_password_reset_request","admin_password_reset_success","admin_permission_change","admin_provisioned","admin_two_factor_auth_change","admin_unauthorized_sign_in_method","app_admin_join","app_authentication_method_change","app_data_deletion","app_data_export","app_google_sso_domain_change","app_identity_verification_change","app_name_change","app_outbound_address_change","app_package_installation","app_package_token_regeneration","app_package_uninstallation","app_team_creation","app_team_deletion","app_team_membership_modification","app_timezone_change","app_webhook_creation","app_webhook_deletion","articles_in_messenger_enabled_change","bulk_delete","bulk_export","campaign_deletion","campaign_state_change","conversation_part_deletion","conversation_pdf_export","conversation_topic_change","conversation_topic_creation","conversation_topic_deletion","help_center_settings_change","inbound_conversations_change","inbox_access_change","inbox_bulk_action","message_deletion","message_state_change","messenger_look_and_feel_change","messenger_search_required_change","messenger_spaces_change","office_hours_change","role_change","role_creation","role_deletion","ruleset_activation_title_preview","ruleset_creation","ruleset_deletion","search_browse_enabled_change","search_browse_required_change","seat_change","seat_revoke","security_settings_change","temporary_expectation_change","upfront_email_collection_change","welcome_message_change","hide_csat_from_agents_setting_change"]}"#,
@@ -6735,8 +7096,13 @@ fn list_activity_log_event_types_list_activity_log_event_types_401_decodes_decla
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result =
-        admins::list_activity_log_event_types(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = admins::list_activity_log_event_types(
+        &config,
+        admins::ListActivityLogEventTypesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_activity_log_event_types did not fail with SdkError::Http on 401");
     };
@@ -6759,9 +7125,11 @@ fn list_activity_logs_list_activity_logs_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = admins::list_activity_logs(
         &config,
-        decode(fixture(r#""1677253093""#)),
-        Some(decode(fixture(r#""1677861493""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        admins::ListActivityLogsParams {
+            created_at_after: decode(fixture(r#""1677253093""#)),
+            created_at_before: Some(decode(fixture(r#""1677861493""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_activity_logs request failed");
@@ -6788,9 +7156,11 @@ fn list_activity_logs_list_activity_logs_401_decodes_declared_error() {
     };
     let result = admins::list_activity_logs(
         &config,
-        decode(fixture(r#""1677253093""#)),
-        Some(decode(fixture(r#""1677861493""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        admins::ListActivityLogsParams {
+            created_at_after: decode(fixture(r#""1677253093""#)),
+            created_at_before: Some(decode(fixture(r#""1677861493""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6815,8 +7185,10 @@ fn list_admins_list_admins_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = admins::list_admins(
         &config,
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        admins::ListAdminsParams {
+            display_avatar: Some(decode(fixture(r#"true"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_admins request failed");
@@ -6843,8 +7215,10 @@ fn list_admins_list_admins_401_decodes_declared_error() {
     };
     let result = admins::list_admins(
         &config,
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        admins::ListAdminsParams {
+            display_avatar: Some(decode(fixture(r#"true"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6867,9 +7241,14 @@ fn list_all_collections_list_all_collections_reaches_mock_and_decodes_response()
         return;
     };
     let _ = &config;
-    let actual =
-        help_center::list_all_collections(&config, Some(decode(fixture(r#""2.17""#))), None)
-            .expect("list_all_collections request failed");
+    let actual = help_center::list_all_collections(
+        &config,
+        help_center::ListAllCollectionsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_all_collections request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","data":[{"id":"159","workspace_id":"this_is_an_id96_that_should_be_at_least_4","name":"English collection title","url":"http://help-center.test/myapp-96/collection-17","order":17,"created_at":1734537309,"updated_at":1734537309,"description":"english collection description","icon":"bookmark","parent_id":null,"help_center_id":79},{"id":"160","workspace_id":"this_is_an_id96_that_should_be_at_least_4","name":"English section title","url":"http://help-center.test/myapp-96/section-1","order":1,"created_at":1734537309,"updated_at":1734537309,"description":null,"icon":"bookmark","parent_id":"159","help_center_id":null}],"total_count":2,"pages":{"type":"pages","page":1,"per_page":20,"total_pages":1}}"#,
@@ -6891,8 +7270,13 @@ fn list_all_collections_list_all_collections_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result =
-        help_center::list_all_collections(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = help_center::list_all_collections(
+        &config,
+        help_center::ListAllCollectionsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_all_collections did not fail with SdkError::Http on 401");
     };
@@ -6915,10 +7299,12 @@ fn list_all_companies_list_all_companies_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = companies::list_all_companies(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"15"#))),
-        Some(decode(fixture(r#""desc""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ListAllCompaniesParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"15"#))),
+            order: Some(decode(fixture(r#""desc""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_all_companies request failed");
@@ -6945,10 +7331,12 @@ fn list_all_companies_list_all_companies_401_decodes_declared_error() {
     };
     let result = companies::list_all_companies(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"15"#))),
-        Some(decode(fixture(r#""desc""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ListAllCompaniesParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"15"#))),
+            order: Some(decode(fixture(r#""desc""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -6971,8 +7359,14 @@ fn list_articles_list_articles_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = articles::list_articles(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_articles request failed");
+    let actual = articles::list_articles(
+        &config,
+        articles::ListArticlesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_articles request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","pages":{"type":"pages","page":1,"per_page":25,"total_pages":1},"total_count":1,"data":[{"id":"39","type":"article","workspace_id":"this_is_an_id64_that_should_be_at_least_4","parent_ids":[],"tags":{"type":"tag.list","tags":[]},"title":"This is the article title","description":"","body":"","author_id":991267492,"state":"published","created_at":1734537283,"updated_at":1734537283,"url":"http://help-center.test/myapp-64/en/articles/39-this-is-the-article-title"}]}"#,
@@ -6994,7 +7388,13 @@ fn list_articles_list_articles_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = articles::list_articles(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = articles::list_articles(
+        &config,
+        articles::ListArticlesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_articles did not fail with SdkError::Http on 401");
     };
@@ -7081,8 +7481,10 @@ fn list_attached_contacts_list_attached_contacts_reaches_mock_and_decodes_respon
     let _ = &config;
     let actual = companies::list_attached_contacts(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ListAttachedContactsParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_attached_contacts request failed");
@@ -7109,8 +7511,10 @@ fn list_attached_contacts_list_attached_contacts_401_decodes_declared_error() {
     };
     let result = companies::list_attached_contacts(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ListAttachedContactsParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7135,9 +7539,11 @@ fn list_audiences_list_audiences_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = audiences::list_audiences(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        audiences::ListAudiencesParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"50"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_audiences request failed");
@@ -7164,9 +7570,11 @@ fn list_audiences_list_audiences_401_decodes_declared_error() {
     };
     let result = audiences::list_audiences(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        audiences::ListAudiencesParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"50"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7191,7 +7599,9 @@ fn list_away_status_reasons_list_away_status_reasons_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = away_status_reasons::list_away_status_reasons(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        away_status_reasons::ListAwayStatusReasonsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_away_status_reasons request failed");
@@ -7218,7 +7628,9 @@ fn list_away_status_reasons_list_away_status_reasons_401_decodes_declared_error(
     };
     let result = away_status_reasons::list_away_status_reasons(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        away_status_reasons::ListAwayStatusReasonsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7241,8 +7653,14 @@ fn list_brands_list_brands_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = brands::list_brands(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_brands request failed");
+    let actual = brands::list_brands(
+        &config,
+        brands::ListBrandsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_brands request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","data":[{"type":"brand","id":"tlkp1d91","name":"Default Brand","is_default":true,"created_at":1673778600,"updated_at":1711031100,"help_center_id":"11","default_address_settings_id":"13"},{"type":"brand","id":"3","name":"Premium Brand","is_default":false,"created_at":1686387300,"updated_at":1709229600,"help_center_id":"10","default_address_settings_id":"15"}]}"#,
@@ -7264,7 +7682,13 @@ fn list_brands_list_brands_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = brands::list_brands(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = brands::list_brands(
+        &config,
+        brands::ListBrandsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_brands did not fail with SdkError::Http on 401");
     };
@@ -7287,9 +7711,11 @@ fn list_calls_list_calls_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = calls::list_calls(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"25"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ListCallsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"25"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_calls request failed");
@@ -7316,9 +7742,11 @@ fn list_calls_list_calls_401_decodes_declared_error() {
     };
     let result = calls::list_calls(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"25"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ListCallsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"25"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7343,8 +7771,10 @@ fn list_calls_with_transcripts_list_calls_with_transcripts_reaches_mock_and_deco
     let _ = &config;
     let actual = calls::list_calls_with_transcripts(
         &config,
-        decode(fixture(r#"["64619700005694","64619700005695"]"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ListCallsWithTranscriptsParams {
+            conversation_ids: decode(fixture(r#"["64619700005694","64619700005695"]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_calls_with_transcripts request failed");
@@ -7371,8 +7801,10 @@ fn list_calls_with_transcripts_list_calls_with_transcripts_400_decodes_declared_
     };
     let result = calls::list_calls_with_transcripts(
         &config,
-        decode(fixture(r#"["64619700005694","64619700005695"]"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ListCallsWithTranscriptsParams {
+            conversation_ids: decode(fixture(r#"["64619700005694","64619700005695"]"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7398,8 +7830,10 @@ fn list_companies_attached_segments_list_companies_attached_segments_reaches_moc
     let _ = &config;
     let actual = companies::list_companies_attached_segments(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ListCompaniesAttachedSegmentsParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_companies_attached_segments request failed");
@@ -7424,8 +7858,10 @@ fn list_companies_attached_segments_list_companies_attached_segments_401_decodes
     };
     let result = companies::list_companies_attached_segments(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ListCompaniesAttachedSegmentsParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7450,8 +7886,10 @@ fn list_company_notes_list_company_notes_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = notes::list_company_notes(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::ListCompanyNotesParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_company_notes request failed");
@@ -7478,8 +7916,10 @@ fn list_company_notes_list_company_notes_404_decodes_declared_error() {
     };
     let result = notes::list_company_notes(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::ListCompanyNotesParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7504,9 +7944,11 @@ fn list_contact_activities_list_contact_activities_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = contacts::list_contact_activities(
         &config,
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactActivitiesParams {
+            per_page: Some(decode(fixture(r#"50"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contact_activities request failed");
@@ -7533,9 +7975,11 @@ fn list_contact_activities_list_contact_activities_401_decodes_declared_error() 
     };
     let result = contacts::list_contact_activities(
         &config,
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactActivitiesParams {
+            per_page: Some(decode(fixture(r#"50"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7560,8 +8004,10 @@ fn list_contact_banners_list_contact_banners_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = banners::list_contact_banners(
         &config,
-        decode(fixture(r#""id-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        banners::ListContactBannersParams {
+            id: decode(fixture(r#""id-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contact_banners request failed");
@@ -7588,8 +8034,10 @@ fn list_contact_banners_list_contact_banners_404_decodes_declared_error() {
     };
     let result = banners::list_contact_banners(
         &config,
-        decode(fixture(r#""id-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        banners::ListContactBannersParams {
+            id: decode(fixture(r#""id-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7678,8 +8126,10 @@ fn list_contacts_list_contacts_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::list_contacts(
         &config,
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsParams {
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contacts request failed");
@@ -7706,8 +8156,10 @@ fn list_contacts_list_contacts_401_decodes_declared_error() {
     };
     let result = contacts::list_contacts(
         &config,
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsParams {
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7732,8 +8184,10 @@ fn list_contacts_companies_list_contacts_companies_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = contacts::list_contacts_companies(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsCompaniesParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contacts_companies request failed");
@@ -7760,8 +8214,10 @@ fn list_contacts_companies_list_contacts_companies_401_decodes_declared_error() 
     };
     let result = contacts::list_contacts_companies(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsCompaniesParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7786,8 +8242,10 @@ fn list_contacts_segments_list_contacts_segments_reaches_mock_and_decodes_respon
     let _ = &config;
     let actual = contacts::list_contacts_segments(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsSegmentsParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contacts_segments request failed");
@@ -7814,8 +8272,10 @@ fn list_contacts_segments_list_contacts_segments_401_decodes_declared_error() {
     };
     let result = contacts::list_contacts_segments(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsSegmentsParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7840,8 +8300,10 @@ fn list_contacts_subscriptions_list_contacts_subscriptions_reaches_mock_and_deco
     let _ = &config;
     let actual = contacts::list_contacts_subscriptions(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsSubscriptionsParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contacts_subscriptions request failed");
@@ -7868,8 +8330,10 @@ fn list_contacts_subscriptions_list_contacts_subscriptions_401_decodes_declared_
     };
     let result = contacts::list_contacts_subscriptions(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsSubscriptionsParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7894,8 +8358,10 @@ fn list_contacts_tags_list_contacts_tags_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::list_contacts_tags(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsTagsParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_contacts_tags request failed");
@@ -7922,8 +8388,10 @@ fn list_contacts_tags_list_contacts_tags_401_decodes_declared_error() {
     };
     let result = contacts::list_contacts_tags(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListContactsTagsParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -7946,9 +8414,14 @@ fn list_content_import_sources_list_content_import_sources_reaches_mock_and_deco
         return;
     };
     let _ = &config;
-    let actual =
-        ai_content::list_content_import_sources(&config, Some(decode(fixture(r#""2.17""#))), None)
-            .expect("list_content_import_sources request failed");
+    let actual = ai_content::list_content_import_sources(
+        &config,
+        ai_content::ListContentImportSourcesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_content_import_sources request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"data":[{"id":33,"type":"content_import_source","last_synced_at":1734537259,"status":"active","url":"https://support.example.com/us/1","sync_behavior":"automatic","created_at":1734537259,"updated_at":1734537259,"audience_ids":[]},{"id":34,"type":"content_import_source","last_synced_at":1734537259,"status":"active","url":"https://support.example.com/us/2","sync_behavior":"automatic","created_at":1734537259,"updated_at":1734537259,"audience_ids":[]},{"id":35,"type":"content_import_source","last_synced_at":1734537259,"status":"active","url":"https://support.example.com/us/3","sync_behavior":"automatic","created_at":1734537259,"updated_at":1734537259,"audience_ids":[]}],"pages":{"type":"pages","page":1,"per_page":50,"total_pages":1},"total_count":3,"type":"list"}"#,
@@ -7970,8 +8443,13 @@ fn list_content_import_sources_list_content_import_sources_401_decodes_declared_
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result =
-        ai_content::list_content_import_sources(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = ai_content::list_content_import_sources(
+        &config,
+        ai_content::ListContentImportSourcesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_content_import_sources did not fail with SdkError::Http on 401");
     };
@@ -7994,9 +8472,11 @@ fn list_content_snippets_list_content_snippets_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = content_snippets::list_content_snippets(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        content_snippets::ListContentSnippetsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"20"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_content_snippets request failed");
@@ -8018,8 +8498,10 @@ fn list_conversation_attributes_list_conversation_attributes_reaches_mock_and_de
     let _ = &config;
     let actual = conversations_attributes::list_conversation_attributes(
         &config,
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::ListConversationAttributesParams {
+            include_archived: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_conversation_attributes request failed");
@@ -8046,8 +8528,10 @@ fn list_conversation_attributes_list_conversation_attributes_401_decodes_declare
     };
     let result = conversations_attributes::list_conversation_attributes(
         &config,
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::ListConversationAttributesParams {
+            include_archived: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8204,9 +8688,11 @@ fn list_data_attributes_list_data_attributes_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = data_attributes::list_data_attributes(
         &config,
-        Some(decode(fixture(r#""company""#))),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_attributes::ListDataAttributesParams {
+            model: Some(decode(fixture(r#""company""#))),
+            include_archived: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_data_attributes request failed");
@@ -8233,9 +8719,11 @@ fn list_data_attributes_list_data_attributes_401_decodes_declared_error() {
     };
     let result = data_attributes::list_data_attributes(
         &config,
-        Some(decode(fixture(r#""company""#))),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_attributes::ListDataAttributesParams {
+            model: Some(decode(fixture(r#""company""#))),
+            include_archived: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8334,9 +8822,11 @@ fn list_data_connectors_list_data_connectors_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = data_connectors::list_data_connectors(
         &config,
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::ListDataConnectorsParams {
+            per_page: Some(decode(fixture(r#"20"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_data_connectors request failed");
@@ -8363,9 +8853,11 @@ fn list_data_connectors_list_data_connectors_400_decodes_declared_error() {
     };
     let result = data_connectors::list_data_connectors(
         &config,
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::ListDataConnectorsParams {
+            per_page: Some(decode(fixture(r#"20"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8390,10 +8882,12 @@ fn list_data_connector_versions_list_data_connector_versions_reaches_mock_and_de
     let _ = &config;
     let actual = data_connectors::list_data_connector_versions(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::ListDataConnectorVersionsParams {
+            id: decode(fixture(r#""12345""#)),
+            per_page: Some(decode(fixture(r#"20"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_data_connector_versions request failed");
@@ -8420,10 +8914,12 @@ fn list_data_connector_versions_list_data_connector_versions_400_decodes_declare
     };
     let result = data_connectors::list_data_connector_versions(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""starting_after""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::ListDataConnectorVersionsParams {
+            id: decode(fixture(r#""12345""#)),
+            per_page: Some(decode(fixture(r#"20"#))),
+            starting_after: Some(decode(fixture(r#""starting_after""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8448,10 +8944,12 @@ fn list_data_events_list_data_events_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = data_events::list_data_events(
         &config,
-        decode(fixture(r#"{"user_id":"user-1"}"#)),
-        decode(fixture(r#""type""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_events::ListDataEventsParams {
+            filter: decode(fixture(r#"{"user_id":"user-1"}"#)),
+            type_: decode(fixture(r#""type""#)),
+            summary: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_data_events request failed");
@@ -8478,10 +8976,12 @@ fn list_data_events_list_data_events_401_decodes_declared_error() {
     };
     let result = data_events::list_data_events(
         &config,
-        decode(fixture(r#"{"user_id":"user-1"}"#)),
-        decode(fixture(r#""type""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_events::ListDataEventsParams {
+            filter: decode(fixture(r#"{"user_id":"user-1"}"#)),
+            type_: decode(fixture(r#""type""#)),
+            summary: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8506,9 +9006,11 @@ fn list_deleted_contacts_list_deleted_contacts_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = contacts::list_deleted_contacts(
         &config,
-        Some(decode(fixture(r#"10"#))),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListDeletedContactsParams {
+            per_page: Some(decode(fixture(r#"10"#))),
+            page: Some(decode(fixture(r#"1"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_deleted_contacts request failed");
@@ -8535,9 +9037,11 @@ fn list_deleted_contacts_list_deleted_contacts_400_decodes_declared_error() {
     };
     let result = contacts::list_deleted_contacts(
         &config,
-        Some(decode(fixture(r#"10"#))),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ListDeletedContactsParams {
+            per_page: Some(decode(fixture(r#"10"#))),
+            page: Some(decode(fixture(r#"1"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8562,10 +9066,12 @@ fn list_deleted_conversation_ids_list_deleted_conversation_ids_reaches_mock_and_
     let _ = &config;
     let actual = conversations::list_deleted_conversation_ids(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""desc""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListDeletedConversationIdsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"20"#))),
+            order: Some(decode(fixture(r#""desc""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_deleted_conversation_ids request failed");
@@ -8592,10 +9098,12 @@ fn list_deleted_conversation_ids_list_deleted_conversation_ids_400_decodes_decla
     };
     let result = conversations::list_deleted_conversation_ids(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""desc""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListDeletedConversationIdsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"20"#))),
+            order: Some(decode(fixture(r#""desc""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8620,9 +9128,11 @@ fn list_dynamic_contents_list_dynamic_contents_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = dynamic_content::list_dynamic_contents(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        dynamic_content::ListDynamicContentsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"20"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_dynamic_contents request failed");
@@ -8649,9 +9159,11 @@ fn list_dynamic_contents_list_dynamic_contents_401_decodes_declared_error() {
     };
     let result = dynamic_content::list_dynamic_contents(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"20"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        dynamic_content::ListDynamicContentsParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"20"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8674,8 +9186,14 @@ fn list_emails_list_emails_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = emails::list_emails(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_emails request failed");
+    let actual = emails::list_emails(
+        &config,
+        emails::ListEmailsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_emails request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","data":[{"type":"email_setting","id":"1","email":"support@company.com","verified":true,"domain":"company.com","brand_id":"9","forwarding_enabled":true,"forwarded_email_last_received_at":1710498600,"created_at":1692530400,"updated_at":1710498600},{"type":"email_setting","id":"2","email":"hello@company.com","verified":true,"domain":"company.com","brand_id":"10","forwarding_enabled":false,"forwarded_email_last_received_at":null,"created_at":1683729000,"updated_at":1701424500}]}"#,
@@ -8697,7 +9215,13 @@ fn list_emails_list_emails_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = emails::list_emails(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = emails::list_emails(
+        &config,
+        emails::ListEmailsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_emails did not fail with SdkError::Http on 401");
     };
@@ -8718,8 +9242,14 @@ fn list_external_pages_list_external_pages_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = ai_content::list_external_pages(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_external_pages request failed");
+    let actual = ai_content::list_external_pages(
+        &config,
+        ai_content::ListExternalPagesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_external_pages request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"data":[{"id":"19","type":"external_page","title":"My External Content","html":"<h1>Hello world</h1><p>This is external content</p>","url":"https://support.example.com/us/3","ai_agent_availability":true,"ai_copilot_availability":true,"ai_sales_agent_availability":true,"fin_availability":true,"locale":"en","source_id":42,"external_id":"3","audience_ids":[],"created_at":1734537269,"updated_at":1734537269,"last_ingested_at":1734537269},{"id":"18","type":"external_page","title":"My External Content","html":"<h1>Hello world</h1><p>This is external content</p>","url":"https://support.example.com/us/2","ai_agent_availability":true,"ai_copilot_availability":true,"ai_sales_agent_availability":true,"fin_availability":true,"locale":"en","source_id":41,"external_id":"2","audience_ids":[],"created_at":1734537269,"updated_at":1734537269,"last_ingested_at":1734537269},{"id":"17","type":"external_page","title":"My External Content","html":"<h1>Hello world</h1><p>This is external content</p>","url":"https://support.example.com/us/1","ai_agent_availability":true,"ai_copilot_availability":true,"ai_sales_agent_availability":true,"fin_availability":true,"locale":"en","source_id":40,"external_id":"1","audience_ids":[],"created_at":1734537269,"updated_at":1734537269,"last_ingested_at":1734537269}],"pages":{"type":"pages","page":1,"per_page":50,"total_pages":1},"total_count":3,"type":"list"}"#,
@@ -8741,7 +9271,13 @@ fn list_external_pages_list_external_pages_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = ai_content::list_external_pages(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = ai_content::list_external_pages(
+        &config,
+        ai_content::ListExternalPagesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_external_pages did not fail with SdkError::Http on 401");
     };
@@ -8764,8 +9300,10 @@ fn list_fin_capabilities_list_fin_capabilities_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = fin_agent::list_fin_capabilities(
         &config,
-        decode(fixture(r#"{"id":"123456"}"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        fin_agent::ListFinCapabilitiesParams {
+            user: decode(fixture(r#"{"id":"123456"}"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_fin_capabilities request failed");
@@ -8792,8 +9330,10 @@ fn list_fin_capabilities_list_fin_capabilities_400_decodes_declared_error() {
     };
     let result = fin_agent::list_fin_capabilities(
         &config,
-        decode(fixture(r#"{"id":"123456"}"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        fin_agent::ListFinCapabilitiesParams {
+            user: decode(fixture(r#"{"id":"123456"}"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8818,10 +9358,12 @@ fn list_folders_list_folders_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = folders::list_folders(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::ListFoldersParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"50"#))),
+            parent_folder_id: Some(decode(fixture(r#"1"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_folders request failed");
@@ -8848,10 +9390,12 @@ fn list_folders_list_folders_401_decodes_declared_error() {
     };
     let result = folders::list_folders(
         &config,
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::ListFoldersParams {
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"50"#))),
+            parent_folder_id: Some(decode(fixture(r#"1"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8874,9 +9418,14 @@ fn list_get_datasets_list_get_datasets_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual =
-        reporting_data_export::list_get_datasets(&config, Some(decode(fixture(r#""2.17""#))), None)
-            .expect("list_get_datasets request failed");
+    let actual = reporting_data_export::list_get_datasets(
+        &config,
+        reporting_data_export::ListGetDatasetsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_get_datasets request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","data":[{"id":"conversation","name":"Conversation","description":"Conversation-level details: status, channel, assignee.","default_time_attribute_id":"conversation_started_at","attributes":[{"id":"conversation_id","qualified_id":"conversation.conversation_id","name":"Conversation ID"}]}]}"#,
@@ -8895,8 +9444,10 @@ fn list_handling_events_list_handling_events_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = conversations::list_handling_events(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListHandlingEventsParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_handling_events request failed");
@@ -8923,8 +9474,10 @@ fn list_handling_events_list_handling_events_401_decodes_declared_error() {
     };
     let result = conversations::list_handling_events(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListHandlingEventsParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -8949,10 +9502,12 @@ fn list_help_center_redirects_list_help_center_redirects_reaches_mock_and_decode
     let _ = &config;
     let actual = help_center::list_help_center_redirects(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::ListHelpCenterRedirectsParams {
+            help_center_id: decode(fixture(r#""123""#)),
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"50"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_help_center_redirects request failed");
@@ -8979,10 +9534,12 @@ fn list_help_center_redirects_list_help_center_redirects_401_decodes_declared_er
     };
     let result = help_center::list_help_center_redirects(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::ListHelpCenterRedirectsParams {
+            help_center_id: decode(fixture(r#""123""#)),
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"50"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9005,8 +9562,14 @@ fn list_help_centers_list_help_centers_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = help_center::list_help_centers(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_help_centers request failed");
+    let actual = help_center::list_help_centers(
+        &config,
+        help_center::ListHelpCentersParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_help_centers request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(r#"{"type":"list","data":[]}"#);
     assert!(
@@ -9026,7 +9589,13 @@ fn list_help_centers_list_help_centers_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = help_center::list_help_centers(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = help_center::list_help_centers(
+        &config,
+        help_center::ListHelpCentersParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_help_centers did not fail with SdkError::Http on 401");
     };
@@ -9049,8 +9618,10 @@ fn list_hitl_events_list_hitl_events_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = conversations::list_hitl_events(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListHitlEventsParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_hitl_events request failed");
@@ -9077,8 +9648,10 @@ fn list_hitl_events_list_hitl_events_401_decodes_declared_error() {
     };
     let result = conversations::list_hitl_events(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListHitlEventsParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9103,7 +9676,9 @@ fn list_internal_articles_list_internal_articles_reaches_mock_and_decodes_respon
     let _ = &config;
     let actual = internal_articles::list_internal_articles(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::ListInternalArticlesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_internal_articles request failed");
@@ -9130,7 +9705,9 @@ fn list_internal_articles_list_internal_articles_401_decodes_declared_error() {
     };
     let result = internal_articles::list_internal_articles(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::ListInternalArticlesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9155,8 +9732,10 @@ fn list_live_newsfeed_items_list_live_newsfeed_items_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = news::list_live_newsfeed_items(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::ListLiveNewsfeedItemsParams {
+            newsfeed_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_live_newsfeed_items request failed");
@@ -9183,8 +9762,10 @@ fn list_live_newsfeed_items_list_live_newsfeed_items_401_decodes_declared_error(
     };
     let result = news::list_live_newsfeed_items(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::ListLiveNewsfeedItemsParams {
+            newsfeed_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9209,10 +9790,12 @@ fn list_macros_list_macros_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = macros::list_macros(
         &config,
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""WzE3MTk0OTM3NTcuMCwgIjEyMyJd""#))),
-        Some(decode(fixture(r#"1719474966"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        macros::ListMacrosParams {
+            per_page: Some(decode(fixture(r#"50"#))),
+            starting_after: Some(decode(fixture(r#""WzE3MTk0OTM3NTcuMCwgIjEyMyJd""#))),
+            updated_since: Some(decode(fixture(r#"1719474966"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_macros request failed");
@@ -9239,10 +9822,12 @@ fn list_macros_list_macros_400_decodes_declared_error() {
     };
     let result = macros::list_macros(
         &config,
-        Some(decode(fixture(r#"50"#))),
-        Some(decode(fixture(r#""WzE3MTk0OTM3NTcuMCwgIjEyMyJd""#))),
-        Some(decode(fixture(r#"1719474966"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        macros::ListMacrosParams {
+            per_page: Some(decode(fixture(r#"50"#))),
+            starting_after: Some(decode(fixture(r#""WzE3MTk0OTM3NTcuMCwgIjEyMyJd""#))),
+            updated_since: Some(decode(fixture(r#"1719474966"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9265,8 +9850,14 @@ fn list_newsfeeds_list_newsfeeds_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = news::list_newsfeeds(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_newsfeeds request failed");
+    let actual = news::list_newsfeeds(
+        &config,
+        news::ListNewsfeedsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_newsfeeds request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","pages":{"page":1,"per_page":10,"total_pages":1,"type":"pages"},"data":[{"id":"68","type":"newsfeed","name":"Visitor Feed","created_at":1734537813,"updated_at":1734537813},{"id":"69","type":"newsfeed","name":"Visitor Feed","created_at":1734537813,"updated_at":1734537813}],"total_count":2}"#,
@@ -9288,7 +9879,13 @@ fn list_newsfeeds_list_newsfeeds_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = news::list_newsfeeds(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = news::list_newsfeeds(
+        &config,
+        news::ListNewsfeedsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_newsfeeds did not fail with SdkError::Http on 401");
     };
@@ -9309,8 +9906,14 @@ fn list_news_items_list_news_items_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = news::list_news_items(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_news_items request failed");
+    let actual = news::list_news_items(
+        &config,
+        news::ListNewsItemsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_news_items request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","pages":{"page":1,"per_page":10,"total_pages":1,"type":"pages"},"data":[{"id":"29","type":"news-item","workspace_id":"this_is_an_id530_that_should_be_at_least_","title":"We have news","body":"<p>Hello there,</p>","sender_id":991267825,"state":"draft","labels":[],"cover_image_url":null,"reactions":[null,null,null,null],"deliver_silently":false,"created_at":1734537793,"updated_at":1734537793,"newsfeed_assignments":[]},{"id":"30","type":"news-item","workspace_id":"this_is_an_id530_that_should_be_at_least_","title":"We have news","body":"<p>Hello there,</p>","sender_id":991267827,"state":"draft","labels":[],"cover_image_url":null,"reactions":[null,null,null,null],"deliver_silently":false,"created_at":1734537793,"updated_at":1734537793,"newsfeed_assignments":[]}],"total_count":2}"#,
@@ -9332,7 +9935,13 @@ fn list_news_items_list_news_items_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = news::list_news_items(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = news::list_news_items(
+        &config,
+        news::ListNewsItemsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_news_items did not fail with SdkError::Http on 401");
     };
@@ -9355,8 +9964,10 @@ fn list_notes_list_notes_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = notes::list_notes(
         &config,
-        decode(fixture(r#""contact-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::ListNotesParams {
+            contact_id: decode(fixture(r#""contact-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_notes request failed");
@@ -9383,8 +9994,10 @@ fn list_notes_list_notes_404_decodes_declared_error() {
     };
     let result = notes::list_notes(
         &config,
-        decode(fixture(r#""contact-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::ListNotesParams {
+            contact_id: decode(fixture(r#""contact-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9409,8 +10022,10 @@ fn list_office_hours_exceptions_list_office_hours_exceptions_reaches_mock_and_de
     let _ = &config;
     let actual = office_hours::list_office_hours_exceptions(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::ListOfficeHoursExceptionsParams {
+            office_hours_schedule_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_office_hours_exceptions request failed");
@@ -9437,8 +10052,10 @@ fn list_office_hours_exceptions_list_office_hours_exceptions_401_decodes_declare
     };
     let result = office_hours::list_office_hours_exceptions(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::ListOfficeHoursExceptionsParams {
+            office_hours_schedule_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9463,7 +10080,9 @@ fn list_office_hours_schedules_list_office_hours_schedules_reaches_mock_and_deco
     let _ = &config;
     let actual = office_hours::list_office_hours_schedules(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::ListOfficeHoursSchedulesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_office_hours_schedules request failed");
@@ -9490,7 +10109,9 @@ fn list_office_hours_schedules_list_office_hours_schedules_401_decodes_declared_
     };
     let result = office_hours::list_office_hours_schedules(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        office_hours::ListOfficeHoursSchedulesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9515,8 +10136,10 @@ fn list_segments_list_segments_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = segments::list_segments(
         &config,
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        segments::ListSegmentsParams {
+            include_count: Some(decode(fixture(r#"true"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_segments request failed");
@@ -9543,8 +10166,10 @@ fn list_segments_list_segments_401_decodes_declared_error() {
     };
     let result = segments::list_segments(
         &config,
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        segments::ListSegmentsParams {
+            include_count: Some(decode(fixture(r#"true"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9569,10 +10194,12 @@ fn list_side_conversations_list_side_conversations_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = conversations::list_side_conversations(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"25"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListSideConversationsParams {
+            id: decode(fixture(r#""123""#)),
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"25"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_side_conversations request failed");
@@ -9599,10 +10226,12 @@ fn list_side_conversations_list_side_conversations_401_decodes_declared_error() 
     };
     let result = conversations::list_side_conversations(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#"1"#))),
-        Some(decode(fixture(r#"25"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::ListSideConversationsParams {
+            id: decode(fixture(r#""123""#)),
+            page: Some(decode(fixture(r#"1"#))),
+            per_page: Some(decode(fixture(r#"25"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9627,7 +10256,9 @@ fn list_subscription_types_list_subscription_types_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = subscription_types::list_subscription_types(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        subscription_types::ListSubscriptionTypesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("list_subscription_types request failed");
@@ -9654,7 +10285,9 @@ fn list_subscription_types_list_subscription_types_401_decodes_declared_error() 
     };
     let result = subscription_types::list_subscription_types(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
+        subscription_types::ListSubscriptionTypesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9677,8 +10310,14 @@ fn list_tags_list_tags_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = tags::list_tags(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_tags request failed");
+    let actual = tags::list_tags(
+        &config,
+        tags::ListTagsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_tags request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected =
         fixture(r#"{"type":"list","data":[{"type":"tag","id":"102","name":"Manual tag 1"}]}"#);
@@ -9699,7 +10338,13 @@ fn list_tags_list_tags_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = tags::list_tags(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = tags::list_tags(
+        &config,
+        tags::ListTagsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_tags did not fail with SdkError::Http on 401");
     };
@@ -9720,8 +10365,14 @@ fn list_teams_list_teams_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = teams::list_teams(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_teams request failed");
+    let actual = teams::list_teams(
+        &config,
+        teams::ListTeamsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_teams request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(r#"{"type":"team.list","teams":[]}"#);
     assert!(
@@ -9741,7 +10392,13 @@ fn list_teams_list_teams_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = teams::list_teams(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = teams::list_teams(
+        &config,
+        teams::ListTeamsParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_teams did not fail with SdkError::Http on 401");
     };
@@ -9762,9 +10419,14 @@ fn list_ticket_states_list_ticket_states_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual =
-        ticket_states::list_ticket_states(&config, Some(decode(fixture(r#""2.17""#))), None)
-            .expect("list_ticket_states request failed");
+    let actual = ticket_states::list_ticket_states(
+        &config,
+        ticket_states::ListTicketStatesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_ticket_states request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","data":[{"type":"ticket_state","id":"8269","category":"submitted","internal_label":"Submitted","external_label":"Submitted","ticket_types":{"type":"list","data":[{"type":"ticket_type","id":"55","name":"my-ticket-type-3","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"56","name":"my-ticket-type-4","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"58","name":"my-ticket-type-6","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"}]},"archived":false},{"type":"ticket_state","id":"8270","category":"in_progress","internal_label":"In progress","external_label":"In progress","ticket_types":{"type":"list","data":[{"type":"ticket_type","id":"55","name":"my-ticket-type-3","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"56","name":"my-ticket-type-4","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"58","name":"my-ticket-type-6","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"}]},"archived":false},{"type":"ticket_state","id":"8271","category":"waiting_on_customer","internal_label":"Waiting on customer","external_label":"Waiting on you","ticket_types":{"type":"list","data":[{"type":"ticket_type","id":"55","name":"my-ticket-type-3","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"56","name":"my-ticket-type-4","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"58","name":"my-ticket-type-6","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"}]},"archived":false},{"type":"ticket_state","id":"8272","category":"resolved","internal_label":"Resolved","external_label":"Resolved","ticket_types":{"type":"list","data":[{"type":"ticket_type","id":"55","name":"my-ticket-type-3","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"56","name":"my-ticket-type-4","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"58","name":"my-ticket-type-6","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"}]},"archived":false},{"type":"ticket_state","id":"8273","category":"submitted","internal_label":"Admin label 1","external_label":"User label","ticket_types":{"type":"list","data":[{"type":"ticket_type","id":"55","name":"my-ticket-type-3","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"},{"type":"ticket_type","id":"56","name":"my-ticket-type-4","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"}]},"archived":false},{"type":"ticket_state","id":"8274","category":"submitted","internal_label":"Admin label 2","external_label":"User label","ticket_types":{"type":"list","data":[{"type":"ticket_type","id":"58","name":"my-ticket-type-6","description":"my ticket type description is awesome.","icon":"🦁","archived":false,"category":"Back-office"}]},"archived":false}]}"#,
@@ -9786,8 +10448,13 @@ fn list_ticket_states_list_ticket_states_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result =
-        ticket_states::list_ticket_states(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = ticket_states::list_ticket_states(
+        &config,
+        ticket_states::ListTicketStatesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_ticket_states did not fail with SdkError::Http on 401");
     };
@@ -9808,8 +10475,14 @@ fn list_ticket_types_list_ticket_types_reaches_mock_and_decodes_response() {
         return;
     };
     let _ = &config;
-    let actual = ticket_types::list_ticket_types(&config, Some(decode(fixture(r#""2.17""#))), None)
-        .expect("list_ticket_types request failed");
+    let actual = ticket_types::list_ticket_types(
+        &config,
+        ticket_types::ListTicketTypesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    )
+    .expect("list_ticket_types request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"list","data":[{"type":"ticket_type","id":"67","name":"Bug Report","description":"Bug Report Template","icon":"🎟️","workspace_id":"this_is_an_id648_that_should_be_at_least_","archived":false,"created_at":1734537866,"updated_at":1734537866,"ticket_type_attributes":{"type":"list"},"category":"Customer","ticket_states":{"type":"list","data":[{"type":"ticket_state","id":"8321","category":"submitted","internal_label":"Submitted","external_label":"Submitted"},{"type":"ticket_state","id":"8322","category":"in_progress","internal_label":"In progress","external_label":"In progress"},{"type":"ticket_state","id":"8323","category":"waiting_on_customer","internal_label":"Waiting on customer","external_label":"Waiting on you"},{"type":"ticket_state","id":"8324","category":"resolved","internal_label":"Resolved","external_label":"Resolved"}]}}]}"#,
@@ -9831,7 +10504,13 @@ fn list_ticket_types_list_ticket_types_401_decodes_declared_error() {
             .map(|base_url| format!("{base_url}/__mockStatus/401")),
         ..config
     };
-    let result = ticket_types::list_ticket_types(&config, Some(decode(fixture(r#""2.17""#))), None);
+    let result = ticket_types::list_ticket_types(
+        &config,
+        ticket_types::ListTicketTypesParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
+        None,
+    );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
         panic!("list_ticket_types did not fail with SdkError::Http on 401");
     };
@@ -9854,11 +10533,13 @@ fn manage_conversation_manage_conversation_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = conversations::manage_conversation(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"message_type":"close","type":"admin","admin_id":"12345","body":"Goodbye :)"}"#,
-        ))),
+        conversations::ManageConversationParams {
+            conversation_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(
+                r#"{"message_type":"close","type":"admin","admin_id":"12345","body":"Goodbye :)"}"#,
+            ))),
+        },
         None,
     )
     .expect("manage_conversation request failed");
@@ -9885,11 +10566,13 @@ fn manage_conversation_manage_conversation_401_decodes_declared_error() {
     };
     let result = conversations::manage_conversation(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"message_type":"close","type":"admin","admin_id":"12345","body":"Goodbye :)"}"#,
-        ))),
+        conversations::ManageConversationParams {
+            conversation_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(
+                r#"{"message_type":"close","type":"admin","admin_id":"12345","body":"Goodbye :)"}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -9978,9 +10661,11 @@ fn merge_conversation_merge_conversation_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = conversations::merge_conversation(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#"456"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::MergeConversationParams {
+            id: decode(fixture(r#""123""#)),
+            merge_into_conversation_id: decode(fixture(r#"456"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("merge_conversation request failed");
@@ -10007,9 +10692,11 @@ fn merge_conversation_merge_conversation_400_decodes_declared_error() {
     };
     let result = conversations::merge_conversation(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#"456"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations::MergeConversationParams {
+            id: decode(fixture(r#""123""#)),
+            merge_into_conversation_id: decode(fixture(r#"456"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10098,9 +10785,11 @@ fn publish_article_draft_publish_article_draft_reaches_mock_and_decodes_response
     let _ = &config;
     let actual = articles::publish_article_draft(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"["en","fr"]"#))),
+        articles::PublishArticleDraftParams {
+            id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            locales: Some(decode(fixture(r#"["en","fr"]"#))),
+        },
         None,
     )
     .expect("publish_article_draft request failed");
@@ -10127,9 +10816,11 @@ fn publish_article_draft_publish_article_draft_401_decodes_declared_error() {
     };
     let result = articles::publish_article_draft(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"["en","fr"]"#))),
+        articles::PublishArticleDraftParams {
+            id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            locales: Some(decode(fixture(r#"["en","fr"]"#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10154,8 +10845,10 @@ fn redact_conversation_redact_conversation_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = conversations::redact_conversation(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"{"type":"conversation_part","conversation_id":"19894788788","conversation_part_id":"19381789428"}"#))),
+        conversations::RedactConversationParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(r#"{"type":"conversation_part","conversation_id":"19894788788","conversation_part_id":"19381789428"}"#))),
+        },
         None,
     )
     .expect("redact_conversation request failed");
@@ -10182,10 +10875,12 @@ fn redact_conversation_redact_conversation_401_decodes_declared_error() {
     };
     let result = conversations::redact_conversation(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"type":"conversation_part","conversation_id":"19894788788","conversation_part_id":"19381789428"}"#,
-        ))),
+        conversations::RedactConversationParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(
+                r#"{"type":"conversation_part","conversation_id":"19894788788","conversation_part_id":"19381789428"}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10210,10 +10905,12 @@ fn register_fin_voice_call_register_fin_voice_call_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = calls::register_fin_voice_call(
         &config,
-        decode(fixture(r#""+1234567890""#)),
-        decode(fixture(r#""call-123-abc""#)),
-        Some(decode(fixture(r#""aws_connect""#))),
-        Some(Some(decode(fixture(r#"{"key":"value"}"#)))),
+        calls::RegisterFinVoiceCallParams {
+            phone_number: decode(fixture(r#""+1234567890""#)),
+            call_id: decode(fixture(r#""call-123-abc""#)),
+            source: Some(decode(fixture(r#""aws_connect""#))),
+            data: Some(Some(decode(fixture(r#"{"key":"value"}"#)))),
+        },
         None,
     )
     .expect("register_fin_voice_call request failed");
@@ -10240,10 +10937,12 @@ fn register_fin_voice_call_register_fin_voice_call_400_decodes_declared_error() 
     };
     let result = calls::register_fin_voice_call(
         &config,
-        decode(fixture(r#""+1234567890""#)),
-        decode(fixture(r#""call-123-abc""#)),
-        Some(decode(fixture(r#""aws_connect""#))),
-        Some(Some(decode(fixture(r#"{"key":"value"}"#)))),
+        calls::RegisterFinVoiceCallParams {
+            phone_number: decode(fixture(r#""+1234567890""#)),
+            call_id: decode(fixture(r#""call-123-abc""#)),
+            source: Some(decode(fixture(r#""aws_connect""#))),
+            data: Some(Some(decode(fixture(r#"{"key":"value"}"#)))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10268,9 +10967,11 @@ fn reply_conversation_reply_conversation_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = conversations::reply_conversation(
         &config,
-        decode(fixture(r#""123 or \"last\"""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(r#"{"message_type":"comment","type":"user","intercom_user_id":"6762f1571bb69f9f2193bbbb","body":"Thanks again :)"}"#))),
+        conversations::ReplyConversationParams {
+            conversation_id: decode(fixture(r#""123 or \"last\"""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(r#"{"message_type":"comment","type":"user","intercom_user_id":"6762f1571bb69f9f2193bbbb","body":"Thanks again :)"}"#))),
+        },
         None,
     )
     .expect("reply_conversation request failed");
@@ -10297,11 +10998,13 @@ fn reply_conversation_reply_conversation_401_decodes_declared_error() {
     };
     let result = conversations::reply_conversation(
         &config,
-        decode(fixture(r#""123 or \"last\"""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"message_type":"comment","type":"user","intercom_user_id":"6762f1571bb69f9f2193bbbb","body":"Thanks again :)"}"#,
-        ))),
+        conversations::ReplyConversationParams {
+            conversation_id: decode(fixture(r#""123 or \"last\"""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(
+                r#"{"message_type":"comment","type":"user","intercom_user_id":"6762f1571bb69f9f2193bbbb","body":"Thanks again :)"}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10326,9 +11029,11 @@ fn reply_ticket_reply_ticket_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = tickets::reply_ticket(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        tickets::ReplyTicketParams {
+            ticket_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            skip_notifications: None,
+        },
         None,
     )
     .expect("reply_ticket request failed");
@@ -10355,9 +11060,11 @@ fn reply_ticket_reply_ticket_400_decodes_declared_error() {
     };
     let result = tickets::reply_ticket(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        tickets::ReplyTicketParams {
+            ticket_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            skip_notifications: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10450,8 +11157,10 @@ fn retrieve_admin_retrieve_admin_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = admins::retrieve_admin(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        admins::RetrieveAdminParams {
+            admin_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_admin request failed");
@@ -10478,8 +11187,10 @@ fn retrieve_admin_retrieve_admin_401_decodes_declared_error() {
     };
     let result = admins::retrieve_admin(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        admins::RetrieveAdminParams {
+            admin_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10504,8 +11215,10 @@ fn retrieve_article_retrieve_article_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = articles::retrieve_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::RetrieveArticleParams {
+            article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_article request failed");
@@ -10532,8 +11245,10 @@ fn retrieve_article_retrieve_article_401_decodes_declared_error() {
     };
     let result = articles::retrieve_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::RetrieveArticleParams {
+            article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10558,8 +11273,10 @@ fn retrieve_article_draft_retrieve_article_draft_reaches_mock_and_decodes_respon
     let _ = &config;
     let actual = articles::retrieve_article_draft(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::RetrieveArticleDraftParams {
+            id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_article_draft request failed");
@@ -10586,8 +11303,10 @@ fn retrieve_article_draft_retrieve_article_draft_401_decodes_declared_error() {
     };
     let result = articles::retrieve_article_draft(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::RetrieveArticleDraftParams {
+            id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10612,10 +11331,12 @@ fn retrieve_article_version_retrieve_article_version_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = articles::retrieve_article_version(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""301""#)),
-        Some(decode(fixture(r#""en""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::RetrieveArticleVersionParams {
+            article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""301""#)),
+            locale: Some(decode(fixture(r#""en""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_article_version request failed");
@@ -10642,10 +11363,12 @@ fn retrieve_article_version_retrieve_article_version_400_decodes_declared_error(
     };
     let result = articles::retrieve_article_version(
         &config,
-        decode(fixture(r#"123"#)),
-        decode(fixture(r#""301""#)),
-        Some(decode(fixture(r#""en""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        articles::RetrieveArticleVersionParams {
+            article_id: decode(fixture(r#"123"#)),
+            id: decode(fixture(r#""301""#)),
+            locale: Some(decode(fixture(r#""en""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10670,8 +11393,10 @@ fn retrieve_audience_retrieve_audience_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = audiences::retrieve_audience(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        audiences::RetrieveAudienceParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_audience request failed");
@@ -10698,8 +11423,10 @@ fn retrieve_audience_retrieve_audience_401_decodes_declared_error() {
     };
     let result = audiences::retrieve_audience(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        audiences::RetrieveAudienceParams {
+            id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10724,8 +11451,10 @@ fn retrieve_brand_retrieve_brand_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = brands::retrieve_brand(
         &config,
-        decode(fixture(r#""id-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        brands::RetrieveBrandParams {
+            id: decode(fixture(r#""id-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_brand request failed");
@@ -10752,8 +11481,10 @@ fn retrieve_brand_retrieve_brand_401_decodes_declared_error() {
     };
     let result = brands::retrieve_brand(
         &config,
-        decode(fixture(r#""id-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        brands::RetrieveBrandParams {
+            id: decode(fixture(r#""id-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10778,8 +11509,10 @@ fn retrieve_collection_retrieve_collection_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = help_center::retrieve_collection(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::RetrieveCollectionParams {
+            collection_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_collection request failed");
@@ -10806,8 +11539,10 @@ fn retrieve_collection_retrieve_collection_401_decodes_declared_error() {
     };
     let result = help_center::retrieve_collection(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::RetrieveCollectionParams {
+            collection_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -10832,8 +11567,10 @@ fn retrieve_companies_by_id_retrieve_companies_by_id_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = companies::retrieve_companies_by_id(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::RetrieveCompaniesByIdParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_companies_by_id request failed");
@@ -10860,8 +11597,10 @@ fn retrieve_companies_by_id_retrieve_companies_by_id_401_decodes_declared_error(
     };
     let result = companies::retrieve_companies_by_id(
         &config,
-        decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::RetrieveCompaniesByIdParams {
+            company_id: decode(fixture(r#""5f4d3c1c-7b1b-4d7d-a97e-6095715c6632""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11020,9 +11759,11 @@ fn retrieve_data_connector_retrieve_data_connector_reaches_mock_and_decodes_resp
     let _ = &config;
     let actual = data_connectors::retrieve_data_connector(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#""live""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::RetrieveDataConnectorParams {
+            id: decode(fixture(r#""12345""#)),
+            state_version: Some(decode(fixture(r#""live""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_data_connector request failed");
@@ -11049,9 +11790,11 @@ fn retrieve_data_connector_retrieve_data_connector_400_decodes_declared_error() 
     };
     let result = data_connectors::retrieve_data_connector(
         &config,
-        decode(fixture(r#""12345""#)),
-        Some(decode(fixture(r#""live""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::RetrieveDataConnectorParams {
+            id: decode(fixture(r#""12345""#)),
+            state_version: Some(decode(fixture(r#""live""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11077,9 +11820,11 @@ fn retrieve_data_connector_version_retrieve_data_connector_version_reaches_mock_
     let _ = &config;
     let actual = data_connectors::retrieve_data_connector_version(
         &config,
-        decode(fixture(r#""12345""#)),
-        decode(fixture(r#"9821"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::RetrieveDataConnectorVersionParams {
+            id: decode(fixture(r#""12345""#)),
+            version_id: decode(fixture(r#"9821"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_data_connector_version request failed");
@@ -11106,9 +11851,11 @@ fn retrieve_data_connector_version_retrieve_data_connector_version_401_decodes_d
     };
     let result = data_connectors::retrieve_data_connector_version(
         &config,
-        decode(fixture(r#""12345""#)),
-        decode(fixture(r#"9821"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::RetrieveDataConnectorVersionParams {
+            id: decode(fixture(r#""12345""#)),
+            version_id: decode(fixture(r#"9821"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11133,8 +11880,10 @@ fn retrieve_email_retrieve_email_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = emails::retrieve_email(
         &config,
-        decode(fixture(r#""id-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        emails::RetrieveEmailParams {
+            id: decode(fixture(r#""id-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_email request failed");
@@ -11161,8 +11910,10 @@ fn retrieve_email_retrieve_email_401_decodes_declared_error() {
     };
     let result = emails::retrieve_email(
         &config,
-        decode(fixture(r#""id-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        emails::RetrieveEmailParams {
+            id: decode(fixture(r#""id-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11187,8 +11938,10 @@ fn retrieve_folder_retrieve_folder_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = folders::retrieve_folder(
         &config,
-        decode(fixture(r#"6"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::RetrieveFolderParams {
+            id: decode(fixture(r#"6"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_folder request failed");
@@ -11215,8 +11968,10 @@ fn retrieve_folder_retrieve_folder_401_decodes_declared_error() {
     };
     let result = folders::retrieve_folder(
         &config,
-        decode(fixture(r#"6"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::RetrieveFolderParams {
+            id: decode(fixture(r#"6"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11241,8 +11996,10 @@ fn retrieve_help_center_retrieve_help_center_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = help_center::retrieve_help_center(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::RetrieveHelpCenterParams {
+            help_center_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_help_center request failed");
@@ -11269,8 +12026,10 @@ fn retrieve_help_center_retrieve_help_center_401_decodes_declared_error() {
     };
     let result = help_center::retrieve_help_center(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::RetrieveHelpCenterParams {
+            help_center_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11295,9 +12054,11 @@ fn retrieve_help_center_redirect_retrieve_help_center_redirect_reaches_mock_and_
     let _ = &config;
     let actual = help_center::retrieve_help_center_redirect(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""26""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::RetrieveHelpCenterRedirectParams {
+            help_center_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""26""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_help_center_redirect request failed");
@@ -11324,9 +12085,11 @@ fn retrieve_help_center_redirect_retrieve_help_center_redirect_401_decodes_decla
     };
     let result = help_center::retrieve_help_center_redirect(
         &config,
-        decode(fixture(r#""123""#)),
-        decode(fixture(r#""26""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        help_center::RetrieveHelpCenterRedirectParams {
+            help_center_id: decode(fixture(r#""123""#)),
+            id: decode(fixture(r#""26""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11351,8 +12114,10 @@ fn retrieve_internal_article_retrieve_internal_article_reaches_mock_and_decodes_
     let _ = &config;
     let actual = internal_articles::retrieve_internal_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::RetrieveInternalArticleParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_internal_article request failed");
@@ -11379,8 +12144,10 @@ fn retrieve_internal_article_retrieve_internal_article_401_decodes_declared_erro
     };
     let result = internal_articles::retrieve_internal_article(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::RetrieveInternalArticleParams {
+            internal_article_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11405,8 +12172,10 @@ fn retrieve_newsfeed_retrieve_newsfeed_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = news::retrieve_newsfeed(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::RetrieveNewsfeedParams {
+            newsfeed_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_newsfeed request failed");
@@ -11433,8 +12202,10 @@ fn retrieve_newsfeed_retrieve_newsfeed_401_decodes_declared_error() {
     };
     let result = news::retrieve_newsfeed(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::RetrieveNewsfeedParams {
+            newsfeed_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11459,8 +12230,10 @@ fn retrieve_news_item_retrieve_news_item_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = news::retrieve_news_item(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::RetrieveNewsItemParams {
+            news_item_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_news_item request failed");
@@ -11487,8 +12260,10 @@ fn retrieve_news_item_retrieve_news_item_401_decodes_declared_error() {
     };
     let result = news::retrieve_news_item(
         &config,
-        decode(fixture(r#"123"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        news::RetrieveNewsItemParams {
+            news_item_id: decode(fixture(r#"123"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11513,8 +12288,10 @@ fn retrieve_note_retrieve_note_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = notes::retrieve_note(
         &config,
-        decode(fixture(r#"1"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::RetrieveNoteParams {
+            note_id: decode(fixture(r#"1"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_note request failed");
@@ -11541,8 +12318,10 @@ fn retrieve_note_retrieve_note_401_decodes_declared_error() {
     };
     let result = notes::retrieve_note(
         &config,
-        decode(fixture(r#"1"#)),
-        Some(decode(fixture(r#""2.17""#))),
+        notes::RetrieveNoteParams {
+            note_id: decode(fixture(r#"1"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11567,8 +12346,10 @@ fn retrieve_segment_retrieve_segment_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = segments::retrieve_segment(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        segments::RetrieveSegmentParams {
+            segment_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_segment request failed");
@@ -11595,8 +12376,10 @@ fn retrieve_segment_retrieve_segment_401_decodes_declared_error() {
     };
     let result = segments::retrieve_segment(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        segments::RetrieveSegmentParams {
+            segment_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11621,8 +12404,10 @@ fn retrieve_team_retrieve_team_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = teams::retrieve_team(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        teams::RetrieveTeamParams {
+            team_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_team request failed");
@@ -11649,8 +12434,10 @@ fn retrieve_team_retrieve_team_401_decodes_declared_error() {
     };
     let result = teams::retrieve_team(
         &config,
-        decode(fixture(r#""123""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        teams::RetrieveTeamParams {
+            team_id: decode(fixture(r#""123""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11675,8 +12462,10 @@ fn retrieve_visitor_with_user_id_retrieve_visitor_with_user_id_reaches_mock_and_
     let _ = &config;
     let actual = visitors::retrieve_visitor_with_user_id(
         &config,
-        decode(fixture(r#""user-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        visitors::RetrieveVisitorWithUserIdParams {
+            user_id: decode(fixture(r#""user-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_visitor_with_user_id request failed");
@@ -11703,8 +12492,10 @@ fn retrieve_visitor_with_user_id_retrieve_visitor_with_user_id_401_decodes_decla
     };
     let result = visitors::retrieve_visitor_with_user_id(
         &config,
-        decode(fixture(r#""user-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        visitors::RetrieveVisitorWithUserIdParams {
+            user_id: decode(fixture(r#""user-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11730,8 +12521,10 @@ fn retrieve_whats_app_message_status_retrieve_whats_app_message_status_reaches_m
     let _ = &config;
     let actual = messages::retrieve_whats_app_message_status(
         &config,
-        decode(fixture(r#""message-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        messages::RetrieveWhatsAppMessageStatusParams {
+            message_id: decode(fixture(r#""message-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("retrieve_whats_app_message_status request failed");
@@ -11759,8 +12552,10 @@ fn retrieve_whats_app_message_status_retrieve_whats_app_message_status_401_decod
     };
     let result = messages::retrieve_whats_app_message_status(
         &config,
-        decode(fixture(r#""message-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        messages::RetrieveWhatsAppMessageStatusParams {
+            message_id: decode(fixture(r#""message-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -11857,8 +12652,10 @@ fn scroll_over_all_companies_scroll_over_all_companies_reaches_mock_and_decodes_
     let _ = &config;
     let actual = companies::scroll_over_all_companies(
         &config,
-        Some(decode(fixture(r#""scroll_param""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ScrollOverAllCompaniesParams {
+            scroll_param: Some(decode(fixture(r#""scroll_param""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("scroll_over_all_companies request failed");
@@ -11885,8 +12682,10 @@ fn scroll_over_all_companies_scroll_over_all_companies_401_decodes_declared_erro
     };
     let result = companies::scroll_over_all_companies(
         &config,
-        Some(decode(fixture(r#""scroll_param""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        companies::ScrollOverAllCompaniesParams {
+            scroll_param: Some(decode(fixture(r#""scroll_param""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12045,12 +12844,12 @@ fn search_companies_search_companies_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = companies::search_companies(
         &config,
-        decode(fixture(
-            r#"{"operator":"AND","value":[{"field":"name","operator":"=","value":"my-company"}]}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(Some(decode(fixture(r#"{"per_page":5}"#)))),
-        Some(decode(fixture(r#"{"field":"name","order":"ascending"}"#))),
+        companies::SearchCompaniesParams {
+            query: decode(fixture(r#"{"operator":"AND","value":[{"field":"name","operator":"=","value":"my-company"}]}"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            pagination: Some(Some(decode(fixture(r#"{"per_page":5}"#)))),
+            sort: Some(decode(fixture(r#"{"field":"name","order":"ascending"}"#))),
+        },
         None,
     )
     .expect("search_companies request failed");
@@ -12077,12 +12876,14 @@ fn search_companies_search_companies_400_decodes_declared_error() {
     };
     let result = companies::search_companies(
         &config,
-        decode(fixture(
-            r#"{"operator":"AND","value":[{"field":"name","operator":"=","value":"my-company"}]}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(Some(decode(fixture(r#"{"per_page":5}"#)))),
-        Some(decode(fixture(r#"{"field":"name","order":"ascending"}"#))),
+        companies::SearchCompaniesParams {
+            query: decode(fixture(
+                r#"{"operator":"AND","value":[{"field":"name","operator":"=","value":"my-company"}]}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            pagination: Some(Some(decode(fixture(r#"{"per_page":5}"#)))),
+            sort: Some(decode(fixture(r#"{"field":"name","order":"ascending"}"#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12299,8 +13100,10 @@ fn search_internal_articles_search_internal_articles_reaches_mock_and_decodes_re
     let _ = &config;
     let actual = internal_articles::search_internal_articles(
         &config,
-        Some(decode(fixture(r#"123"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::SearchInternalArticlesParams {
+            folder_id: Some(decode(fixture(r#"123"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("search_internal_articles request failed");
@@ -12327,8 +13130,10 @@ fn search_internal_articles_search_internal_articles_401_decodes_declared_error(
     };
     let result = internal_articles::search_internal_articles(
         &config,
-        Some(decode(fixture(r#"123"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        internal_articles::SearchInternalArticlesParams {
+            folder_id: Some(decode(fixture(r#"123"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12353,9 +13158,11 @@ fn search_tickets_search_tickets_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = tickets::search_tickets(
         &config,
-        decode(fixture(r#"{"operator":"AND","value":[{"field":"created_at","operator":">","value":"1306054154"}]}"#)),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(Some(decode(fixture(r#"{"per_page":5}"#)))),
+        tickets::SearchTicketsParams {
+            query: decode(fixture(r#"{"operator":"AND","value":[{"field":"created_at","operator":">","value":"1306054154"}]}"#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            pagination: Some(Some(decode(fixture(r#"{"per_page":5}"#)))),
+        },
         None,
     )
     .expect("search_tickets request failed");
@@ -12441,8 +13248,10 @@ fn show_bulk_update_contacts_job_show_bulk_update_contacts_job_reaches_mock_and_
     let _ = &config;
     let actual = contacts::show_bulk_update_contacts_job(
         &config,
-        decode(fixture(r#""job_v2_1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ShowBulkUpdateContactsJobParams {
+            id: decode(fixture(r#""job_v2_1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("show_bulk_update_contacts_job request failed");
@@ -12469,8 +13278,10 @@ fn show_bulk_update_contacts_job_show_bulk_update_contacts_job_401_decodes_decla
     };
     let result = contacts::show_bulk_update_contacts_job(
         &config,
-        decode(fixture(r#""job_v2_1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ShowBulkUpdateContactsJobParams {
+            id: decode(fixture(r#""job_v2_1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12495,8 +13306,10 @@ fn show_call_show_call_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = calls::show_call(
         &config,
-        decode(fixture(r#""call-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ShowCallParams {
+            call_id: decode(fixture(r#""call-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("show_call request failed");
@@ -12523,8 +13336,10 @@ fn show_call_show_call_401_decodes_declared_error() {
     };
     let result = calls::show_call(
         &config,
-        decode(fixture(r#""call-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ShowCallParams {
+            call_id: decode(fixture(r#""call-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12549,8 +13364,10 @@ fn show_call_transcript_show_call_transcript_reaches_mock_and_decodes_response()
     let _ = &config;
     let actual = calls::show_call_transcript(
         &config,
-        decode(fixture(r#""call-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ShowCallTranscriptParams {
+            call_id: decode(fixture(r#""call-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("show_call_transcript request failed");
@@ -12577,8 +13394,10 @@ fn show_call_transcript_show_call_transcript_404_decodes_declared_error() {
     };
     let result = calls::show_call_transcript(
         &config,
-        decode(fixture(r#""call-1""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        calls::ShowCallTranscriptParams {
+            call_id: decode(fixture(r#""call-1""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12603,9 +13422,11 @@ fn show_contact_show_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::show_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ShowContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("show_contact request failed");
@@ -12632,9 +13453,11 @@ fn show_contact_show_contact_401_decodes_declared_error() {
     };
     let result = contacts::show_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ShowContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12659,9 +13482,11 @@ fn show_contact_by_external_id_show_contact_by_external_id_reaches_mock_and_deco
     let _ = &config;
     let actual = contacts::show_contact_by_external_id(
         &config,
-        decode(fixture(r#""cdd29344-5e0c-4ef0-ac56-f9ba2979bc27""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ShowContactByExternalIdParams {
+            external_id: decode(fixture(r#""cdd29344-5e0c-4ef0-ac56-f9ba2979bc27""#)),
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("show_contact_by_external_id request failed");
@@ -12688,9 +13513,11 @@ fn show_contact_by_external_id_show_contact_by_external_id_401_decodes_declared_
     };
     let result = contacts::show_contact_by_external_id(
         &config,
-        decode(fixture(r#""cdd29344-5e0c-4ef0-ac56-f9ba2979bc27""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::ShowContactByExternalIdParams {
+            external_id: decode(fixture(r#""cdd29344-5e0c-4ef0-ac56-f9ba2979bc27""#)),
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12716,9 +13543,11 @@ fn show_data_connector_execution_result_show_data_connector_execution_result_rea
     let _ = &config;
     let actual = data_connectors::show_data_connector_execution_result(
         &config,
-        decode(fixture(r#""12345""#)),
-        decode(fixture(r#""99001""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::ShowDataConnectorExecutionResultParams {
+            data_connector_id: decode(fixture(r#""12345""#)),
+            id: decode(fixture(r#""99001""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("show_data_connector_execution_result request failed");
@@ -12746,9 +13575,11 @@ fn show_data_connector_execution_result_show_data_connector_execution_result_401
     };
     let result = data_connectors::show_data_connector_execution_result(
         &config,
-        decode(fixture(r#""12345""#)),
-        decode(fixture(r#""99001""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::ShowDataConnectorExecutionResultParams {
+            data_connector_id: decode(fixture(r#""12345""#)),
+            id: decode(fixture(r#""99001""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12939,10 +13770,12 @@ fn submit_fin_csat_submit_fin_csat_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = fin_agent::submit_fin_csat(
         &config,
-        decode(fixture(r#""ext-123""#)),
-        decode(fixture(r#""amazing""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        fin_agent::SubmitFinCsatParams {
+            conversation_id: decode(fixture(r#""ext-123""#)),
+            rating: decode(fixture(r#""amazing""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            remark: None,
+        },
         None,
     )
     .expect("submit_fin_csat request failed");
@@ -12967,10 +13800,12 @@ fn submit_fin_csat_submit_fin_csat_401_decodes_declared_error() {
     };
     let result = fin_agent::submit_fin_csat(
         &config,
-        decode(fixture(r#""ext-123""#)),
-        decode(fixture(r#""amazing""#)),
-        Some(decode(fixture(r#""2.17""#))),
-        None,
+        fin_agent::SubmitFinCsatParams {
+            conversation_id: decode(fixture(r#""ext-123""#)),
+            rating: decode(fixture(r#""amazing""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            remark: None,
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -12995,8 +13830,10 @@ fn unarchive_contact_unarchive_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::unarchive_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        contacts::UnarchiveContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("unarchive_contact request failed");
@@ -13011,31 +13848,33 @@ fn unarchive_contact_unarchive_contact_reaches_mock_and_decodes_response() {
 }
 
 #[test]
-fn unlink_tickets_conversation_unlink_tickets_conversation_reaches_mock_and_decodes_response() {
+fn unlink_ticket_conversation_unlink_ticket_conversation_reaches_mock_and_decodes_response() {
     let Some(config) = configured_client() else {
         return;
     };
     let _ = &config;
-    let actual = tickets::unlink_tickets_conversation(
+    let actual = tickets::unlink_ticket_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""204""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::UnlinkTicketConversationParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            id: decode(fixture(r#""204""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
-    .expect("unlink_tickets_conversation request failed");
+    .expect("unlink_ticket_conversation request failed");
     let actual = serde_json::to_value(actual).expect("serialize generated response");
     let expected = fixture(
         r#"{"type":"conversation","id":"204","created_at":1734537715,"updated_at":1734537752,"source":{"type":"conversation","id":"403918350","delivered_as":"admin_initiated","subject":"","body":"<p>Customer report</p>","author":{"type":"admin","id":"991267645","name":"Ciaran176 Lee","email":"admin176@email.com"},"attachments":[],"redacted":false},"contacts":{"type":"contact.list","contacts":[{"type":"contact","id":"6762f1261bb69f9f2193bba7","external_id":"70"}]},"open":true,"state":"open","linked_objects":{"type":"list","total_count":0,"has_more":false,"data":[]}}"#,
     );
     assert!(
         representative(&actual, &expected),
-        "unlink_tickets_conversation decoded {actual}, expected representative {expected}"
+        "unlink_ticket_conversation decoded {actual}, expected representative {expected}"
     );
 }
 
 #[test]
-fn unlink_tickets_conversation_unlink_tickets_conversation_400_decodes_declared_error() {
+fn unlink_ticket_conversation_unlink_ticket_conversation_400_decodes_declared_error() {
     let Some(config) = configured_client() else {
         return;
     };
@@ -13045,15 +13884,17 @@ fn unlink_tickets_conversation_unlink_tickets_conversation_400_decodes_declared_
             .map(|base_url| format!("{base_url}/__mockStatus/400")),
         ..config
     };
-    let result = tickets::unlink_tickets_conversation(
+    let result = tickets::unlink_ticket_conversation(
         &config,
-        decode(fixture(r#""64619700005694""#)),
-        decode(fixture(r#""204""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        tickets::UnlinkTicketConversationParams {
+            ticket_id: decode(fixture(r#""64619700005694""#)),
+            id: decode(fixture(r#""204""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
-        panic!("unlink_tickets_conversation did not fail with SdkError::Http on 400");
+        panic!("unlink_ticket_conversation did not fail with SdkError::Http on 400");
     };
     assert_eq!(error.status_code, 400);
     let actual = serde_json::to_value(&error.data).expect("serialize declared error body");
@@ -13062,7 +13903,7 @@ fn unlink_tickets_conversation_unlink_tickets_conversation_400_decodes_declared_
     );
     assert!(
         representative(&actual, &expected),
-        "unlink_tickets_conversation decoded error body {actual}, expected representative {expected}"
+        "unlink_ticket_conversation decoded error body {actual}, expected representative {expected}"
     );
 }
 
@@ -13372,12 +14213,14 @@ fn update_contact_update_contact_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = contacts::update_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"email":"joebloggs@intercom.io","name":"joe bloggs"}"#,
-        ))),
+        contacts::UpdateContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(
+                r#"{"email":"joebloggs@intercom.io","name":"joe bloggs"}"#,
+            ))),
+        },
         None,
     )
     .expect("update_contact request failed");
@@ -13404,12 +14247,14 @@ fn update_contact_update_contact_401_decodes_declared_error() {
     };
     let result = contacts::update_contact(
         &config,
-        decode(fixture(r#""63a07ddf05a32042dffac965""#)),
-        Some(decode(fixture(r#"false"#))),
-        Some(decode(fixture(r#""2.17""#))),
-        Some(decode(fixture(
-            r#"{"email":"joebloggs@intercom.io","name":"joe bloggs"}"#,
-        ))),
+        contacts::UpdateContactParams {
+            contact_id: decode(fixture(r#""63a07ddf05a32042dffac965""#)),
+            include_merge_history: Some(decode(fixture(r#"false"#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            body: Some(decode(fixture(
+                r#"{"email":"joebloggs@intercom.io","name":"joe bloggs"}"#,
+            ))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -13721,10 +14566,12 @@ fn update_conversation_attribute_option_update_conversation_attribute_option_rea
     let _ = &config;
     let actual = conversations_attributes::update_conversation_attribute_option(
         &config,
-        decode(fixture(r#"2"#)),
-        decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
-        decode(fixture(r#""Renamed""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::UpdateConversationAttributeOptionParams {
+            id: decode(fixture(r#"2"#)),
+            option_id: decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
+            label: decode(fixture(r#""Renamed""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("update_conversation_attribute_option request failed");
@@ -13752,10 +14599,12 @@ fn update_conversation_attribute_option_update_conversation_attribute_option_401
     };
     let result = conversations_attributes::update_conversation_attribute_option(
         &config,
-        decode(fixture(r#"2"#)),
-        decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
-        decode(fixture(r#""Renamed""#)),
-        Some(decode(fixture(r#""2.17""#))),
+        conversations_attributes::UpdateConversationAttributeOptionParams {
+            id: decode(fixture(r#"2"#)),
+            option_id: decode(fixture(r#""a1b2c3d4-e5f6-7890-abcd-ef1234567890""#)),
+            label: decode(fixture(r#""Renamed""#)),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -13932,10 +14781,12 @@ fn update_data_connector_version_update_data_connector_version_reaches_mock_and_
     let _ = &config;
     let actual = data_connectors::update_data_connector_version(
         &config,
-        decode(fixture(r#""12345""#)),
-        decode(fixture(r#"9821"#)),
-        Some(decode(fixture(r#""Switched to the v2 orders endpoint""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::UpdateDataConnectorVersionParams {
+            id: decode(fixture(r#""12345""#)),
+            version_id: decode(fixture(r#"9821"#)),
+            note: Some(decode(fixture(r#""Switched to the v2 orders endpoint""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("update_data_connector_version request failed");
@@ -13962,10 +14813,12 @@ fn update_data_connector_version_update_data_connector_version_400_decodes_decla
     };
     let result = data_connectors::update_data_connector_version(
         &config,
-        decode(fixture(r#""12345""#)),
-        decode(fixture(r#"9821"#)),
-        Some(decode(fixture(r#""Switched to the v2 orders endpoint""#))),
-        Some(decode(fixture(r#""2.17""#))),
+        data_connectors::UpdateDataConnectorVersionParams {
+            id: decode(fixture(r#""12345""#)),
+            version_id: decode(fixture(r#"9821"#)),
+            note: Some(decode(fixture(r#""Switched to the v2 orders endpoint""#))),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -14130,11 +14983,13 @@ fn update_folder_update_folder_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = folders::update_folder(
         &config,
-        decode(fixture(r#"6"#)),
-        decode(fixture(
-            r#"{"name":"Updated Product Documentation","emoji":"📖"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::UpdateFolderParams {
+            id: decode(fixture(r#"6"#)),
+            folder: decode(fixture(
+                r#"{"name":"Updated Product Documentation","emoji":"📖"}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     )
     .expect("update_folder request failed");
@@ -14161,11 +15016,13 @@ fn update_folder_update_folder_400_decodes_declared_error() {
     };
     let result = folders::update_folder(
         &config,
-        decode(fixture(r#"6"#)),
-        decode(fixture(
-            r#"{"name":"Updated Product Documentation","emoji":"📖"}"#,
-        )),
-        Some(decode(fixture(r#""2.17""#))),
+        folders::UpdateFolderParams {
+            id: decode(fixture(r#"6"#)),
+            folder: decode(fixture(
+                r#"{"name":"Updated Product Documentation","emoji":"📖"}"#,
+            )),
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {
@@ -14272,10 +15129,12 @@ fn update_ip_allowlist_update_ip_allowlist_reaches_mock_and_decodes_response() {
     let _ = &config;
     let actual = ip_allowlist::update_ip_allowlist(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        None,
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#"["192.168.1.0/24","10.0.0.1"]"#))),
+        ip_allowlist::UpdateIpAllowlistParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            type_: None,
+            enabled: Some(decode(fixture(r#"true"#))),
+            ip_allowlist: Some(decode(fixture(r#"["192.168.1.0/24","10.0.0.1"]"#))),
+        },
         None,
     )
     .expect("update_ip_allowlist request failed");
@@ -14302,10 +15161,12 @@ fn update_ip_allowlist_update_ip_allowlist_401_decodes_declared_error() {
     };
     let result = ip_allowlist::update_ip_allowlist(
         &config,
-        Some(decode(fixture(r#""2.17""#))),
-        None,
-        Some(decode(fixture(r#"true"#))),
-        Some(decode(fixture(r#"["192.168.1.0/24","10.0.0.1"]"#))),
+        ip_allowlist::UpdateIpAllowlistParams {
+            intercom_version: Some(decode(fixture(r#""2.17""#))),
+            type_: None,
+            enabled: Some(decode(fixture(r#"true"#))),
+            ip_allowlist: Some(decode(fixture(r#"["192.168.1.0/24","10.0.0.1"]"#))),
+        },
         None,
     );
     let Err(::octridev_intercom::errors::SdkError::Http(error)) = result else {

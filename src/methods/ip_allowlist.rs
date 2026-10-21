@@ -6,14 +6,20 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{IntercomVersion, IpAllowlist};
 
+#[derive(Debug, Clone, Default)]
+pub struct GetIpAllowlistParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the current IP allowlist configuration for the workspace. Use the returned `enabled` value and `ip_allowlist` entries to inspect whether the allowlist is active and which IP addresses or ranges are allowed.
 ///
 /// Retrieve the current IP allowlist configuration for the workspace.
 pub fn get_ip_allowlist(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: GetIpAllowlistParams,
     options: Option<&RequestOptions>,
 ) -> Result<IpAllowlist, SdkError> {
+    let GetIpAllowlistParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -38,6 +44,14 @@ pub fn get_ip_allowlist(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct UpdateIpAllowlistParams {
+    pub intercom_version: Option<IntercomVersion>,
+    pub type_: Option<String>,
+    pub enabled: Option<bool>,
+    pub ip_allowlist: Option<Vec<String>>,
+}
+
 /// Updates the workspace's IP allowlist configuration. Supply `enabled` to control whether the allowlist is active and `ip_allowlist` to set allowed IP addresses or CIDR ranges. Include the caller's current IP address before enabling the allowlist to avoid locking out the caller.
 ///
 /// Update the IP allowlist configuration for the workspace. {% admonition type="warning" name="Lockout Protection" %} The API will reject updates that would lock out the caller's IP address. Ensure your current IP is included in the allowlist when enabling the feature. {% /admonition %}
@@ -52,12 +66,15 @@ pub fn get_ip_allowlist(
 ///   `192.168.0.1/24` (allows 192.168.0.0 \- 192.168.0.255)
 pub fn update_ip_allowlist(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
-    type_: Option<String>,
-    enabled: Option<bool>,
-    ip_allowlist: Option<Vec<String>>,
+    params: UpdateIpAllowlistParams,
     options: Option<&RequestOptions>,
 ) -> Result<IpAllowlist, SdkError> {
+    let UpdateIpAllowlistParams {
+        intercom_version,
+        type_,
+        enabled,
+        ip_allowlist,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

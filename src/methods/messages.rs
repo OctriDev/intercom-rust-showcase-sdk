@@ -209,6 +209,12 @@ pub fn create_message(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveWhatsAppMessageStatusParams {
+    pub message_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the delivery status and conversation details for a specific WhatsApp message. Supply the message's `message_id` to check whether it was sent, delivered, read, or failed. The response includes error details when delivery fails.
 ///
 /// Retrieves the delivery status of a specific WhatsApp message by its message ID. Returns the current status, conversation details, and any error information if the message failed to deliver.
@@ -218,10 +224,13 @@ pub fn create_message(
 /// * `message_id` - The WhatsApp message ID to check status for
 pub fn retrieve_whats_app_message_status(
     config: &ClientConfig,
-    message_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveWhatsAppMessageStatusParams,
     options: Option<&RequestOptions>,
 ) -> Result<WhatsappMessageStatus, SdkError> {
+    let RetrieveWhatsAppMessageStatusParams {
+        message_id,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     __query.extend([("message_id", crate::client::query_value(&message_id))]);
 
@@ -250,6 +259,14 @@ pub fn retrieve_whats_app_message_status(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetWhatsAppMessageStatusParams {
+    pub ruleset_id: String,
+    pub per_page: Option<i64>,
+    pub starting_after: Option<String>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists paginated status events for WhatsApp messages sent through the Outbound module. Use `ruleset_id` to select the set of messages and `per_page` and `starting_after` to paginate the results. The API plan must allow access to this operation.
 ///
 /// Retrieves statuses of messages sent from the Outbound module. Currently, this API only supports WhatsApp messages. This endpoint returns paginated status events for WhatsApp messages sent via the Outbound module, providing information about delivery state and related message details.
@@ -263,12 +280,15 @@ pub fn retrieve_whats_app_message_status(
 ///   results
 pub fn get_whats_app_message_status(
     config: &ClientConfig,
-    ruleset_id: String,
-    per_page: Option<i64>,
-    starting_after: Option<String>,
-    intercom_version: Option<IntercomVersion>,
+    params: GetWhatsAppMessageStatusParams,
     options: Option<&RequestOptions>,
 ) -> Result<WhatsappMessageStatusList, SdkError> {
+    let GetWhatsAppMessageStatusParams {
+        ruleset_id,
+        per_page,
+        starting_after,
+        intercom_version,
+    } = params;
     if let Some(ref per_page_v) = per_page {
         validate_range(
             "per_page",

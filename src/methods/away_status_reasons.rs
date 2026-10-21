@@ -6,14 +6,20 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{AwayStatusReasonList, IntercomVersion};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListAwayStatusReasonsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the away status reasons configured for the workspace, including reasons marked as deleted. Use this endpoint to retrieve reason labels and their associated identifiers, ordering, and status information.
 ///
 /// Returns a list of all away status reasons configured for the workspace, including deleted ones.
 pub fn list_away_status_reasons(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListAwayStatusReasonsParams,
     options: Option<&RequestOptions>,
 ) -> Result<AwayStatusReasonList, SdkError> {
+    let ListAwayStatusReasonsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

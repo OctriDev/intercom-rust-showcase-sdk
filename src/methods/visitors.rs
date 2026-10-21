@@ -111,6 +111,12 @@ pub fn update_visitor(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveVisitorWithUserIdParams {
+    pub user_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a visitor using the visitor's `user_id`. Use this operation when you need the details associated with a specific visitor identifier. The response includes visitor identity and profile information.
 ///
 /// You can fetch the details of a single visitor.
@@ -120,10 +126,13 @@ pub fn update_visitor(
 /// * `user_id` - The user_id of the Visitor you want to retrieve.
 pub fn retrieve_visitor_with_user_id(
     config: &ClientConfig,
-    user_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveVisitorWithUserIdParams,
     options: Option<&RequestOptions>,
 ) -> Result<Visitor, SdkError> {
+    let RetrieveVisitorWithUserIdParams {
+        user_id,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     __query.extend([("user_id", crate::client::query_value(&user_id))]);
 
@@ -152,6 +161,14 @@ pub fn retrieve_visitor_with_user_id(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ConvertVisitorParams {
+    pub type_: String,
+    pub user: ConvertVisitorRequestUser,
+    pub visitor: ConvertVisitorRequestVisitor,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Converts a visitor into a contact with the specified `lead` or `user` role, merging the visitor into an existing contact when one matches. If no matching contact exists, the visitor's identifiers are replaced with the supplied contact identifiers. The response contains the resulting contact.
 ///
 /// You can merge a Visitor to a Contact of role type `lead` or `user`. \> 📘 What happens upon a visitor being converted? \> \> If the User exists, then the Visitor will be merged into it, the Visitor deleted and the User returned. If the User does not exist, the Visitor will be converted to a User, with the User identifiers replacing it's Visitor identifiers.
@@ -164,12 +181,15 @@ pub fn retrieve_visitor_with_user_id(
 /// * `visitor` - The unique identifiers to convert a single Visitor.
 pub fn convert_visitor(
     config: &ClientConfig,
-    type_: String,
-    user: ConvertVisitorRequestUser,
-    visitor: ConvertVisitorRequestVisitor,
-    intercom_version: Option<IntercomVersion>,
+    params: ConvertVisitorParams,
     options: Option<&RequestOptions>,
 ) -> Result<Contact, SdkError> {
+    let ConvertVisitorParams {
+        type_,
+        user,
+        visitor,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

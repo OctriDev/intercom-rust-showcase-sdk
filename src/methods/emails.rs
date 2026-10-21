@@ -6,14 +6,20 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{EmailList, EmailSetting, IntercomVersion};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListEmailsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists sender email address settings for the workspace. Use this operation to review configured sender addresses and their verification, domain, and forwarding details.
 ///
 /// Lists all sender email address settings for the workspace
 pub fn list_emails(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListEmailsParams,
     options: Option<&RequestOptions>,
 ) -> Result<EmailList, SdkError> {
+    let ListEmailsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -38,6 +44,12 @@ pub fn list_emails(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveEmailParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a sender email address setting by its unique identifier. Use this operation to inspect an individual setting, including its verification status, associated brand, and forwarding details.
 ///
 /// Fetches a specific email setting by its unique identifier
@@ -47,10 +59,13 @@ pub fn list_emails(
 /// * `id` - The unique identifier of the email setting
 pub fn retrieve_email(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveEmailParams,
     options: Option<&RequestOptions>,
 ) -> Result<EmailSetting, SdkError> {
+    let RetrieveEmailParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
