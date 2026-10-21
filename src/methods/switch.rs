@@ -6,6 +6,13 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{CustomAttributesRequest, IntercomVersion, PhoneSwitch};
 
+#[derive(Debug, Clone, Default)]
+pub struct CreatePhoneSwitchParams {
+    pub phone: String,
+    pub intercom_version: Option<IntercomVersion>,
+    pub custom_attributes: Option<CustomAttributesRequest>,
+}
+
 /// Triggers a phone call redirect by sending an SMS with a Messenger link to the specified phone number. Supply `phone` in E.164 format; you can also include `custom_attributes` to add caller-set attributes to the contact or lead. The SMS directs the recipient to continue the conversation in Messenger.
 ///
 /// You can use the API to deflect phone calls to the Intercom Messenger. Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified. If custom attributes are specified, they will be added to the user or lead's custom data attributes.
@@ -21,11 +28,14 @@ use crate::types::{CustomAttributesRequest, IntercomVersion, PhoneSwitch};
 ///   only.
 pub fn create_phone_switch(
     config: &ClientConfig,
-    phone: String,
-    intercom_version: Option<IntercomVersion>,
-    custom_attributes: Option<CustomAttributesRequest>,
+    params: CreatePhoneSwitchParams,
     options: Option<&RequestOptions>,
 ) -> Result<PhoneSwitch, SdkError> {
+    let CreatePhoneSwitchParams {
+        phone,
+        intercom_version,
+        custom_attributes,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

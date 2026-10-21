@@ -320,12 +320,18 @@ pub fn get_reporting_data(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListGetDatasetsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the datasets and attributes available for reporting data exports. Use the returned dataset identifiers and attribute details to determine which data you can include in an export.
 pub fn list_get_datasets(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListGetDatasetsParams,
     options: Option<&RequestOptions>,
 ) -> Result<ListGetDatasetsResponse, SdkError> {
+    let ListGetDatasetsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

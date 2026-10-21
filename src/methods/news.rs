@@ -9,14 +9,20 @@ use crate::types::{
     NewsfeedAssignment, PaginatedResponse,
 };
 
+#[derive(Debug, Clone, Default)]
+pub struct ListNewsItemsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists news items across the workspace in a paginated response. Use the cursor-based page metadata to navigate through the results. Each response includes a total count and an array of news item objects.
 ///
 /// You can fetch a list of all news items
 pub fn list_news_items(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListNewsItemsParams,
     options: Option<&RequestOptions>,
 ) -> Result<PaginatedResponse, SdkError> {
+    let ListNewsItemsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -201,6 +207,12 @@ pub fn create_news_item(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveNewsItemParams {
+    pub news_item_id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the details of a single news item. Use its unique `news_item_id` to identify the item. The response includes the item's content, state, newsfeed assignments, and timestamps.
 ///
 /// You can fetch the details of a single news item.
@@ -211,10 +223,13 @@ pub fn create_news_item(
 ///   Intercom.
 pub fn retrieve_news_item(
     config: &ClientConfig,
-    news_item_id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveNewsItemParams,
     options: Option<&RequestOptions>,
 ) -> Result<NewsItem, SdkError> {
+    let RetrieveNewsItemParams {
+        news_item_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -407,6 +422,12 @@ pub fn update_news_item(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteNewsItemParams {
+    pub news_item_id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes a single news item. Use `news_item_id` to identify the item to remove. The response confirms whether the item was deleted and identifies the deleted object.
 ///
 /// You can delete a single news item.
@@ -417,10 +438,13 @@ pub fn update_news_item(
 ///   Intercom.
 pub fn delete_news_item(
     config: &ClientConfig,
-    news_item_id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteNewsItemParams,
     options: Option<&RequestOptions>,
 ) -> Result<DeletedObject, SdkError> {
+    let DeleteNewsItemParams {
+        news_item_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -448,6 +472,12 @@ pub fn delete_news_item(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListLiveNewsfeedItemsParams {
+    pub newsfeed_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the live news items assigned to a specific newsfeed. Supply `newsfeed_id` to select the feed whose items you want to retrieve. The response includes cursor-based page metadata and a total count.
 ///
 /// You can fetch a list of all news items that are live on a given newsfeed
@@ -458,10 +488,13 @@ pub fn delete_news_item(
 ///   given by Intercom.
 pub fn list_live_newsfeed_items(
     config: &ClientConfig,
-    newsfeed_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: ListLiveNewsfeedItemsParams,
     options: Option<&RequestOptions>,
 ) -> Result<PaginatedResponse, SdkError> {
+    let ListLiveNewsfeedItemsParams {
+        newsfeed_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -489,14 +522,20 @@ pub fn list_live_newsfeed_items(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListNewsfeedsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the newsfeeds available in the workspace. Use the cursor-based page metadata to navigate through the results. The response includes a total count and an array of newsfeed objects.
 ///
 /// You can fetch a list of all newsfeeds
 pub fn list_newsfeeds(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListNewsfeedsParams,
     options: Option<&RequestOptions>,
 ) -> Result<PaginatedResponse, SdkError> {
+    let ListNewsfeedsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -521,6 +560,12 @@ pub fn list_newsfeeds(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveNewsfeedParams {
+    pub newsfeed_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the details of a single newsfeed. Use `newsfeed_id` to identify the feed. Newsfeeds cannot be edited through the API.
 ///
 /// You can fetch the details of a single newsfeed
@@ -531,10 +576,13 @@ pub fn list_newsfeeds(
 ///   given by Intercom.
 pub fn retrieve_newsfeed(
     config: &ClientConfig,
-    newsfeed_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveNewsfeedParams,
     options: Option<&RequestOptions>,
 ) -> Result<Newsfeed, SdkError> {
+    let RetrieveNewsfeedParams {
+        newsfeed_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

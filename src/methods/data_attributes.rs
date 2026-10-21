@@ -100,6 +100,13 @@ impl std::fmt::Display for CreateDataAttributeRequestModelEnum {
     }
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListDataAttributesParams {
+    pub model: Option<ListDataAttributesEnum>,
+    pub include_archived: Option<bool>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists workspace data attributes for contacts or companies. Use `model` to select a model and `include_archived` to include archived attributes; conversation attributes are available from `GET /conversations/attributes` instead.
 ///
 /// You can fetch a list of all data attributes belonging to a workspace for contacts or companies. {% admonition type="warning" %} Conversation attributes are no longer returned by this endpoint. Calling without a `model` parameter no longer includes them, and `model=conversation` returns a `422` error. Use `GET /conversations/attributes` instead. {% /admonition %}
@@ -112,11 +119,14 @@ impl std::fmt::Display for CreateDataAttributeRequestModelEnum {
 ///   we return only non archived data attributes.
 pub fn list_data_attributes(
     config: &ClientConfig,
-    model: Option<ListDataAttributesEnum>,
-    include_archived: Option<bool>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListDataAttributesParams,
     options: Option<&RequestOptions>,
 ) -> Result<DataAttributeList, SdkError> {
+    let ListDataAttributesParams {
+        model,
+        include_archived,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(2);
     if let Some(ref v) = model {
         __query.push(("model", crate::client::query_value(v)));

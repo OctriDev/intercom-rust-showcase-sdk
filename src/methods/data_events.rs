@@ -234,6 +234,14 @@ pub fn create_data_event(
     .data)
 }
 
+#[derive(Debug, Clone)]
+pub struct ListDataEventsParams {
+    pub filter: ListDataEvents,
+    pub type_: String,
+    pub summary: Option<bool>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists data events associated with a user or lead, identified by `user_id`, `email`, or `intercom_user_id`. Set `type` to `user` and use `summary` to request a summary response. You can list individual events only when they are less than 90 days old; summaries can include older events.
 ///
 /// \> 🚧 \> \> Please note that you can only 'list' events that are less than 90 days old. Event counts and summaries will still include your events older than 90 days but you cannot 'list' these events individually if they are older than 90 days The events belonging to a customer can be listed by sending a GET request to `https://api.intercom.io/events` with a user or lead identifier along with a `type` parameter. The identifier parameter can be one of `user_id`, `email` or `intercom_user_id`. The `type` parameter value must be `user`. \- `https://api.intercom.io/events?type=user&user_id={user_id}` \- `https://api.intercom.io/events?type=user&email={email}` \- `https://api.intercom.io/events?type=user&intercom_user_id={id}` (this call can be used to list leads) The `email` parameter value should be [url encoded](http://en.wikipedia.org/wiki/Percent-encoding) when sending. You can optionally define the result page size as well with the `per_page` parameter.
@@ -244,12 +252,15 @@ pub fn create_data_event(
 /// * `summary` - summary flag
 pub fn list_data_events(
     config: &ClientConfig,
-    filter: ListDataEvents,
-    type_: String,
-    summary: Option<bool>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListDataEventsParams,
     options: Option<&RequestOptions>,
 ) -> Result<DataEventSummary, SdkError> {
+    let ListDataEventsParams {
+        filter,
+        type_,
+        summary,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(3);
     let __filter_pairs = crate::client::object_query_pairs("filter", &filter, "form", true);
     __query.extend(
@@ -287,6 +298,13 @@ pub fn list_data_events(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DataEventSummariesParams {
+    pub intercom_version: Option<IntercomVersion>,
+    pub user_id: Option<String>,
+    pub event_summaries: Option<CreateDataEventSummariesRequestEventSummaries>,
+}
+
 /// Creates event summaries that track how often an event occurred and when it first and last occurred for a user. Supply the user's `user_id` and an `event_summaries` object containing event names, counts, and timestamps. Use past-tense verb-noun event names, such as `updated-plan`.
 ///
 /// Create event summaries for a user. Event summaries are used to track the number of times an event has occurred, the first time it occurred and the last time it occurred.
@@ -300,11 +318,14 @@ pub fn list_data_events(
 ///   'verb-noun' combination, to improve readability, for example `updated-plan`.
 pub fn data_event_summaries(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
-    user_id: Option<String>,
-    event_summaries: Option<CreateDataEventSummariesRequestEventSummaries>,
+    params: DataEventSummariesParams,
     options: Option<&RequestOptions>,
 ) -> Result<serde_json::Value, SdkError> {
+    let DataEventSummariesParams {
+        intercom_version,
+        user_id,
+        event_summaries,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

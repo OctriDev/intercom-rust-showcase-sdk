@@ -9,14 +9,20 @@ use crate::types::{
 };
 use crate::validation::{validate_range, RangeOpts};
 
+#[derive(Debug, Clone, Default)]
+pub struct IdentifyAdminParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Identifies the authenticated admin and returns the associated app object, called a workspace in legacy terminology. Use this endpoint to identify the admin who is signed in. If you use it in a custom sign-in flow, do not accept sign-ins from users with unverified email addresses.
 ///
 /// You can view the currently authorised admin along with the embedded app object (a "workspace" in legacy terminology). \> 🚧 Single Sign On \> \> If you are building a custom "Log in with Intercom" flow for your site, and you call the `/me` endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.
 pub fn identify_admin(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: IdentifyAdminParams,
     options: Option<&RequestOptions>,
 ) -> Result<AdminWithApp, SdkError> {
+    let IdentifyAdminParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -133,6 +139,13 @@ pub fn set_away_admin(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListActivityLogsParams {
+    pub created_at_after: String,
+    pub created_at_before: Option<String>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists activity logs for admins in the app within a requested time range. Provide `created_at_after` as the start of the range and optionally use `created_at_before` to set its end. Results are paginated.
 ///
 /// You can get a log of activities by all admins in an app.
@@ -145,11 +158,14 @@ pub fn set_away_admin(
 ///   formatted as a UNIX timestamp.
 pub fn list_activity_logs(
     config: &ClientConfig,
-    created_at_after: String,
-    created_at_before: Option<String>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListActivityLogsParams,
     options: Option<&RequestOptions>,
 ) -> Result<ActivityLogList, SdkError> {
+    let ListActivityLogsParams {
+        created_at_after,
+        created_at_before,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(2);
     __query.extend([(
         "created_at_after",
@@ -315,14 +331,20 @@ pub fn search_activity_logs(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListActivityLogEventTypesParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the event type values available for filtering admin activity logs. Use the returned values with the `event_types` filter when searching activity logs.
 ///
 /// You can get a list of all activity log event types. This is useful for discovering valid values to use with the `event_types` filter on the List all activity logs endpoint.
 pub fn list_activity_log_event_types(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListActivityLogEventTypesParams,
     options: Option<&RequestOptions>,
 ) -> Result<ActivityLogEventTypeList, SdkError> {
+    let ListActivityLogEventTypesParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -347,6 +369,12 @@ pub fn list_activity_log_event_types(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListAdminsParams {
+    pub display_avatar: Option<bool>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the admins associated with the workspace. Set `display_avatar` to `true` to include each admin's avatar object and image URL; it defaults to `false` when omitted.
 ///
 /// You can fetch a list of admins for a given workspace.
@@ -357,10 +385,13 @@ pub fn list_activity_log_event_types(
 ///   avatar object containing the image URL. Defaults to false.
 pub fn list_admins(
     config: &ClientConfig,
-    display_avatar: Option<bool>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListAdminsParams,
     options: Option<&RequestOptions>,
 ) -> Result<AdminList, SdkError> {
+    let ListAdminsParams {
+        display_avatar,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     if let Some(ref v) = display_avatar {
         __query.push(("display_avatar", crate::client::query_value(v)));
@@ -391,6 +422,12 @@ pub fn list_admins(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveAdminParams {
+    pub admin_id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the details of a specific admin account. Use the admin identifier to view the admin's profile, away settings, team assignments, and role information when present.
 ///
 /// You can retrieve the details of a single admin.
@@ -400,10 +437,13 @@ pub fn list_admins(
 /// * `admin_id` - The unique identifier of a given admin
 pub fn retrieve_admin(
     config: &ClientConfig,
-    admin_id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveAdminParams,
     options: Option<&RequestOptions>,
 ) -> Result<Admin, SdkError> {
+    let RetrieveAdminParams {
+        admin_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

@@ -6,14 +6,20 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{IntercomVersion, Team, TeamList, TeamMetricList};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListTeamsParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the teams in the workspace. Use this endpoint to retrieve team objects and their available team details.
 ///
 /// This will return a list of team objects for the App.
 pub fn list_teams(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListTeamsParams,
     options: Option<&RequestOptions>,
 ) -> Result<TeamList, SdkError> {
+    let ListTeamsParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -38,6 +44,12 @@ pub fn list_teams(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveTeamParams {
+    pub team_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a team and the admins that belong to it. Use the `team_id` path parameter to specify the team whose details you need.
 ///
 /// You can fetch the details of a single team, containing an array of admins that belong to this team.
@@ -47,10 +59,13 @@ pub fn list_teams(
 /// * `team_id` - The unique identifier of a given team.
 pub fn retrieve_team(
     config: &ClientConfig,
-    team_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveTeamParams,
     options: Option<&RequestOptions>,
 ) -> Result<Team, SdkError> {
+    let RetrieveTeamParams {
+        team_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -75,6 +90,13 @@ pub fn retrieve_team(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetTeamMetricsParams {
+    pub team_id: String,
+    pub idle_threshold: Option<i64>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves real-time activity metrics for admins in a specified team, including counts of open, idle, and snoozed conversations. The `realtime_monitoring` feature must be enabled for the workspace; use `idle_threshold` to set when an open conversation counts as idle.
 ///
 /// Returns real-time activity metrics for admins in the specified team. For each admin, the response includes counts of open, idle, and snoozed conversations. This endpoint requires the `realtime_monitoring` feature to be enabled for your workspace.
@@ -88,11 +110,14 @@ pub fn retrieve_team(
 ///   minutes).
 pub fn get_team_metrics(
     config: &ClientConfig,
-    team_id: String,
-    idle_threshold: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: GetTeamMetricsParams,
     options: Option<&RequestOptions>,
 ) -> Result<TeamMetricList, SdkError> {
+    let GetTeamMetricsParams {
+        team_id,
+        idle_threshold,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     if let Some(ref v) = idle_threshold {
         __query.push(("idle_threshold", crate::client::query_value(v)));

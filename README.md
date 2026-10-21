@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ..Default::default()
     };
     let client = Intercom::new(config);
-    let result = client.content_snippets.get("123".to_string(), None, None)?;
+    let result = client.content_snippets.get(octridev_intercom::methods::content_snippets::GetContentSnippetParams { id: "123".to_string(), ..Default::default() }, None)?;
     println!("{result:#?}");
     Ok(())
 }

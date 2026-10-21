@@ -6,6 +6,14 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{IntercomVersion, SubscriptionType, SubscriptionTypeList};
 
+#[derive(Debug, Clone, Default)]
+pub struct AttachSubscriptionTypeToContactParams {
+    pub contact_id: String,
+    pub id: String,
+    pub consent_type: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Adds a subscription type to a contact and applies its opt-in or opt-out preference. Supply the subscription `id` and `consent_type` to specify which subscription to attach and how the contact has consented.
 ///
 /// You can add a specific subscription to a contact. In Intercom, we have two different subscription types based on user consent \- opt-out and opt-in: 1.Attaching a contact to an opt-out subscription type will opt that user out from receiving messages related to that subscription type. 2.Attaching a contact to an opt-in subscription type will opt that user in to receiving messages related to that subscription type. This will return a subscription type model for the subscription type that was added to the contact.
@@ -19,12 +27,15 @@ use crate::types::{IntercomVersion, SubscriptionType, SubscriptionTypeList};
 /// * `consent_type` - The consent_type of a subscription, opt_out or opt_in.
 pub fn attach_subscription_type_to_contact(
     config: &ClientConfig,
-    contact_id: String,
-    id: String,
-    consent_type: String,
-    intercom_version: Option<IntercomVersion>,
+    params: AttachSubscriptionTypeToContactParams,
     options: Option<&RequestOptions>,
 ) -> Result<SubscriptionType, SdkError> {
+    let AttachSubscriptionTypeToContactParams {
+        contact_id,
+        id,
+        consent_type,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -74,6 +85,13 @@ pub fn attach_subscription_type_to_contact(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DetachSubscriptionTypeToContactParams {
+    pub contact_id: String,
+    pub subscription_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Removes a subscription type from a contact. Identify both the contact and subscription type with their respective path parameters; the response returns the removed subscription type.
 ///
 /// You can remove a specific subscription from a contact. This will return a subscription type model for the subscription type that was removed from the contact.
@@ -86,11 +104,14 @@ pub fn attach_subscription_type_to_contact(
 ///   is given by Intercom
 pub fn detach_subscription_type_to_contact(
     config: &ClientConfig,
-    contact_id: String,
-    subscription_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DetachSubscriptionTypeToContactParams,
     options: Option<&RequestOptions>,
 ) -> Result<SubscriptionType, SdkError> {
+    let DetachSubscriptionTypeToContactParams {
+        contact_id,
+        subscription_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -119,14 +140,20 @@ pub fn detach_subscription_type_to_contact(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListSubscriptionTypesParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists subscription types associated with the workspace. Use this endpoint to retrieve the available types customers can use to opt out of non-essential communications.
 ///
 /// You can list all subscription types. A list of subscription type objects will be returned.
 pub fn list_subscription_types(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListSubscriptionTypesParams,
     options: Option<&RequestOptions>,
 ) -> Result<SubscriptionTypeList, SdkError> {
+    let ListSubscriptionTypesParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

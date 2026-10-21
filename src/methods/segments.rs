@@ -6,6 +6,12 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{IntercomVersion, Segment, SegmentList};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListSegmentsParams {
+    pub include_count: Option<bool>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists segments in the workspace, which group contacts according to configured rules. Set `include_count` to include the number of contacts in each segment. Use `page` and `per_page` to paginate the results.
 ///
 /// You can fetch a list of all segments.
@@ -16,10 +22,13 @@ use crate::types::{IntercomVersion, Segment, SegmentList};
 ///   segment.
 pub fn list_segments(
     config: &ClientConfig,
-    include_count: Option<bool>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListSegmentsParams,
     options: Option<&RequestOptions>,
 ) -> Result<SegmentList, SdkError> {
+    let ListSegmentsParams {
+        include_count,
+        intercom_version,
+    } = params;
     let mut __query: Vec<(&str, String)> = Vec::with_capacity(1);
     if let Some(ref v) = include_count {
         __query.push(("include_count", crate::client::query_value(v)));
@@ -50,6 +59,12 @@ pub fn list_segments(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveSegmentParams {
+    pub segment_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the details of a segment, a group of contacts defined by its rules. Use `segment_id` to identify the segment you want to retrieve.
 ///
 /// You can fetch the details of a single segment.
@@ -59,10 +74,13 @@ pub fn list_segments(
 /// * `segment_id` - The unique identified of a given segment.
 pub fn retrieve_segment(
     config: &ClientConfig,
-    segment_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveSegmentParams,
     options: Option<&RequestOptions>,
 ) -> Result<Segment, SdkError> {
+    let RetrieveSegmentParams {
+        segment_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

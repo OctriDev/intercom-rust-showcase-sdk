@@ -6,6 +6,12 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::SdkError;
 use crate::types::{IntercomVersion, WorkflowExport};
 
+#[derive(Debug, Clone, Default)]
+pub struct ExportWorkflowParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Exports the complete configuration for a workflow, including its steps, targeting rules, and attributes. Use this operation to retrieve workflow configuration for EU Data Act compliance.
 ///
 /// Export a workflow configuration by its ID. This endpoint returns the complete workflow definition including its steps, targeting rules, and attributes. This endpoint is designed for EU Data Act compliance, allowing customers to export their workflow configurations.
@@ -15,10 +21,13 @@ use crate::types::{IntercomVersion, WorkflowExport};
 /// * `id` - The unique identifier for the workflow
 pub fn export_workflow(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: ExportWorkflowParams,
     options: Option<&RequestOptions>,
 ) -> Result<WorkflowExport, SdkError> {
+    let ExportWorkflowParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

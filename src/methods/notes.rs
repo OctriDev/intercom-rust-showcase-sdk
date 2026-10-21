@@ -6,6 +6,12 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{DeletedNoteObject, IntercomVersion, Note, NoteList};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListCompanyNotesParams {
+    pub company_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the notes associated with a specific company. Use the company identifier to retrieve its notes; the response includes cursor-based pagination metadata.
 ///
 /// You can fetch a list of notes that are associated to a company.
@@ -16,10 +22,13 @@ use crate::types::{DeletedNoteObject, IntercomVersion, Note, NoteList};
 ///   Intercom
 pub fn list_company_notes(
     config: &ClientConfig,
-    company_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: ListCompanyNotesParams,
     options: Option<&RequestOptions>,
 ) -> Result<NoteList, SdkError> {
+    let ListCompanyNotesParams {
+        company_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -47,6 +56,14 @@ pub fn list_company_notes(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct CreateCompanyNoteParams {
+    pub company_id: String,
+    pub body: String,
+    pub intercom_version: Option<IntercomVersion>,
+    pub admin_id: Option<String>,
+}
+
 /// Creates a note associated with a specific company. Include the note text in `body`; you can optionally specify `admin_id` to set the note's author, otherwise the admin associated with the access token is used.
 ///
 /// You can add a note to a single company.
@@ -60,12 +77,15 @@ pub fn list_company_notes(
 ///   provided, defaults to the admin associated with the access token.
 pub fn create_company_note(
     config: &ClientConfig,
-    company_id: String,
-    body: String,
-    intercom_version: Option<IntercomVersion>,
-    admin_id: Option<String>,
+    params: CreateCompanyNoteParams,
     options: Option<&RequestOptions>,
 ) -> Result<Note, SdkError> {
+    let CreateCompanyNoteParams {
+        company_id,
+        body,
+        intercom_version,
+        admin_id,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -117,6 +137,12 @@ pub fn create_company_note(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ListNotesParams {
+    pub contact_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists notes associated with a contact. Use the `contact_id` path parameter to identify the contact; the response includes cursor-based pagination metadata and the total note count.
 ///
 /// You can fetch a list of notes that are associated to a contact.
@@ -126,10 +152,13 @@ pub fn create_company_note(
 /// * `contact_id` - The unique identifier of a contact.
 pub fn list_notes(
     config: &ClientConfig,
-    contact_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: ListNotesParams,
     options: Option<&RequestOptions>,
 ) -> Result<NoteList, SdkError> {
+    let ListNotesParams {
+        contact_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -157,6 +186,14 @@ pub fn list_notes(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct CreateNoteParams {
+    pub contact_id: i64,
+    pub body: String,
+    pub intercom_version: Option<IntercomVersion>,
+    pub admin_id: Option<String>,
+}
+
 /// Creates a note for a contact. Supply the required `body` text and optionally specify the `admin_id` of the admin associated with the note. The response includes the created note and its contact and author details.
 ///
 /// You can add a note to a single contact.
@@ -168,12 +205,15 @@ pub fn list_notes(
 /// * `admin_id` - The unique identifier of a given admin.
 pub fn create_note(
     config: &ClientConfig,
-    contact_id: i64,
-    body: String,
-    intercom_version: Option<IntercomVersion>,
-    admin_id: Option<String>,
+    params: CreateNoteParams,
     options: Option<&RequestOptions>,
 ) -> Result<Note, SdkError> {
+    let CreateNoteParams {
+        contact_id,
+        body,
+        intercom_version,
+        admin_id,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -225,6 +265,12 @@ pub fn create_note(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveNoteParams {
+    pub note_id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a note attached to a contact or company. Supply `note_id` to identify the note. The response includes the note body, creation time, author, and associated contact or company.
 ///
 /// You can fetch the details of a single note.
@@ -234,10 +280,13 @@ pub fn create_note(
 /// * `note_id` - The unique identifier of a given note
 pub fn retrieve_note(
     config: &ClientConfig,
-    note_id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveNoteParams,
     options: Option<&RequestOptions>,
 ) -> Result<Note, SdkError> {
+    let RetrieveNoteParams {
+        note_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -262,6 +311,12 @@ pub fn retrieve_note(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteNoteParams {
+    pub note_id: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes a note attached to a contact or company. Use `note_id` to identify the note to remove. Notes of other kinds cannot be deleted through the API.
 ///
 /// You can delete a single contact or company note. Notes of other kinds cannot be deleted through the API.
@@ -271,10 +326,13 @@ pub fn retrieve_note(
 /// * `note_id` - The unique identifier of a given note
 pub fn delete_note(
     config: &ClientConfig,
-    note_id: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteNoteParams,
     options: Option<&RequestOptions>,
 ) -> Result<DeletedNoteObject, SdkError> {
+    let DeleteNoteParams {
+        note_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

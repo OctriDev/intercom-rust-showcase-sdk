@@ -9,14 +9,20 @@ use crate::types::{
     UpdateTicketTypeRequestCategoryEnum,
 };
 
+#[derive(Debug, Clone, Default)]
+pub struct ListTicketTypesParams {
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists the ticket types associated with the workspace. Use the returned ticket type details to review their attributes, states, and archive status.
 ///
 /// You can get a list of all ticket types for a workspace.
 pub fn list_ticket_types(
     config: &ClientConfig,
-    intercom_version: Option<IntercomVersion>,
+    params: ListTicketTypesParams,
     options: Option<&RequestOptions>,
 ) -> Result<TicketTypeList, SdkError> {
+    let ListTicketTypesParams { intercom_version } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -158,6 +164,12 @@ pub fn create_ticket_type(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetTicketTypeParams {
+    pub ticket_type_id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves a ticket type by its unique identifier. Supply `ticket_type_id` to identify the ticket type and an API version if you need to override the default version.
 ///
 /// You can fetch the details of a single ticket type.
@@ -168,10 +180,13 @@ pub fn create_ticket_type(
 ///   given by Intercom.
 pub fn get_ticket_type(
     config: &ClientConfig,
-    ticket_type_id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: GetTicketTypeParams,
     options: Option<&RequestOptions>,
 ) -> Result<TicketType, SdkError> {
+    let GetTicketTypeParams {
+        ticket_type_id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

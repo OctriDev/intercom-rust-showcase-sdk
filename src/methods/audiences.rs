@@ -7,6 +7,13 @@ use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{Audience, AudienceList, IntercomVersion, Predicate};
 use crate::validation::{validate_range, RangeOpts};
 
+#[derive(Debug, Clone, Default)]
+pub struct ListAudiencesParams {
+    pub page: Option<i64>,
+    pub per_page: Option<i64>,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Lists audiences configured for the workspace, with pagination metadata. Use `page` and `per_page` to paginate the results, and note that `per_page` is capped at 50.
 ///
 /// You can fetch a list of all audiences for the workspace.
@@ -18,11 +25,14 @@ use crate::validation::{validate_range, RangeOpts};
 ///   Maximum is 50.
 pub fn list_audiences(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListAudiencesParams,
     options: Option<&RequestOptions>,
 ) -> Result<AudienceList, SdkError> {
+    let ListAudiencesParams {
+        page,
+        per_page,
+        intercom_version,
+    } = params;
     if let Some(ref per_page_v) = per_page {
         validate_range(
             "per_page",
@@ -78,19 +88,25 @@ pub fn list_audiences(
 ///   Maximum is 50.
 pub fn list_audiences_paginated(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListAudiencesParams,
     options: Option<&RequestOptions>,
     mut yield_fn: impl FnMut(&Audience) -> bool,
 ) -> Result<(), SdkError> {
+    let ListAudiencesParams {
+        page,
+        per_page,
+        intercom_version,
+    } = params;
+
     let mut _page_number: i64 = page.unwrap_or(1);
     loop {
         let _page = list_audiences(
             config,
-            Some(_page_number),
-            per_page,
-            intercom_version.clone(),
+            ListAudiencesParams {
+                page: Some(_page_number),
+                per_page,
+                intercom_version: intercom_version.clone(),
+            },
             options,
         )?;
         if match _page.data.as_ref() {
@@ -119,19 +135,25 @@ pub struct ListAudiencesPage<'a> {
 
 pub fn list_audiences_pages(
     config: &ClientConfig,
-    page: Option<i64>,
-    per_page: Option<i64>,
-    intercom_version: Option<IntercomVersion>,
+    params: ListAudiencesParams,
     options: Option<&RequestOptions>,
     mut yield_page: impl FnMut(ListAudiencesPage<'_>) -> bool,
 ) -> Result<(), SdkError> {
+    let ListAudiencesParams {
+        page,
+        per_page,
+        intercom_version,
+    } = params;
+
     let mut _page_number: i64 = page.unwrap_or(1);
     loop {
         let _page = list_audiences(
             config,
-            Some(_page_number),
-            per_page,
-            intercom_version.clone(),
+            ListAudiencesParams {
+                page: Some(_page_number),
+                per_page,
+                intercom_version: intercom_version.clone(),
+            },
             options,
         )?;
         if match _page.data.as_ref() {
@@ -157,6 +179,14 @@ pub fn list_audiences_pages(
     }
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct CreateAudienceParams {
+    pub name: String,
+    pub intercom_version: Option<IntercomVersion>,
+    pub predicates: Option<Vec<Predicate>>,
+    pub role_predicates: Option<Vec<Predicate>>,
+}
+
 /// Creates an audience that groups contacts for targeting by Fin. Supply a `name` and optionally define membership with `predicates` and role-based filters with `role_predicates`. A 201 response returns the created audience and its generated identifier.
 ///
 /// You can create a new audience by making a POST request to `https://api.intercom.io/audiences`.
@@ -170,12 +200,15 @@ pub fn list_audiences_pages(
 ///   membership by contact role.
 pub fn create_audience(
     config: &ClientConfig,
-    name: String,
-    intercom_version: Option<IntercomVersion>,
-    predicates: Option<Vec<Predicate>>,
-    role_predicates: Option<Vec<Predicate>>,
+    params: CreateAudienceParams,
     options: Option<&RequestOptions>,
 ) -> Result<Audience, SdkError> {
+    let CreateAudienceParams {
+        name,
+        intercom_version,
+        predicates,
+        role_predicates,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -235,6 +268,12 @@ pub fn create_audience(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct RetrieveAudienceParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves an audience configured for the workspace, including its contact and role-based membership predicates. Use the audience `id` to retrieve the audience details.
 ///
 /// You can fetch the details of a single audience by making a GET request to `https://api.intercom.io/audiences/{id}`.
@@ -244,10 +283,13 @@ pub fn create_audience(
 /// * `id` - The unique identifier for the audience.
 pub fn retrieve_audience(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: RetrieveAudienceParams,
     options: Option<&RequestOptions>,
 ) -> Result<Audience, SdkError> {
+    let RetrieveAudienceParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -366,6 +408,12 @@ pub fn update_audience(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DeleteAudienceParams {
+    pub id: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Deletes the audience identified by `id` from the workspace. Use this endpoint when the audience is no longer needed; a successful response has no response body.
 ///
 /// You can delete a single audience by making a DELETE request to `https://api.intercom.io/audiences/{id}`.
@@ -375,10 +423,13 @@ pub fn update_audience(
 /// * `id` - The unique identifier for the audience.
 pub fn delete_audience(
     config: &ClientConfig,
-    id: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DeleteAudienceParams,
     options: Option<&RequestOptions>,
 ) -> Result<serde_json::Value, SdkError> {
+    let DeleteAudienceParams {
+        id,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((

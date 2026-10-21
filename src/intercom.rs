@@ -21,10 +21,10 @@ impl AdminsNamespace {
     /// You can view the currently authorised admin along with the embedded app object (a "workspace" in legacy terminology). \> 🚧 Single Sign On \> \> If you are building a custom "Log in with Intercom" flow for your site, and you call the `/me` endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.
     pub fn identify(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::admins::IdentifyAdminParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AdminWithApp, crate::errors::SdkError> {
-        crate::methods::admins::identify_admin(&self.config, intercom_version, options)
+        crate::methods::admins::identify_admin(&self.config, params, options)
     }
     /// Sets an admin's away status for the Inbox and controls whether new conversation replies are reassigned. Supply `away_mode_enabled` and `away_mode_reassign` in the request body; their defaults are `true` and `false`, respectively. You can also provide an away status reason identifier.
     ///
@@ -41,18 +41,10 @@ impl AdminsNamespace {
     /// You can get a log of activities by all admins in an app.
     pub fn list_activity_logs(
         &self,
-        created_at_after: String,
-        created_at_before: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::admins::ListActivityLogsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ActivityLogList, crate::errors::SdkError> {
-        crate::methods::admins::list_activity_logs(
-            &self.config,
-            created_at_after,
-            created_at_before,
-            intercom_version,
-            options,
-        )
+        crate::methods::admins::list_activity_logs(&self.config, params, options)
     }
     /// Searches admin activity logs by time range and optional event type filters. Supply `created_at_after` and use `event_types` to restrict results to selected event types; retrieve valid event types from the activity log event types endpoint. Use `page` and `per_page` to paginate the results.
     ///
@@ -69,36 +61,30 @@ impl AdminsNamespace {
     /// You can get a list of all activity log event types. This is useful for discovering valid values to use with the `event_types` filter on the List all activity logs endpoint.
     pub fn list_activity_log_event_types(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::admins::ListActivityLogEventTypesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ActivityLogEventTypeList, crate::errors::SdkError> {
-        crate::methods::admins::list_activity_log_event_types(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::admins::list_activity_log_event_types(&self.config, params, options)
     }
     /// Lists the admins associated with the workspace. Set `display_avatar` to `true` to include each admin's avatar object and image URL; it defaults to `false` when omitted.
     ///
     /// You can fetch a list of admins for a given workspace.
     pub fn list(
         &self,
-        display_avatar: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::admins::ListAdminsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AdminList, crate::errors::SdkError> {
-        crate::methods::admins::list_admins(&self.config, display_avatar, intercom_version, options)
+        crate::methods::admins::list_admins(&self.config, params, options)
     }
     /// Retrieves the details of a specific admin account. Use the admin identifier to view the admin's profile, away settings, team assignments, and role information when present.
     ///
     /// You can retrieve the details of a single admin.
     pub fn retrieve(
         &self,
-        admin_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::admins::RetrieveAdminParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Admin, crate::errors::SdkError> {
-        crate::methods::admins::retrieve_admin(&self.config, admin_id, intercom_version, options)
+        crate::methods::admins::retrieve_admin(&self.config, params, options)
     }
 }
 
@@ -119,31 +105,20 @@ impl MacrosNamespace {
     /// You can fetch a single macro (saved reply) by its ID. The macro will only be returned if it is visible to the authenticated user based on its visibility settings. \*\*Visibility Rules\*\* A macro is returned based on its `visible_to` setting: \- `everyone`: Always visible to all team members \- `specific_teams`: Only visible if the authenticated user belongs to one of the teams specified in `visible_to_team_ids` If a macro exists but is not visible to the authenticated user, a 404 error is returned. \*\*Placeholder Transformation\*\* The API transforms Intercom placeholders to a more standard XML-like format in the `body` field: \- From: `{{user.name | fallback: 'there'}}` \- To: `<attribute key="user.name" default="there"/\>` Default values in placeholders are HTML-escaped for security.
     pub fn get(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::macros::GetMacroParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Macro, crate::errors::SdkError> {
-        crate::methods::macros::get_macro(&self.config, id, intercom_version, options)
+        crate::methods::macros::get_macro(&self.config, params, options)
     }
     /// Lists macros (saved replies) in the workspace, ordered by most recently updated. Use `starting_after` to continue from the previous page and `updated_since` to filter by update time. The `starting_after` cursor is a Base64-encoded JSON array containing the previous page's last `updated_at` and `id` values.
     ///
     /// You can fetch a list of all macros (saved replies) in your workspace for use in automating responses. The macros are returned in descending order by updated_at. \*\*Pagination\*\* This endpoint uses cursor-based pagination via the `starting_after` parameter. The cursor is a Base64-encoded JSON array containing `[updated_at, id]` of the last item from the previous page. \*\*Placeholder Transformation\*\* The API transforms Intercom placeholders to a more standard XML-like format: \- From: `{{user.name | fallback: 'there'}}` \- To: `<attribute key="user.name" default="there"/\>`
     pub fn list(
         &self,
-        per_page: Option<i64>,
-        starting_after: Option<String>,
-        updated_since: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::macros::ListMacrosParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<MacroList, crate::errors::SdkError> {
-        crate::methods::macros::list_macros(
-            &self.config,
-            per_page,
-            starting_after,
-            updated_since,
-            intercom_version,
-            options,
-        )
+        crate::methods::macros::list_macros(&self.config, params, options)
     }
 }
 
@@ -164,18 +139,10 @@ impl OfficeHoursNamespace {
     /// You can fetch the details of a single office hours exception.
     pub fn get_exception(
         &self,
-        office_hours_schedule_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::GetOfficeHoursExceptionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<OfficeHoursException, crate::errors::SdkError> {
-        crate::methods::office_hours::get_office_hours_exception(
-            &self.config,
-            office_hours_schedule_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::get_office_hours_exception(&self.config, params, options)
     }
     /// Updates an existing office hours exception, changing only the fields included in the request. Set `exception_type` to `closed` or `custom_hours`; custom hours require `time_intervals`, while closed exceptions omit them. Set `exception_date` in `YYYY-MM-DD` format and use `recurring_annually` to indicate whether the exception repeats each year.
     ///
@@ -192,37 +159,23 @@ impl OfficeHoursNamespace {
     /// You can delete a single office hours exception.
     pub fn delete_exception(
         &self,
-        office_hours_schedule_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::DeleteOfficeHoursExceptionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<
         crate::methods::office_hours::DeleteOfficeHoursExceptionResponse,
         crate::errors::SdkError,
     > {
-        crate::methods::office_hours::delete_office_hours_exception(
-            &self.config,
-            office_hours_schedule_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::delete_office_hours_exception(&self.config, params, options)
     }
     /// Lists the exceptions for a specific office hours schedule. Use the schedule identifier to retrieve exceptions that override its regular hours on particular dates.
     ///
     /// You can fetch a list of all exceptions for an office hours schedule.
     pub fn list_exceptions(
         &self,
-        office_hours_schedule_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::ListOfficeHoursExceptionsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<OfficeHoursExceptionList, crate::errors::SdkError> {
-        crate::methods::office_hours::list_office_hours_exceptions(
-            &self.config,
-            office_hours_schedule_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::list_office_hours_exceptions(&self.config, params, options)
     }
     /// Creates an exception that overrides the regular hours for a specific date on an office hours schedule. Supply `exception_date` and choose `closed` or `custom_hours`; provide `time_intervals` for custom hours and omit it for a closed day. Set `recurring_annually` to repeat the exception on the same date each year.
     ///
@@ -239,16 +192,10 @@ impl OfficeHoursNamespace {
     /// You can fetch the details of a single office hours schedule.
     pub fn get_schedule(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::GetOfficeHoursScheduleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<OfficeHoursSchedule, crate::errors::SdkError> {
-        crate::methods::office_hours::get_office_hours_schedule(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::get_office_hours_schedule(&self.config, params, options)
     }
     /// Updates the provided fields of an existing office hours schedule. Supply only the schedule properties you want to change; when updating `time_intervals`, set `start_minute` and `end_minute` on 15-minute boundaries.
     ///
@@ -265,53 +212,33 @@ impl OfficeHoursNamespace {
     /// You can delete a single office hours schedule.
     pub fn delete_schedule(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::DeleteOfficeHoursScheduleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<
         crate::methods::office_hours::DeleteOfficeHoursScheduleResponse,
         crate::errors::SdkError,
     > {
-        crate::methods::office_hours::delete_office_hours_schedule(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::delete_office_hours_schedule(&self.config, params, options)
     }
     /// Lists the office hours schedules configured for the workspace. Use this endpoint to view the recurring schedules and their weekly hours.
     ///
     /// You can fetch a list of all office hours schedules for the workspace.
     pub fn list_schedules(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::ListOfficeHoursSchedulesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<OfficeHoursScheduleList, crate::errors::SdkError> {
-        crate::methods::office_hours::list_office_hours_schedules(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::list_office_hours_schedules(&self.config, params, options)
     }
     /// Creates a recurring weekly office hours schedule for the workspace. Provide its `name`, `time_zone_name`, and `time_intervals`; set each interval's start and end on 15-minute boundaries. The response includes the created schedule and its identifier.
     ///
     /// You can create a new office hours schedule for the workspace.
     pub fn create_schedule(
         &self,
-        name: String,
-        time_zone_name: String,
-        time_intervals: Vec<OfficeHoursTimeIntervalRequest>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::office_hours::CreateOfficeHoursScheduleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<OfficeHoursSchedule, crate::errors::SdkError> {
-        crate::methods::office_hours::create_office_hours_schedule(
-            &self.config,
-            name,
-            time_zone_name,
-            time_intervals,
-            intercom_version,
-            options,
-        )
+        crate::methods::office_hours::create_office_hours_schedule(&self.config, params, options)
     }
 }
 
@@ -332,14 +259,10 @@ impl AiContentNamespace {
     /// You can retrieve a list of all content import sources for a workspace.
     pub fn list_content_import_sources(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ai_content::ListContentImportSourcesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContentImportSourcesList, crate::errors::SdkError> {
-        crate::methods::ai_content::list_content_import_sources(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::ai_content::list_content_import_sources(&self.config, params, options)
     }
     /// Creates a content import source for external pages in your Fin Content Library. Supply `sync_behavior` as `api` and provide the source `url`; you can also set its status and associate audiences.
     ///
@@ -356,30 +279,18 @@ impl AiContentNamespace {
     /// You can delete a content import source by making a DELETE request this endpoint. This will also delete all external pages that were imported from this source.
     pub fn delete_content_import_source(
         &self,
-        source_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ai_content::DeleteContentImportSourceParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::ai_content::delete_content_import_source(
-            &self.config,
-            source_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::ai_content::delete_content_import_source(&self.config, params, options)
     }
     /// Retrieves a content import source from your Fin Content Library by its identifier. Use the source ID to inspect its URL, status, sync behavior, and associated audiences.
     pub fn get_content_import_source(
         &self,
-        source_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ai_content::GetContentImportSourceParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContentImportSource, crate::errors::SdkError> {
-        crate::methods::ai_content::get_content_import_source(
-            &self.config,
-            source_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::ai_content::get_content_import_source(&self.config, params, options)
     }
     /// Replaces the settings for a content import source in your Fin Content Library. Provide `sync_behavior` and `url`; you can also change its status, update its audiences, and apply an audience to existing external pages.
     ///
@@ -396,10 +307,10 @@ impl AiContentNamespace {
     /// You can retrieve a list of all external pages for a workspace.
     pub fn list_external_pages(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ai_content::ListExternalPagesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ExternalPagesList, crate::errors::SdkError> {
-        crate::methods::ai_content::list_external_pages(&self.config, intercom_version, options)
+        crate::methods::ai_content::list_external_pages(&self.config, params, options)
     }
     /// Creates an external page in your Fin Content Library, or updates the existing page with the same source and external identifiers. Provide the page title, HTML body, locale, source ID, and source-assigned external ID.
     ///
@@ -416,32 +327,20 @@ impl AiContentNamespace {
     /// Sending a DELETE request for an external page will remove it from the content library UI and from being used for AI answers.
     pub fn delete_external_page(
         &self,
-        page_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ai_content::DeleteExternalPageParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ExternalPage, crate::errors::SdkError> {
-        crate::methods::ai_content::delete_external_page(
-            &self.config,
-            page_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::ai_content::delete_external_page(&self.config, params, options)
     }
     /// Retrieves an external page from your Fin Content Library by its page identifier. Use this operation to inspect the page content, source association, availability settings, and audience targeting.
     ///
     /// You can retrieve an external page.
     pub fn get_external_page(
         &self,
-        page_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ai_content::GetExternalPageParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ExternalPage, crate::errors::SdkError> {
-        crate::methods::ai_content::get_external_page(
-            &self.config,
-            page_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::ai_content::get_external_page(&self.config, params, options)
     }
     /// Replaces the specified external page's details in your Fin Content Library; this operation applies to pages created through the API. Provide `title`, `html`, `url`, `locale`, and `source_id`, and include `audience_ids` to replace the existing audience memberships.
     ///
@@ -472,10 +371,10 @@ impl ArticlesNamespace {
     /// You can fetch a list of all articles by making a GET request to `https://api.intercom.io/articles`. \> 📘 How are the articles sorted and ordered? \> \> Articles will be returned in descending order on the `updated_at` attribute. This means if you need to iterate through results then we'll show the most recently updated articles first.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::articles::ListArticlesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ArticleList, crate::errors::SdkError> {
-        crate::methods::articles::list_articles(&self.config, intercom_version, options)
+        crate::methods::articles::list_articles(&self.config, params, options)
     }
     /// Creates a new article in the help center. Supply `title` and `author_id`; `state` defaults to draft, and you can provide article content in HTML or Markdown. Article tags are read-only through the Articles API and must be managed through the Tags API or the Intercom UI.
     ///
@@ -492,16 +391,10 @@ impl ArticlesNamespace {
     /// You can fetch the details of a single article by making a GET request to `https://api.intercom.io/articles/<id\>`.
     pub fn retrieve(
         &self,
-        article_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::articles::RetrieveArticleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Article, crate::errors::SdkError> {
-        crate::methods::articles::retrieve_article(
-            &self.config,
-            article_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::articles::retrieve_article(&self.config, params, options)
     }
     /// Updates an existing article's content and settings. Use the `article_id` path parameter to identify the article and provide only the fields you want to change; `body` and `body_markdown` cannot be supplied together. Article tags are read-only through the Articles API and must be managed through the Tags API or the Intercom UI.
     ///
@@ -518,32 +411,20 @@ impl ArticlesNamespace {
     /// You can delete a single article by making a DELETE request to `https://api.intercom.io/articles/<id\>`.
     pub fn delete(
         &self,
-        article_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::articles::DeleteArticleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedArticleObject, crate::errors::SdkError> {
-        crate::methods::articles::delete_article(
-            &self.config,
-            article_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::articles::delete_article(&self.config, params, options)
     }
     /// Retrieves the staged draft of a published article without changing its live content. Use the `id` path parameter to identify the article; a draft exists only when unpublished changes have been staged. You need the `read_articles_scope` OAuth scope to retrieve the draft.
     ///
     /// Fetch the staged draft of a published article by making a GET request to `https://api.intercom.io/articles/<id\>/draft`. The response is the article rendered with its draft content, leaving the live article untouched. A draft exists only when a published article has unpublished changes staged on top of it. Returns `404` when the article has no staged draft. Requires the `read_articles_scope` OAuth scope.
     pub fn retrieve_draft(
         &self,
-        id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::articles::RetrieveArticleDraftParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Article, crate::errors::SdkError> {
-        crate::methods::articles::retrieve_article_draft(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::articles::retrieve_article_draft(&self.config, params, options)
     }
     /// Stages changes to a published article as a draft, leaving the live article unchanged. Use the `id` path parameter to identify the article and supply versioned text content to stage; non-versioned fields such as AI availability are ignored. The article must already be published, and you need the `read_write_articles_scope` OAuth scope.
     ///
@@ -560,56 +441,30 @@ impl ArticlesNamespace {
     /// Publish a staged draft by making a POST request to `https://api.intercom.io/articles/<id\>/draft/publish`, promoting the draft content to live. On a single-language workspace no body is required. On a multilingual workspace you must list which locales to publish via the `locales` array; omitting it returns `422`. Returns `422` when there is no staged draft to publish, or when a requested locale has no pending changes. Requires the `read_write_articles_scope` OAuth scope.
     pub fn publish_draft(
         &self,
-        id: i64,
-        intercom_version: Option<IntercomVersion>,
-        locales: Option<Vec<String>>,
+        params: crate::methods::articles::PublishArticleDraftParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Article, crate::errors::SdkError> {
-        crate::methods::articles::publish_article_draft(
-            &self.config,
-            id,
-            intercom_version,
-            locales,
-            options,
-        )
+        crate::methods::articles::publish_article_draft(&self.config, params, options)
     }
     /// Applies an existing workspace tag to an article. Provide the tag's `id` in the request body and use `article_id` to identify the article. The authenticated teammate needs the `manage_knowledge_base_content` permission and the `read_write_articles_scope` OAuth scope.
     ///
     /// Apply an existing tag to an article. Returns the tag that was applied. The tag must already exist in the workspace (create tags with the Tags API), and the authenticating teammate must have the `manage_knowledge_base_content` permission. Requires the `read_write_articles_scope` OAuth scope.
     pub fn attach_tag(
         &self,
-        article_id: i64,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
-        admin_id: Option<Option<String>>,
+        params: crate::methods::articles::AttachArticlesTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::articles::attach_articles_tag(
-            &self.config,
-            article_id,
-            id,
-            intercom_version,
-            admin_id,
-            options,
-        )
+        crate::methods::articles::attach_articles_tag(&self.config, params, options)
     }
     /// Removes a tag from an article. Use the `article_id` and `id` path parameters to identify the article and tag to detach. The authenticated teammate needs the `manage_knowledge_base_content` permission and the `read_write_articles_scope` OAuth scope.
     ///
     /// Remove a tag from an article. Returns the tag that was removed, with null `applied_at` and `applied_by`. The authenticating teammate must have the `manage_knowledge_base_content` permission. Requires the `read_write_articles_scope` OAuth scope.
     pub fn detach_tag(
         &self,
-        article_id: i64,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::articles::DetachArticlesTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::articles::detach_articles_tag(
-            &self.config,
-            article_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::articles::detach_articles_tag(&self.config, params, options)
     }
     /// Lists an article's version history as paginated metadata, with the newest versions first. Use `locale` to filter the history to a configured locale, and use `page` and `per_page` to paginate the results. Retrieve an individual version to access its full content.
     ///
@@ -626,20 +481,10 @@ impl ArticlesNamespace {
     /// Fetch a single prior version of an article, including its body content, by making a GET request to `https://api.intercom.io/articles/<article_id\>/versions/<id\>`. Returns the version's full content; the live article remains untouched. Requires the `read_articles_scope` OAuth scope.
     pub fn retrieve_version(
         &self,
-        article_id: i64,
-        id: String,
-        locale: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::articles::RetrieveArticleVersionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ArticleVersion, crate::errors::SdkError> {
-        crate::methods::articles::retrieve_article_version(
-            &self.config,
-            article_id,
-            id,
-            locale,
-            intercom_version,
-            options,
-        )
+        crate::methods::articles::retrieve_article_version(&self.config, params, options)
     }
     /// Searches articles by phrase and can filter results by article state and Help Center. Use `highlight` to request highlighted matching content; results include article data, optional highlights, and cursor-based page information.
     ///
@@ -670,14 +515,10 @@ impl AwayStatusReasonsNamespace {
     /// Returns a list of all away status reasons configured for the workspace, including deleted ones.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::away_status_reasons::ListAwayStatusReasonsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AwayStatusReasonList, crate::errors::SdkError> {
-        crate::methods::away_status_reasons::list_away_status_reasons(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::away_status_reasons::list_away_status_reasons(&self.config, params, options)
     }
 }
 
@@ -698,69 +539,41 @@ impl AudiencesNamespace {
     /// You can fetch a list of all audiences for the workspace.
     pub fn list(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::audiences::ListAudiencesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AudienceList, crate::errors::SdkError> {
-        crate::methods::audiences::list_audiences(
-            &self.config,
-            page,
-            per_page,
-            intercom_version,
-            options,
-        )
+        crate::methods::audiences::list_audiences(&self.config, params, options)
     }
     /// Lists audiences configured for the workspace, with pagination metadata. Use `page` and `per_page` to paginate the results, and note that `per_page` is capped at 50.
     ///
     /// You can fetch a list of all audiences for the workspace.
     pub fn list_paginated(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::audiences::ListAudiencesParams,
         options: Option<&crate::client::RequestOptions>,
         yield_fn: impl FnMut(&Audience) -> bool,
     ) -> Result<(), crate::errors::SdkError> {
-        crate::methods::audiences::list_audiences_paginated(
-            &self.config,
-            page,
-            per_page,
-            intercom_version,
-            options,
-            yield_fn,
-        )
+        crate::methods::audiences::list_audiences_paginated(&self.config, params, options, yield_fn)
     }
     /// Creates an audience that groups contacts for targeting by Fin. Supply a `name` and optionally define membership with `predicates` and role-based filters with `role_predicates`. A 201 response returns the created audience and its generated identifier.
     ///
     /// You can create a new audience by making a POST request to `https://api.intercom.io/audiences`.
     pub fn create(
         &self,
-        name: String,
-        intercom_version: Option<IntercomVersion>,
-        predicates: Option<Vec<Predicate>>,
-        role_predicates: Option<Vec<Predicate>>,
+        params: crate::methods::audiences::CreateAudienceParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Audience, crate::errors::SdkError> {
-        crate::methods::audiences::create_audience(
-            &self.config,
-            name,
-            intercom_version,
-            predicates,
-            role_predicates,
-            options,
-        )
+        crate::methods::audiences::create_audience(&self.config, params, options)
     }
     /// Retrieves an audience configured for the workspace, including its contact and role-based membership predicates. Use the audience `id` to retrieve the audience details.
     ///
     /// You can fetch the details of a single audience by making a GET request to `https://api.intercom.io/audiences/{id}`.
     pub fn retrieve(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::audiences::RetrieveAudienceParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Audience, crate::errors::SdkError> {
-        crate::methods::audiences::retrieve_audience(&self.config, id, intercom_version, options)
+        crate::methods::audiences::retrieve_audience(&self.config, params, options)
     }
     /// Replaces the supplied audience properties while leaving omitted properties unchanged. Send any combination of `name`, `predicates`, and `role_predicates` to update the audience identified by `id`.
     ///
@@ -777,11 +590,10 @@ impl AudiencesNamespace {
     /// You can delete a single audience by making a DELETE request to `https://api.intercom.io/audiences/{id}`.
     pub fn delete(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::audiences::DeleteAudienceParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::audiences::delete_audience(&self.config, id, intercom_version, options)
+        crate::methods::audiences::delete_audience(&self.config, params, options)
     }
 }
 
@@ -822,17 +634,13 @@ impl ReportingDataExportNamespace {
     /// Lists the datasets and attributes available for reporting data exports. Use the returned dataset identifiers and attribute details to determine which data you can include in an export.
     pub fn list_get_datasets(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::reporting_data_export::ListGetDatasetsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<
         crate::methods::reporting_data_export::ListGetDatasetsResponse,
         crate::errors::SdkError,
     > {
-        crate::methods::reporting_data_export::list_get_datasets(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::reporting_data_export::list_get_datasets(&self.config, params, options)
     }
     /// Downloads the data file for a completed reporting data export job. Provide the job identifier and app ID, and send the required `Accept` header to receive the file as an octet stream.
     ///
@@ -884,37 +692,21 @@ impl FinAgentNamespace {
     /// Record a customer's satisfaction rating for a conversation, with an optional free-text remark. Fin decides \*when\* to ask for a rating — this reuses the CSAT settings on your Fin workflow, not this API. When Fin asks, it fires a `csat_requested` event over webhooks or SSE carrying the rating options to show the user. Present those options, then submit the user's choice here. Submitting the same rating again, with no new remark, is a no-op and stays successful, so an at-least-once client can safely retry. Submitting a \*different\* rating updates the stored rating while the update window is still open, and a first remark can be added to an already-rated survey. Once a remark has been recorded the rating is locked and can no longer be changed. {% admonition type="warning" %} To request access to the Fin Agent API, go to \*\*Settings \> Integrations \> Fin Agent API\*\* in your workspace and tell us about your use case. Once access is granted, \*\*Fin Agent API\*\* appears under \*\*Fin AI Agent \> Deploy\*\*. {% /admonition %}
     pub fn submit_fin_csat(
         &self,
-        conversation_id: String,
-        rating: crate::methods::fin_agent::SubmitFinCsatRatingEnum,
-        intercom_version: Option<IntercomVersion>,
-        remark: Option<String>,
+        params: crate::methods::fin_agent::SubmitFinCsatParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::fin_agent::SubmitFinCsatResponse, crate::errors::SdkError> {
-        crate::methods::fin_agent::submit_fin_csat(
-            &self.config,
-            conversation_id,
-            rating,
-            intercom_version,
-            remark,
-            options,
-        )
+        crate::methods::fin_agent::submit_fin_csat(&self.config, params, options)
     }
     /// Lists the Fin capabilities available for a supplied user so an orchestrating agent can choose which action to call. Include the user's ID; if that user does not exist, Fin creates a user from the supplied details, and updates the email and attributes of an existing user.
     ///
     /// Return a machine-readable, per-user list of what Fin can do for a given end user, so an orchestrating agent can decide which endpoint to call. The response is audience-matched to the supplied user: each live, API-triggerable procedure is checked against that user before being included, alongside the static `reply` and `ask` actions. {% admonition type="warning" %} To request access to the Fin Agent API, go to \*\*Settings \> Integrations \> Fin Agent API\*\* in your workspace and tell us about your use case. Once access is granted, \*\*Fin Agent API\*\* appears under \*\*Fin AI Agent \> Deploy\*\*. {% /admonition %}
     pub fn list_fin_capabilities(
         &self,
-        user: FinAgentUser,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::fin_agent::ListFinCapabilitiesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::fin_agent::ListFinCapabilitiesResponse, crate::errors::SdkError>
     {
-        crate::methods::fin_agent::list_fin_capabilities(
-            &self.config,
-            user,
-            intercom_version,
-            options,
-        )
+        crate::methods::fin_agent::list_fin_capabilities(&self.config, params, options)
     }
     /// Submits a single, self-contained question to Fin and starts a non-conversational request. Fin returns its answer asynchronously through the `fin_replied` event and completes the conversation without an `awaiting_user_reply` cycle.
     ///
@@ -941,21 +733,11 @@ impl FinAgentNamespace {
     /// Hand a conversation off to a human teammate. If you use the Intercom Helpdesk, the handoff lands in your team inbox. Provide either `conversation_id` or `user`: \- `conversation_id` — escalate an existing agent conversation, including one started with `/fin/ask`. On the Intercom Helpdesk, Fin by default summarises the conversation and opens a new Helpdesk conversation that carries the summary as an internal note. Escalation does not change the original agent conversation's assignment or open/closed state. Configure an escalation Operator Workflow to change this default. \- `user` — escalate on behalf of a user with no prior agent conversation. On the Intercom Helpdesk, a new Helpdesk conversation is created for the teammate. Not supported on Fin for Platforms — see below. In both cases, pass the optional `context` to give the receiving teammate background your orchestrating agent has and Fin does not. On the Intercom Helpdesk, it appears above the summary in the internal note of the new conversation the teammate picks up. It is never shown to the end user. Escalating an existing conversation also sets its AI Agent resolution state to `escalated`, readable as `ai_agent.resolution_state` on the Conversations API. This is a resolution state, not a billable resolution. On Fin for Platforms, `conversation_id` is required — `user` is not supported and is rejected, because there is no Intercom Helpdesk in which to create a conversation. There is no Intercom inbox either, so an escalation that no workflow handles does not open a Helpdesk conversation for a teammate. `context` is not surfaced, and the conversation is left open for your platform to hand off and continue driving. You are notified over the existing webhook or SSE channel with an `escalated` status followed by `complete`. The `complete` status signals that Fin is done; it does not close the conversation. On the Intercom Helpdesk, the new human conversation remains open; on Fin for Platforms, the conversation…
     pub fn escalate_fin_conversation(
         &self,
-        intercom_version: Option<IntercomVersion>,
-        conversation_id: Option<String>,
-        user: Option<FinAgentUser>,
-        context: Option<String>,
+        params: crate::methods::fin_agent::EscalateFinConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::fin_agent::EscalateFinConversationResponse, crate::errors::SdkError>
     {
-        crate::methods::fin_agent::escalate_fin_conversation(
-            &self.config,
-            intercom_version,
-            conversation_id,
-            user,
-            context,
-            options,
-        )
+        crate::methods::fin_agent::escalate_fin_conversation(&self.config, params, options)
     }
 }
 
@@ -976,20 +758,10 @@ impl HelpCenterNamespace {
     /// You can fetch a list of all URL redirects for a help center by making a GET request to `https://api.intercom.io/help_center/help_centers/{help_center_id}/redirects`. Redirects are returned in descending order on the `updated_at` attribute. Requires the `read_help_center_redirects_scope` OAuth scope.
     pub fn list_redirects(
         &self,
-        help_center_id: String,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::ListHelpCenterRedirectsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<HelpCenterRedirectList, crate::errors::SdkError> {
-        crate::methods::help_center::list_help_center_redirects(
-            &self.config,
-            help_center_id,
-            page,
-            per_page,
-            intercom_version,
-            options,
-        )
+        crate::methods::help_center::list_help_center_redirects(&self.config, params, options)
     }
     /// Creates a redirect in a help center, mapping a source URL to an article or collection. Supply `from_url`, `locale`, `target_type`, and `target_id`; the source URL must be absolute and within the help center's URL space, and the target must belong to that help center. Use the `read_write_help_center_redirects_scope` OAuth scope to create redirects.
     ///
@@ -1006,46 +778,30 @@ impl HelpCenterNamespace {
     /// You can fetch the details of a single redirect by making a GET request to `https://api.intercom.io/help_center/help_centers/{help_center_id}/redirects/{id}`. Requires the `read_help_center_redirects_scope` OAuth scope.
     pub fn retrieve_redirect(
         &self,
-        help_center_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::RetrieveHelpCenterRedirectParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<HelpCenterRedirect, crate::errors::SdkError> {
-        crate::methods::help_center::retrieve_help_center_redirect(
-            &self.config,
-            help_center_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::help_center::retrieve_help_center_redirect(&self.config, params, options)
     }
     /// Deletes a redirect from a help center. Provide the help center and redirect identifiers to specify which redirect to remove. Access requires the `read_write_help_center_redirects_scope` OAuth scope.
     ///
     /// You can delete a single redirect by making a DELETE request to `https://api.intercom.io/help_center/help_centers/{help_center_id}/redirects/{id}`. Requires the `read_write_help_center_redirects_scope` OAuth scope.
     pub fn delete_redirect(
         &self,
-        help_center_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::DeleteHelpCenterRedirectParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedHelpCenterRedirectObject, crate::errors::SdkError> {
-        crate::methods::help_center::delete_help_center_redirect(
-            &self.config,
-            help_center_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::help_center::delete_help_center_redirect(&self.config, params, options)
     }
     /// Lists collections in the help center app. Use the results to review collection details, including their names, descriptions, and parent collections. Collections are ordered by `updated_at` in descending order, with the most recently updated first.
     ///
     /// You can fetch a list of all collections by making a GET request to `https://api.intercom.io/help_center/collections`. Collections will be returned in descending order on the `updated_at` attribute. This means if you need to iterate through results then we'll show the most recently updated collections first.
     pub fn list_all_collections(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::ListAllCollectionsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CollectionList, crate::errors::SdkError> {
-        crate::methods::help_center::list_all_collections(&self.config, intercom_version, options)
+        crate::methods::help_center::list_all_collections(&self.config, params, options)
     }
     /// Creates a collection in a help center. Supply `name` and optionally provide a description, translated content, or a parent collection; omitting `help_center_id` creates the collection in the default help center. Use `parent_id` to place the collection under another collection, or leave it null to create a top-level collection.
     ///
@@ -1062,16 +818,10 @@ impl HelpCenterNamespace {
     /// You can fetch the details of a single collection by making a GET request to `https://api.intercom.io/help_center/collections/<id\>`.
     pub fn retrieve_collection(
         &self,
-        collection_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::RetrieveCollectionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Collection, crate::errors::SdkError> {
-        crate::methods::help_center::retrieve_collection(
-            &self.config,
-            collection_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::help_center::retrieve_collection(&self.config, params, options)
     }
     /// Replaces collection details for a specified collection. Supply the collection fields you want to change, such as `name`, `description`, translated content, or parent collection. Use the collection identifier assigned by Intercom to select the collection.
     ///
@@ -1088,42 +838,30 @@ impl HelpCenterNamespace {
     /// You can delete a single collection by making a DELETE request to `https://api.intercom.io/collections/<id\>`.
     pub fn delete_collection(
         &self,
-        collection_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::DeleteCollectionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedCollectionObject, crate::errors::SdkError> {
-        crate::methods::help_center::delete_collection(
-            &self.config,
-            collection_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::help_center::delete_collection(&self.config, params, options)
     }
     /// Retrieves details for a help center. Provide its identifier to inspect its URL, display name, availability, and configured locales. Use this operation to view the help center's workspace and configuration details.
     ///
     /// You can fetch the details of a single Help Center by making a GET request to `https://api.intercom.io/help_center/help_center/<id\>`.
     pub fn retrieve(
         &self,
-        help_center_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::RetrieveHelpCenterParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<HelpCenter, crate::errors::SdkError> {
-        crate::methods::help_center::retrieve_help_center(
-            &self.config,
-            help_center_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::help_center::retrieve_help_center(&self.config, params, options)
     }
     /// Lists the help centers belonging to the app. Use the results to review each help center's identifier, URL, display name, configured locales, and availability. The response contains a list of help center objects.
     ///
     /// You can list all Help Centers by making a GET request to `https://api.intercom.io/help_center/help_centers`.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::help_center::ListHelpCentersParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<HelpCenterList, crate::errors::SdkError> {
-        crate::methods::help_center::list_help_centers(&self.config, intercom_version, options)
+        crate::methods::help_center::list_help_centers(&self.config, params, options)
     }
 }
 
@@ -1144,14 +882,10 @@ impl InternalArticlesNamespace {
     /// You can fetch a list of all internal articles by making a GET request to `https://api.intercom.io/internal_articles`.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::internal_articles::ListInternalArticlesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<InternalArticleList, crate::errors::SdkError> {
-        crate::methods::internal_articles::list_internal_articles(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::internal_articles::list_internal_articles(&self.config, params, options)
     }
     /// Creates an internal article with the supplied content and ownership details. Supply `title`, `owner_id`, and `author_id`; provide content as either `body` in HTML or `body_markdown` in Markdown, not both.
     ///
@@ -1168,16 +902,10 @@ impl InternalArticlesNamespace {
     /// You can fetch the details of a single internal article by making a GET request to `https://api.intercom.io/internal_articles/<id\>`.
     pub fn retrieve(
         &self,
-        internal_article_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::internal_articles::RetrieveInternalArticleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<InternalArticle, crate::errors::SdkError> {
-        crate::methods::internal_articles::retrieve_internal_article(
-            &self.config,
-            internal_article_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::internal_articles::retrieve_internal_article(&self.config, params, options)
     }
     /// Updates an existing internal article's details and configuration. Supply only the fields to change; provide content in either `body` or `body_markdown`, and pass an empty `audience_ids` array to clear existing audience memberships.
     ///
@@ -1194,34 +922,22 @@ impl InternalArticlesNamespace {
     /// You can delete a single internal article by making a DELETE request to `https://api.intercom.io/internal_articles/<id\>`.
     pub fn delete(
         &self,
-        internal_article_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::internal_articles::DeleteInternalArticleParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedInternalArticleObject, crate::errors::SdkError> {
-        crate::methods::internal_articles::delete_internal_article(
-            &self.config,
-            internal_article_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::internal_articles::delete_internal_article(&self.config, params, options)
     }
     /// Attaches an existing tag to an internal article. Supply the tag's `id`; the authenticated user must have the `manage_knowledge_base_content` permission and the `read_write_articles_scope` OAuth scope.
     ///
     /// Apply an existing tag to an internal article. Returns the tag that was applied. The tag must already exist in the workspace (create tags with the Tags API), and the authenticating teammate must have the `manage_knowledge_base_content` permission. Requires the `read_write_articles_scope` OAuth scope.
     pub fn attach_tag(
         &self,
-        internal_article_id: i64,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
-        admin_id: Option<Option<String>>,
+        params: crate::methods::internal_articles::AttachInternalArticlesTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
         crate::methods::internal_articles::attach_internal_articles_tag(
             &self.config,
-            internal_article_id,
-            id,
-            intercom_version,
-            admin_id,
+            params,
             options,
         )
     }
@@ -1230,16 +946,12 @@ impl InternalArticlesNamespace {
     /// Remove a tag from an internal article. Returns the tag that was removed, with null `applied_at` and `applied_by`. The authenticating teammate must have the `manage_knowledge_base_content` permission. Requires the `read_write_articles_scope` OAuth scope.
     pub fn detach_tag(
         &self,
-        internal_article_id: i64,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::internal_articles::DetachInternalArticlesTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
         crate::methods::internal_articles::detach_internal_articles_tag(
             &self.config,
-            internal_article_id,
-            id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -1248,16 +960,10 @@ impl InternalArticlesNamespace {
     /// You can search for internal articles by making a GET request to `https://api.intercom.io/internal_articles/search`.
     pub fn search(
         &self,
-        folder_id: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::internal_articles::SearchInternalArticlesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<InternalArticleSearchResponse, crate::errors::SdkError> {
-        crate::methods::internal_articles::search_internal_articles(
-            &self.config,
-            folder_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::internal_articles::search_internal_articles(&self.config, params, options)
     }
 }
 
@@ -1278,65 +984,50 @@ impl FoldersNamespace {
     /// You can fetch a list of all folders for organizing content by making a GET request to `https://api.intercom.io/folders`.
     pub fn list(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        parent_folder_id: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::folders::ListFoldersParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::folders::ListFoldersResponse, crate::errors::SdkError> {
-        crate::methods::folders::list_folders(
-            &self.config,
-            page,
-            per_page,
-            parent_folder_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::folders::list_folders(&self.config, params, options)
     }
     /// Creates a folder for organizing content. Include a `folder` object with a `name`; optionally provide a description, emoji, or parent folder ID.
     ///
     /// You can create a new folder for organizing content by making a POST request to `https://api.intercom.io/folders`.
     pub fn create(
         &self,
-        folder: crate::methods::folders::CreateFolderFolder,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::folders::CreateFolderParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Folder, crate::errors::SdkError> {
-        crate::methods::folders::create_folder(&self.config, folder, intercom_version, options)
+        crate::methods::folders::create_folder(&self.config, params, options)
     }
     /// Retrieves a folder by its unique identifier. Use the `id` path parameter to select the folder whose details you need.
     ///
     /// You can fetch the details of a single folder by making a GET request to `https://api.intercom.io/folders/<id\>`.
     pub fn retrieve(
         &self,
-        id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::folders::RetrieveFolderParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Folder, crate::errors::SdkError> {
-        crate::methods::folders::retrieve_folder(&self.config, id, intercom_version, options)
+        crate::methods::folders::retrieve_folder(&self.config, params, options)
     }
     /// Updates a folder's details, including its name, description, emoji, or parent folder. Supply the `folder` object with the properties you want to change; `id` selects the folder to update.
     ///
     /// You can update a folder by making a PUT request to `https://api.intercom.io/folders/<id\>`.
     pub fn update(
         &self,
-        id: i64,
-        folder: crate::methods::folders::UpdateFolderFolder,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::folders::UpdateFolderParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Folder, crate::errors::SdkError> {
-        crate::methods::folders::update_folder(&self.config, id, folder, intercom_version, options)
+        crate::methods::folders::update_folder(&self.config, params, options)
     }
     /// Deletes a folder that contains no content. Use the `id` path parameter to select the folder; folders with content cannot be deleted until that content is removed or moved.
     ///
     /// You can delete a folder (if it contains no content) by making a DELETE request to `https://api.intercom.io/folders/<id\>`.
     pub fn delete(
         &self,
-        id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::folders::DeleteFolderParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedFolderObject, crate::errors::SdkError> {
-        crate::methods::folders::delete_folder(&self.config, id, intercom_version, options)
+        crate::methods::folders::delete_folder(&self.config, params, options)
     }
 }
 
@@ -1357,30 +1048,20 @@ impl IpAllowlistNamespace {
     /// Retrieve the current IP allowlist configuration for the workspace.
     pub fn get(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ip_allowlist::GetIpAllowlistParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<IpAllowlist, crate::errors::SdkError> {
-        crate::methods::ip_allowlist::get_ip_allowlist(&self.config, intercom_version, options)
+        crate::methods::ip_allowlist::get_ip_allowlist(&self.config, params, options)
     }
     /// Updates the workspace's IP allowlist configuration. Supply `enabled` to control whether the allowlist is active and `ip_allowlist` to set allowed IP addresses or CIDR ranges. Include the caller's current IP address before enabling the allowlist to avoid locking out the caller.
     ///
     /// Update the IP allowlist configuration for the workspace. {% admonition type="warning" name="Lockout Protection" %} The API will reject updates that would lock out the caller's IP address. Ensure your current IP is included in the allowlist when enabling the feature. {% /admonition %}
     pub fn update(
         &self,
-        intercom_version: Option<IntercomVersion>,
-        type_: Option<String>,
-        enabled: Option<bool>,
-        ip_allowlist: Option<Vec<String>>,
+        params: crate::methods::ip_allowlist::UpdateIpAllowlistParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<IpAllowlist, crate::errors::SdkError> {
-        crate::methods::ip_allowlist::update_ip_allowlist(
-            &self.config,
-            intercom_version,
-            type_,
-            enabled,
-            ip_allowlist,
-            options,
-        )
+        crate::methods::ip_allowlist::update_ip_allowlist(&self.config, params, options)
     }
 }
 
@@ -1421,16 +1102,10 @@ impl CompaniesNamespace {
     /// You can fetch a single company.
     pub fn retrieve_by_id(
         &self,
-        company_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::RetrieveCompaniesByIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Company, crate::errors::SdkError> {
-        crate::methods::companies::retrieve_companies_by_id(
-            &self.config,
-            company_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::retrieve_companies_by_id(&self.config, params, options)
     }
     /// Replaces details for a company identified by its Intercom-assigned ID. Supply the company properties you want to update; `company_id` is set only when the company is created and cannot be changed.
     ///
@@ -1447,140 +1122,80 @@ impl CompaniesNamespace {
     /// Delete a single company. The company record is kept in your workspace, but all contacts are detached. The contacts themselves are not deleted. Detaching contacts is permanent and can't be reversed. A `company.deleted` webhook is sent when the company is deleted. These changes may take some time to be reflected in your workspace. {% admonition type="warning" %} Third-party integrations that sync companies into Intercom (for example, Salesforce or Chargebee) will recreate any company deleted through this endpoint on their next sync. To prevent recreation, remove or filter the company at the source integration before deleting it via the API. {% /admonition %}
     pub fn delete(
         &self,
-        company_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::DeleteCompanyParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedCompanyObject, crate::errors::SdkError> {
-        crate::methods::companies::delete_company(
-            &self.config,
-            company_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::delete_company(&self.config, params, options)
     }
     /// Lists the contacts associated with a specific company. Use the company identifier to retrieve its attached contacts; the response includes cursor-based pagination metadata.
     ///
     /// You can fetch a list of all contacts that belong to a company.
     pub fn list_attached_contacts(
         &self,
-        company_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::ListAttachedContactsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CompanyAttachedContacts, crate::errors::SdkError> {
-        crate::methods::companies::list_attached_contacts(
-            &self.config,
-            company_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::list_attached_contacts(&self.config, params, options)
     }
     /// Lists the segments associated with a specific company. Use the company identifier to retrieve the segments that belong to it.
     ///
     /// You can fetch a list of all segments that belong to a company.
     pub fn list_attached_segments(
         &self,
-        company_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::ListCompaniesAttachedSegmentsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CompanyAttachedSegments, crate::errors::SdkError> {
-        crate::methods::companies::list_companies_attached_segments(
-            &self.config,
-            company_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::list_companies_attached_segments(&self.config, params, options)
     }
     /// Searches companies by attribute filters in a request body. Use `query` to specify filters and optionally provide `pagination` and `sort`; companies without associated users are excluded from the results.
     ///
     /// You can search for companies by the value of their attributes in order to fetch exactly the companies you want. To search for companies, send a `POST` request to `https://api.intercom.io/companies/search`, with a query object in the body defining your filters. Note that the API does not include companies who have no associated users in search results. {% admonition type="warning" name="Optimizing search queries" %} Search queries can be complex, so optimizing them can help the performance of your search. Use the `AND` and `OR` operators to combine multiple filters to get the exact results you need and utilize pagination to limit the number of results returned. The default is `15` results per page. See the [pagination section](https://developers.intercom.com/docs/build-an-integration/learn-more/rest-apis/pagination/#example-search-conversations-request) for more details on how to use the `starting_after` param. {% /admonition %} ### Nesting & Limitations You can nest these filters in order to get even more granular insights that pinpoint exactly what you need. Example: (1 OR 2) AND (3 OR 4). There are some limitations to the amount of multiple's there can be: \* There's a limit of max 2 nested filters \* There's a limit of max 15 filters for each AND or OR group ### Accepted Fields Most keys listed as part of the Companies Model are searchable. The value you search for has to match the accepted type, otherwise the query will fail (ie. as `created_at` accepts a date, the `value` cannot be a string such as `"foobar"`). | Field | Type | | ---------------------------------- | ------------------------------ | | company_id | String | | name | String | | created_at | Date (UNIX Timestamp) | | updated_at | Date (UNIX Timestamp) | | remote_created_at | Date (UNIX Timestamp) | | last_request_at | Date (UNIX Timestamp) | | monthly_spend | Integer | | session_count | Integer | | user_count | Integer | | tag_id | String | | custom_attributes.{attribute_name} | String | The…
     pub fn search(
         &self,
-        query: CompanySearchRequestQuery,
-        intercom_version: Option<IntercomVersion>,
-        pagination: Option<Option<StartingAfterPaging>>,
-        sort: Option<CompanySearchRequestSort>,
+        params: crate::methods::companies::SearchCompaniesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CompanyList, crate::errors::SdkError> {
-        crate::methods::companies::search_companies(
-            &self.config,
-            query,
-            intercom_version,
-            pagination,
-            sort,
-            options,
-        )
+        crate::methods::companies::search_companies(&self.config, params, options)
     }
     /// Lists companies, ordered by `last_request_at` and descending by default. Use the pagination parameters to retrieve results in pages; companies without associated users are excluded, and this endpoint can return at most 10,000 companies.
     ///
     /// You can list companies. The company list is sorted by the `last_request_at` field and by default is ordered descending, most recently requested first. Note that the API does not include companies who have no associated users in list responses. When using the Companies endpoint and the pages object to iterate through the returned companies, there is a limit of 10,000 Companies that can be returned. If you need to list or iterate on more than 10,000 Companies, please use the [Scroll API](https://developers.intercom.com/reference#iterating-over-all-companies). {% admonition type="warning" name="Pagination" %} You can use pagination to limit the number of results returned. The default is `20` results per page. See the [pagination section](https://developers.intercom.com/docs/build-an-integration/learn-more/rest-apis/pagination/#pagination-for-list-apis) for more details on how to use the `starting_after` param. {% /admonition %}
     pub fn list_all(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        order: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::ListAllCompaniesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CompanyList, crate::errors::SdkError> {
-        crate::methods::companies::list_all_companies(
-            &self.config,
-            page,
-            per_page,
-            order,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::list_all_companies(&self.config, params, options)
     }
     /// Lists companies by using a cursor-based scroll to iterate through a large dataset. Omit `scroll_param` to start a scroll, then pass the returned value on subsequent requests; only one scroll can be open per app at a time, and an unused scroll expires after one minute.
     ///
     /// The `list all companies` functionality does not work well for huge datasets, and can result in errors and performance problems when paging deeply. The Scroll API provides an efficient mechanism for iterating over all companies in a dataset. \- Each app can only have 1 scroll open at a time. You'll get an error message if you try to have more than one open per app. \- If the scroll isn't used for 1 minute, it expires and calls with that scroll param will fail \- If the end of the scroll is reached, "companies" will be empty and the scroll parameter will expire {% admonition type="info" name="Scroll Parameter" %} You can get the first page of companies by simply sending a GET request to the scroll endpoint. For subsequent requests you will need to use the scroll parameter from the response. {% /admonition %} {% admonition type="danger" name="Scroll network timeouts" %} Since scroll is often used on large datasets network errors such as timeouts can be encountered. When this occurs you will see a HTTP 500 error with the following message: "Request failed due to an internal network error. Please restart the scroll operation." If this happens, you will need to restart your scroll query: It is not possible to continue from a specific point when using scroll. {% /admonition %}
     pub fn scroll_over_all(
         &self,
-        scroll_param: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::ScrollOverAllCompaniesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CompanyScroll, crate::errors::SdkError> {
-        crate::methods::companies::scroll_over_all_companies(
-            &self.config,
-            scroll_param,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::scroll_over_all_companies(&self.config, params, options)
     }
     /// Attaches a company to a specific contact. Include the company's Intercom identifier in the request body to create the association.
     ///
     /// You can attach a company to a single contact.
     pub fn attach_contact(
         &self,
-        contact_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::AttachCompaniesContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Company, crate::errors::SdkError> {
-        crate::methods::companies::attach_companies_contact(
-            &self.config,
-            contact_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::attach_companies_contact(&self.config, params, options)
     }
     /// Detaches a company from a specific contact. Provide both identifiers to remove the association between that contact and company.
     ///
     /// You can detach a company from a single contact.
     pub fn detach_contact(
         &self,
-        contact_id: String,
-        company_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::companies::DetachCompaniesContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Company, crate::errors::SdkError> {
-        crate::methods::companies::detach_companies_contact(
-            &self.config,
-            contact_id,
-            company_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::companies::detach_companies_contact(&self.config, params, options)
     }
 }
 
@@ -1601,89 +1216,60 @@ impl NotesNamespace {
     /// You can fetch a list of notes that are associated to a company.
     pub fn list(
         &self,
-        company_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::notes::ListCompanyNotesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<NoteList, crate::errors::SdkError> {
-        crate::methods::notes::list_company_notes(
-            &self.config,
-            company_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::notes::list_company_notes(&self.config, params, options)
     }
     /// Creates a note associated with a specific company. Include the note text in `body`; you can optionally specify `admin_id` to set the note's author, otherwise the admin associated with the access token is used.
     ///
     /// You can add a note to a single company.
     pub fn create(
         &self,
-        company_id: String,
-        body: String,
-        intercom_version: Option<IntercomVersion>,
-        admin_id: Option<String>,
+        params: crate::methods::notes::CreateCompanyNoteParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Note, crate::errors::SdkError> {
-        crate::methods::notes::create_company_note(
-            &self.config,
-            company_id,
-            body,
-            intercom_version,
-            admin_id,
-            options,
-        )
+        crate::methods::notes::create_company_note(&self.config, params, options)
     }
     /// Lists notes associated with a contact. Use the `contact_id` path parameter to identify the contact; the response includes cursor-based pagination metadata and the total note count.
     ///
     /// You can fetch a list of notes that are associated to a contact.
     pub fn list_notes(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::notes::ListNotesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<NoteList, crate::errors::SdkError> {
-        crate::methods::notes::list_notes(&self.config, contact_id, intercom_version, options)
+        crate::methods::notes::list_notes(&self.config, params, options)
     }
     /// Creates a note for a contact. Supply the required `body` text and optionally specify the `admin_id` of the admin associated with the note. The response includes the created note and its contact and author details.
     ///
     /// You can add a note to a single contact.
     pub fn create_note(
         &self,
-        contact_id: i64,
-        body: String,
-        intercom_version: Option<IntercomVersion>,
-        admin_id: Option<String>,
+        params: crate::methods::notes::CreateNoteParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Note, crate::errors::SdkError> {
-        crate::methods::notes::create_note(
-            &self.config,
-            contact_id,
-            body,
-            intercom_version,
-            admin_id,
-            options,
-        )
+        crate::methods::notes::create_note(&self.config, params, options)
     }
     /// Retrieves a note attached to a contact or company. Supply `note_id` to identify the note. The response includes the note body, creation time, author, and associated contact or company.
     ///
     /// You can fetch the details of a single note.
     pub fn retrieve(
         &self,
-        note_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::notes::RetrieveNoteParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Note, crate::errors::SdkError> {
-        crate::methods::notes::retrieve_note(&self.config, note_id, intercom_version, options)
+        crate::methods::notes::retrieve_note(&self.config, params, options)
     }
     /// Deletes a note attached to a contact or company. Use `note_id` to identify the note to remove. Notes of other kinds cannot be deleted through the API.
     ///
     /// You can delete a single contact or company note. Notes of other kinds cannot be deleted through the API.
     pub fn delete(
         &self,
-        note_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::notes::DeleteNoteParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedNoteObject, crate::errors::SdkError> {
-        crate::methods::notes::delete_note(&self.config, note_id, intercom_version, options)
+        crate::methods::notes::delete_note(&self.config, params, options)
     }
 }
 
@@ -1704,136 +1290,80 @@ impl ContactsNamespace {
     /// You can fetch a list of companies that are associated to a contact.
     pub fn list_companies(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListContactsCompaniesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactAttachedCompanies, crate::errors::SdkError> {
-        crate::methods::contacts::list_contacts_companies(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_contacts_companies(&self.config, params, options)
     }
     /// Lists the segments associated with a contact. Use the `contact_id` path parameter to identify the contact whose segment associations you want to retrieve.
     ///
     /// You can fetch a list of segments that are associated to a contact.
     pub fn list_segments(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListContactsSegmentsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactSegments, crate::errors::SdkError> {
-        crate::methods::contacts::list_contacts_segments(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_contacts_segments(&self.config, params, options)
     }
     /// Lists the subscription types associated with a contact where the contact has explicitly set a preference. Use this endpoint to retrieve both opt-in and opt-out choices; subscription types in their default state are not included.
     ///
     /// You can fetch a list of subscription types that are attached to a contact. These can be subscriptions that a user has 'opted-in' to or has 'opted-out' from, depending on the subscription type. This will return a list of Subscription Type objects that the contact is associated with. The data property will show a combined list of: 1.Opt-out subscription types that the user has opted-out from. 2.Opt-in subscription types that the user has opted-in to receiving. \*\*Note:\*\* This endpoint only returns subscriptions where the contact has explicitly configured their preference. Subscriptions that are in the default state — where the contact has not made an explicit opt-in or opt-out choice — are not included in the response.
     pub fn list_subscriptions(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListContactsSubscriptionsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<SubscriptionTypeList, crate::errors::SdkError> {
-        crate::methods::contacts::list_contacts_subscriptions(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_contacts_subscriptions(&self.config, params, options)
     }
     /// Lists the tags attached to a contact. Use the `contact_id` path parameter to retrieve the contact's tag associations.
     ///
     /// You can fetch a list of all tags that are attached to a specific contact.
     pub fn list_tags(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListContactsTagsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TagList, crate::errors::SdkError> {
-        crate::methods::contacts::list_contacts_tags(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_contacts_tags(&self.config, params, options)
     }
     /// Lists contacts in the workspace that are no longer active, including their status and identifiers that can help you locate them for recovery or deletion. Use `page` and `per_page` to paginate the results.
     ///
     /// Fetch a paginated list of the contacts in your workspace that are no longer active, so you can recover ones whose `id`, `email`, or `external_id` you no longer have and then permanently delete them. Each entry carries a `status` describing why the contact is inactive: `archived`, `blocked`, `merged`, `pending_deletion`, or `permanently_deleted`. `merged_into_id` is present only when `status` is `merged`, and `external_id` and `email` are `null` for `permanently_deleted` contacts.
     pub fn list_deleted(
         &self,
-        per_page: Option<i64>,
-        page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListDeletedContactsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedContactList, crate::errors::SdkError> {
-        crate::methods::contacts::list_deleted_contacts(
-            &self.config,
-            per_page,
-            page,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_deleted_contacts(&self.config, params, options)
     }
     /// Replaces the supplied fields on an existing contact, including a user or lead, and can update custom object associations. Send only the fields you want to change; when setting `email_verified`, include `email` in the same request. Use `include_merge_history` to request merge history for contacts with a `user` role.
     ///
     /// You can update an existing contact (ie. user or lead). {% admonition type="info" %} This endpoint handles both \*\*contact updates\*\* and \*\*custom object associations\*\*. See _`update a contact with an association to a custom object instance`_ in the request/response examples to see the custom object association format. {% /admonition %}
     pub fn update(
         &self,
-        contact_id: String,
-        include_merge_history: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
-        body: Option<UpdateContactRequest>,
+        params: crate::methods::contacts::UpdateContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::contacts::UpdateContactResponse, crate::errors::SdkError> {
-        crate::methods::contacts::update_contact(
-            &self.config,
-            contact_id,
-            include_merge_history,
-            intercom_version,
-            body,
-            options,
-        )
+        crate::methods::contacts::update_contact(&self.config, params, options)
     }
     /// Retrieves a contact by its unique contact ID. Use `include_merge_history` to request merge history for contacts with a `user` role; merged contacts return a canonical-contact link instead of the original record.
     ///
     /// You can fetch the details of a single contact. {% admonition type="info" name="Merged contacts return 410 Gone" %} If a contact has been merged into another contact via the Merge endpoint (`POST /contacts/merge`), requesting it by its original ID will return \*\*HTTP 410 Gone\*\* with a `Link` header pointing to the canonical (merged-into) contact. \*\*Response headers:\*\* ``` Link: </contacts/{canonical_id}\>; rel="canonical" ``` \*\*Response body:\*\* ```json { "type": "error.list", "errors": [{ "code": "contact_merged", "message": "This contact has been merged. See the 'Link' header for the canonical contact." }] } ``` The `Link` header contains the path to the final merge target, resolving multi-hop merge chains (up to 3 hops). {% /admonition %}
     pub fn show(
         &self,
-        contact_id: String,
-        include_merge_history: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ShowContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::contacts::ShowContactResponse, crate::errors::SdkError> {
-        crate::methods::contacts::show_contact(
-            &self.config,
-            contact_id,
-            include_merge_history,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::show_contact(&self.config, params, options)
     }
     /// Deletes a single contact from the workspace. Use the contact's ID to identify the record to remove. The response includes a contact reference and indicates whether the contact was deleted.
     ///
     /// You can delete a single contact.
     pub fn delete(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::DeleteContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactDeleted, crate::errors::SdkError> {
-        crate::methods::contacts::delete_contact(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::delete_contact(&self.config, params, options)
     }
     /// Merges a contact with the `lead` role into a contact with the `user` role. Supply the source contact in `from` and the destination contact in `into`; set `skip_duplicate_validation` to true to merge contacts without a shared email or phone. The source contact is removed from the active contact list after the merge, so update stored IDs to the destination contact's ID.
     ///
@@ -1870,107 +1400,71 @@ impl ContactsNamespace {
     /// You can fetch a list of contact activity events for your workspace, such as when contacts are created, role updated, merged, or deleted. Events are returned oldest first. {% admonition type="warning" name="Pagination" %} You can use pagination to limit the number of results returned. The default is `50` results per page, with a maximum of `150`. See the [pagination section](https://developers.intercom.com/docs/build-an-integration/learn-more/rest-apis/pagination/#pagination-for-list-apis) for more details on how to use the `starting_after` param. {% /admonition %}
     pub fn list_activities(
         &self,
-        per_page: Option<i64>,
-        starting_after: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListContactActivitiesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactActivityList, crate::errors::SdkError> {
-        crate::methods::contacts::list_contact_activities(
-            &self.config,
-            per_page,
-            starting_after,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_contact_activities(&self.config, params, options)
     }
     /// Lists contacts in the workspace, including users and leads. Contacts merged into other contacts are excluded; only the destination contact remains in the list. Results are paginated, with 10 contacts per page by default and a maximum of 150 per page.
     ///
     /// You can fetch a list of all contacts (ie. users or leads) in your workspace. {% admonition type="info" name="Merged contacts" %} Contacts that have been merged (via POST /contacts/merge) will not appear in list results. Only the target contact from the merge remains accessible. {% /admonition %} {% admonition type="warning" name="Pagination" %} You can use pagination to limit the number of results returned. The default is `10` results per page, with a maximum of `150`. See the [pagination section](https://developers.intercom.com/docs/build-an-integration/learn-more/rest-apis/pagination/#pagination-for-list-apis) for more details on how to use the `starting_after` param. {% /admonition %}
     pub fn list(
         &self,
-        include_merge_history: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ListContactsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactList, crate::errors::SdkError> {
-        crate::methods::contacts::list_contacts(
-            &self.config,
-            include_merge_history,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::list_contacts(&self.config, params, options)
     }
     /// Creates a new contact, such as a user or lead. Provide at least one of `email`, `external_id`, or `role` to identify the contact, and include `email` whenever you set `email_verified`. The response contains the created contact object.
     ///
     /// You can create a new contact (ie. user or lead).
     pub fn create(
         &self,
-        intercom_version: Option<IntercomVersion>,
-        body: Option<CreateContactRequest>,
+        params: crate::methods::contacts::CreateContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::contacts::CreateContactResponse, crate::errors::SdkError> {
-        crate::methods::contacts::create_contact(&self.config, intercom_version, body, options)
+        crate::methods::contacts::create_contact(&self.config, params, options)
     }
     /// Retrieves a user contact by its external ID; this lookup does not support leads. Set `include_merge_history` to request merge history for the contact. If the contact has been merged, the response provides a link to the canonical contact.
     ///
     /// You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads. {% admonition type="info" name="Merged contacts return 410 Gone" %} If the contact with this external ID has been merged into another contact, the API returns \*\*HTTP 410 Gone\*\* with a `Link` header pointing to the canonical (merged-into) contact. See `GET /contacts/{id}` for details on the response format. {% /admonition %}
     pub fn show_by_external_id(
         &self,
-        external_id: String,
-        include_merge_history: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ShowContactByExternalIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::contacts::ShowContactByExternalIdResponse, crate::errors::SdkError>
     {
-        crate::methods::contacts::show_contact_by_external_id(
-            &self.config,
-            external_id,
-            include_merge_history,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::show_contact_by_external_id(&self.config, params, options)
     }
     /// Archives a single contact. Supply the `contact_id` of the contact to archive. The response includes the contact reference and an `archived` flag.
     ///
     /// You can archive a single contact.
     pub fn archive(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ArchiveContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactArchived, crate::errors::SdkError> {
-        crate::methods::contacts::archive_contact(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::archive_contact(&self.config, params, options)
     }
     /// Unarchives a single contact. Supply the `contact_id` of the contact to restore from the archived state. The response includes the contact reference and an `archived` flag.
     ///
     /// You can unarchive a single contact.
     pub fn unarchive(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::UnarchiveContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactUnarchived, crate::errors::SdkError> {
-        crate::methods::contacts::unarchive_contact(
-            &self.config,
-            contact_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::unarchive_contact(&self.config, params, options)
     }
     /// Blocks a single contact. Supply the `contact_id` of the contact to block. Blocking the contact also archives the contact's conversations.
     ///
     /// Block a single contact. \*\*Note:\*\* conversations of the contact will also be archived during the process. More details in [FAQ How do I block Inbox spam?](https://www.intercom.com/help/en/articles/8838656-inbox-faqs)
     pub fn block(
         &self,
-        contact_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::BlockContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactBlocked, crate::errors::SdkError> {
-        crate::methods::contacts::block_contact(&self.config, contact_id, intercom_version, options)
+        crate::methods::contacts::block_contact(&self.config, params, options)
     }
     /// Lists the contacts merged into a given contact, with results returned in pages. Use `cursor` to continue from a previous response and `per_page` and `order` to control the results. Merge history is available only for contacts with the `user` role.
     ///
@@ -2003,70 +1497,40 @@ impl ContactsNamespace {
     /// You can bulk create contacts by submitting an array of contact objects. This is a \*\*strict create\*\* and never updates an existing contact. The endpoint creates an async job that processes the items in the background. Use the returned job ID with `GET /contacts/bulk/{id}` to check the job status. Only the fields listed in the request schema below can be set. Any other fields in a contact object are ignored. {% admonition type="info" name="Handling existing contacts" %} If a contact already exists with the given `external_id` or `email` (including an archived contact), that item is rejected and the job's `state` ends as `completed_with_errors`. New contacts in the same request are still created. The job `state` from `GET /contacts/bulk/{id}` is the signal that one or more items were rejected. Created contacts aren't returned with IDs in the response. Look them up afterwards with Get a contact by External ID or Search contacts. {% /admonition %} {% admonition type="info" name="Limits" %} \- Maximum of 100 contacts per request. \- You can append tasks to an existing job by including `job.id` in the request body. \- Tag application is best-effort and processed asynchronously: unknown tag IDs are skipped, and per-tag results are not returned in the job status. {% /admonition %}
     pub fn bulk_create(
         &self,
-        contacts: Vec<BulkCreateContactsRequestContactsItem>,
-        intercom_version: Option<IntercomVersion>,
-        job: Option<BulkCreateContactsRequestJob>,
+        params: crate::methods::contacts::BulkCreateContactsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactsBulkJob, crate::errors::SdkError> {
-        crate::methods::contacts::bulk_create_contacts(
-            &self.config,
-            contacts,
-            intercom_version,
-            job,
-            options,
-        )
+        crate::methods::contacts::bulk_create_contacts(&self.config, params, options)
     }
     /// Updates multiple contacts in an asynchronous job by applying the supplied fields to each identified contact. Include an `id` and the fields to change in each contact object, with no more than 100 objects in `contacts`. Use the returned job ID with GET /contacts/bulk/{id} to monitor progress; tag application is best-effort.
     ///
     /// You can bulk update contacts by submitting an array of contact objects with the fields to update. Each contact must include an `id` field identifying the contact to update. You can also add or remove tags on each contact by including a `tags` object. Only the fields listed in the request schema below can be set. Any other fields in a contact object are ignored. The endpoint creates an async job that processes the updates in the background. Use the returned job ID with `GET /contacts/bulk/{id}` to check the job status. {% admonition type="info" name="Limits" %} \- Maximum of 100 contacts per request. \- You can append tasks to an existing job by including `job.id` in the request body. \- Tag application is best-effort and processed asynchronously: unknown tag IDs are skipped, and per-tag results are not returned in the job status. {% /admonition %}
     pub fn bulk_update(
         &self,
-        contacts: Vec<BulkUpdateContactsRequestContactsItem>,
-        intercom_version: Option<IntercomVersion>,
-        job: Option<BulkUpdateContactsRequestJob>,
+        params: crate::methods::contacts::BulkUpdateContactsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactsBulkJob, crate::errors::SdkError> {
-        crate::methods::contacts::bulk_update_contacts(
-            &self.config,
-            contacts,
-            intercom_version,
-            job,
-            options,
-        )
+        crate::methods::contacts::bulk_update_contacts(&self.config, params, options)
     }
     /// Deletes multiple contacts permanently through an asynchronous job. Include up to 100 contact identifiers in `contacts`; an item that cannot be deleted fails independently, while the job continues processing other items. Use the returned job ID with GET /contacts/bulk/{id} to monitor the job and check for item failures.
     ///
     /// You can delete contacts in bulk by submitting an array of contact `id`s. The endpoint creates an async job that processes the deletes in the background. Use the returned job ID with `GET /contacts/bulk/{id}` to check the job status. {% admonition type="warning" name="Permanent deletion" %} A contact that doesn't exist, or can't be deleted, fails that item and the job's `state` ends as `completed_with_errors` (visible via `GET /contacts/bulk/{id}`) without failing the rest of the batch. {% /admonition %} {% admonition type="info" name="Limits" %} \- Maximum of 100 contacts per request. \- You can append tasks to an existing job by including `job.id` in the request body. {% /admonition %}
     pub fn bulk_delete(
         &self,
-        contacts: Vec<BulkDeleteContactsRequestContactsItem>,
-        intercom_version: Option<IntercomVersion>,
-        job: Option<BulkDeleteContactsRequestJob>,
+        params: crate::methods::contacts::BulkDeleteContactsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactsBulkJob, crate::errors::SdkError> {
-        crate::methods::contacts::bulk_delete_contacts(
-            &self.config,
-            contacts,
-            intercom_version,
-            job,
-            options,
-        )
+        crate::methods::contacts::bulk_delete_contacts(&self.config, params, options)
     }
     /// Retrieves the status of an asynchronous bulk contact job. Supply the job's `id` to view its overall state, task details, and timestamps. Use the state to determine whether processing is pending, running, completed, or completed with errors.
     ///
     /// You can check the status of a bulk contact update job. The `state` field indicates the overall job progress: `pending`, `running`, `completed`, or `completed_with_errors`.
     pub fn show_bulk_update_job(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::contacts::ShowBulkUpdateContactsJobParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContactsBulkJob, crate::errors::SdkError> {
-        crate::methods::contacts::show_bulk_update_contacts_job(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::contacts::show_bulk_update_contacts_job(&self.config, params, options)
     }
 }
 
@@ -2087,18 +1551,12 @@ impl SubscriptionTypesNamespace {
     /// You can add a specific subscription to a contact. In Intercom, we have two different subscription types based on user consent \- opt-out and opt-in: 1.Attaching a contact to an opt-out subscription type will opt that user out from receiving messages related to that subscription type. 2.Attaching a contact to an opt-in subscription type will opt that user in to receiving messages related to that subscription type. This will return a subscription type model for the subscription type that was added to the contact.
     pub fn attach_to_contact(
         &self,
-        contact_id: String,
-        id: String,
-        consent_type: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::subscription_types::AttachSubscriptionTypeToContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<SubscriptionType, crate::errors::SdkError> {
         crate::methods::subscription_types::attach_subscription_type_to_contact(
             &self.config,
-            contact_id,
-            id,
-            consent_type,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -2107,16 +1565,12 @@ impl SubscriptionTypesNamespace {
     /// You can remove a specific subscription from a contact. This will return a subscription type model for the subscription type that was removed from the contact.
     pub fn detach_to_contact(
         &self,
-        contact_id: String,
-        subscription_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::subscription_types::DetachSubscriptionTypeToContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<SubscriptionType, crate::errors::SdkError> {
         crate::methods::subscription_types::detach_subscription_type_to_contact(
             &self.config,
-            contact_id,
-            subscription_id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -2125,14 +1579,10 @@ impl SubscriptionTypesNamespace {
     /// You can list all subscription types. A list of subscription type objects will be returned.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::subscription_types::ListSubscriptionTypesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<SubscriptionTypeList, crate::errors::SdkError> {
-        crate::methods::subscription_types::list_subscription_types(
-            &self.config,
-            intercom_version,
-            options,
-        )
+        crate::methods::subscription_types::list_subscription_types(&self.config, params, options)
     }
 }
 
@@ -2153,159 +1603,100 @@ impl TagsNamespace {
     /// You can tag a specific contact. This will return a tag object for the tag that was added to the contact.
     pub fn attach_to_contact(
         &self,
-        contact_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::AttachTagToContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::tags::attach_tag_to_contact(
-            &self.config,
-            contact_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tags::attach_tag_to_contact(&self.config, params, options)
     }
     /// Removes a tag from a contact. Identify the contact and tag with the `contact_id` and `tag_id` path parameters; the response returns the removed tag.
     ///
     /// You can remove tag from a specific contact. This will return a tag object for the tag that was removed from the contact.
     pub fn detach_from_contact(
         &self,
-        contact_id: String,
-        tag_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::DetachTagFromContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::tags::detach_tag_from_contact(
-            &self.config,
-            contact_id,
-            tag_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tags::detach_tag_from_contact(&self.config, params, options)
     }
     /// Adds a tag to a specific conversation. Provide the tag identifier and the admin identifier in the request body to apply the tag. The response includes the tag that was added.
     ///
     /// You can tag a specific conversation. This will return a tag object for the tag that was added to the conversation.
     pub fn attach_to_conversation(
         &self,
-        conversation_id: String,
-        id: String,
-        admin_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::AttachTagToConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::tags::attach_tag_to_conversation(
-            &self.config,
-            conversation_id,
-            id,
-            admin_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tags::attach_tag_to_conversation(&self.config, params, options)
     }
     /// Removes a tag from a specific conversation. Identify the conversation and tag in the path, and provide the admin identifier in the request body. The response includes the tag that was removed.
     ///
     /// You can remove tag from a specific conversation. This will return a tag object for the tag that was removed from the conversation.
     pub fn detach_from_conversation(
         &self,
-        conversation_id: String,
-        tag_id: String,
-        admin_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::DetachTagFromConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::tags::detach_tag_from_conversation(
-            &self.config,
-            conversation_id,
-            tag_id,
-            admin_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tags::detach_tag_from_conversation(&self.config, params, options)
     }
     /// Lists tags in the workspace. Use this endpoint to retrieve the tags available for labeling contacts, companies, and conversations.
     ///
     /// You can fetch a list of all tags for a given workspace.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::ListTagsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TagList, crate::errors::SdkError> {
-        crate::methods::tags::list_tags(&self.config, intercom_version, options)
+        crate::methods::tags::list_tags(&self.config, params, options)
     }
     /// Creates or updates a tag, or applies or removes a tag from companies or users. Supply the fields for the operation you want to perform; each operation returns a tag object.
     ///
     /// You can use this endpoint to perform the following operations: \*\*1. Create a new tag:\*\* You can create a new tag by passing in the tag name as specified in "Create or Update Tag Request Payload" described below. \*\*2. Update an existing tag:\*\* You can update an existing tag by passing the id of the tag as specified in "Create or Update Tag Request Payload" described below. \*\*3. Tag Companies:\*\* You can tag single company or a list of companies. You can tag a company by passing in the tag name and the company details as specified in "Tag Company Request Payload" described below. Also, if the tag doesn't exist then a new one will be created automatically. \*\*4. Untag Companies:\*\* You can untag a single company or a list of companies. You can untag a company by passing in the tag id and the company details as specified in "Untag Company Request Payload" described below. \*\*5. Tag Multiple Users:\*\* You can tag a list of users. You can tag the users by passing in the tag name and the user details as specified in "Tag Users Request Payload" described below. Each operation will return a tag object.
     pub fn create(
         &self,
-        intercom_version: Option<IntercomVersion>,
-        body: Option<crate::methods::tags::CreateTag>,
+        params: crate::methods::tags::CreateTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TagCreateResponse, crate::errors::SdkError> {
-        crate::methods::tags::create_tag(&self.config, intercom_version, body, options)
+        crate::methods::tags::create_tag(&self.config, params, options)
     }
     /// Retrieves a tag by its identifier from the workspace. Use the `tag_id` path parameter to specify which tag to retrieve.
     ///
     /// You can fetch the details of tags that are on the workspace by their id. This will return a tag object.
     pub fn find(
         &self,
-        tag_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::FindTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TagBasic, crate::errors::SdkError> {
-        crate::methods::tags::find_tag(&self.config, tag_id, intercom_version, options)
+        crate::methods::tags::find_tag(&self.config, params, options)
     }
     /// Deletes a tag from the workspace. Use the `tag_id` path parameter to identify the tag to delete; a tag with dependent objects cannot be deleted.
     ///
     /// You can delete the details of tags that are on the workspace by passing in the id.
     pub fn delete(
         &self,
-        tag_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::DeleteTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::tags::delete_tag(&self.config, tag_id, intercom_version, options)
+        crate::methods::tags::delete_tag(&self.config, params, options)
     }
     /// Attaches an existing tag to a ticket. Supply the tag's `id` and the `admin_id` of the admin applying it. The response contains the tag object returned for the tagging operation.
     ///
     /// You can tag a specific ticket. This will return a tag object for the tag that was added to the ticket.
     pub fn attach_to_ticket(
         &self,
-        ticket_id: String,
-        id: String,
-        admin_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::AttachTagToTicketParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::tags::attach_tag_to_ticket(
-            &self.config,
-            ticket_id,
-            id,
-            admin_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tags::attach_tag_to_ticket(&self.config, params, options)
     }
     /// Removes a tag from a ticket. Supply the ticket and tag identifiers and the `admin_id` of the admin performing the removal. The response contains the tag object returned for the removal operation.
     ///
     /// You can remove tag from a specific ticket. This will return a tag object for the tag that was removed from the ticket.
     pub fn detach_from_ticket(
         &self,
-        ticket_id: String,
-        tag_id: String,
-        admin_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tags::DetachTagFromTicketParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::tags::detach_tag_from_ticket(
-            &self.config,
-            ticket_id,
-            tag_id,
-            admin_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tags::detach_tag_from_ticket(&self.config, params, options)
     }
 }
 
@@ -2326,29 +1717,20 @@ impl BannersNamespace {
     /// Returns the banners a contact currently matches, so you can display them on surfaces outside the Messenger (native mobile apps, kiosks, embedded tools). Each banner in the response includes a `view_id`. Use it to record a dismissal with the dismiss endpoint. A returned banner is treated as shown: requesting this endpoint records an impression for each banner returned, so call it at the point you are about to display the banners, not speculatively.
     pub fn list(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::banners::ListContactBannersParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<BannerList, crate::errors::SdkError> {
-        crate::methods::banners::list_contact_banners(&self.config, id, intercom_version, options)
+        crate::methods::banners::list_contact_banners(&self.config, params, options)
     }
     /// Records that a contact has dismissed a banner, with dismissals shared across surfaces for that contact. Supply the banner's `view_id` from the list banners response. Dismissing a banner that is already dismissed succeeds and returns the same response.
     ///
     /// Records that a contact has dismissed a banner. Dismissals are shared across surfaces, so a banner dismissed through this endpoint will also stop appearing in the web Messenger for that contact, and vice versa. The request is idempotent: dismissing an already-dismissed banner succeeds and returns the same response.
     pub fn dismiss(
         &self,
-        id: String,
-        view_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::banners::DismissContactBannerParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<BannerDismiss, crate::errors::SdkError> {
-        crate::methods::banners::dismiss_contact_banner(
-            &self.config,
-            id,
-            view_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::banners::dismiss_contact_banner(&self.config, params, options)
     }
 }
 
@@ -2403,35 +1785,23 @@ impl ContentSnippetsNamespace {
     /// You can fetch a list of all content snippets for a workspace.
     pub fn list(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::content_snippets::ListContentSnippetsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContentSnippetList, crate::errors::SdkError> {
-        crate::methods::content_snippets::list_content_snippets(
-            &self.config,
-            page,
-            per_page,
-            intercom_version,
-            options,
-        )
+        crate::methods::content_snippets::list_content_snippets(&self.config, params, options)
     }
     /// Lists content snippets in a workspace. Use `page` and `per_page` to paginate the results; each page includes snippet objects and pagination metadata.
     ///
     /// You can fetch a list of all content snippets for a workspace.
     pub fn list_paginated(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::content_snippets::ListContentSnippetsParams,
         options: Option<&crate::client::RequestOptions>,
         yield_fn: impl FnMut(&ContentSnippet) -> bool,
     ) -> Result<(), crate::errors::SdkError> {
         crate::methods::content_snippets::list_content_snippets_paginated(
             &self.config,
-            page,
-            per_page,
-            intercom_version,
+            params,
             options,
             yield_fn,
         )
@@ -2451,16 +1821,10 @@ impl ContentSnippetsNamespace {
     /// You can fetch a single content snippet by its id.
     pub fn get(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::content_snippets::GetContentSnippetParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ContentSnippet, crate::errors::SdkError> {
-        crate::methods::content_snippets::get_content_snippet(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::content_snippets::get_content_snippet(&self.config, params, options)
     }
     /// Replaces the supplied fields on an existing content snippet while leaving omitted fields unchanged. Provide only the fields you want to update, and use either `json_blocks` or `body_markdown` for the content, not both. Pass an empty `audience_ids` array to clear audience targeting.
     ///
@@ -2477,54 +1841,30 @@ impl ContentSnippetsNamespace {
     /// You can delete a single content snippet by its id.
     pub fn delete(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::content_snippets::DeleteContentSnippetParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::content_snippets::delete_content_snippet(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::content_snippets::delete_content_snippet(&self.config, params, options)
     }
     /// Applies an existing tag to a content snippet and returns the applied tag. The tag must already exist, and the authenticated user must have the `manage_knowledge_base_content` permission. The request requires the `read_write_content_snippets` OAuth scope.
     ///
     /// Apply an existing tag to a content snippet. Returns the tag that was applied. The tag must already exist in the workspace (create tags with the Tags API), and the authenticating teammate must have the `manage_knowledge_base_content` permission. Requires the `read_write_content_snippets` OAuth scope.
     pub fn attach_tag(
         &self,
-        content_snippet_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
-        admin_id: Option<Option<String>>,
+        params: crate::methods::content_snippets::AttachContentSnippetsTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::content_snippets::attach_content_snippets_tag(
-            &self.config,
-            content_snippet_id,
-            id,
-            intercom_version,
-            admin_id,
-            options,
-        )
+        crate::methods::content_snippets::attach_content_snippets_tag(&self.config, params, options)
     }
     /// Removes a tag from a content snippet and returns the removed tag. The authenticated user must have the `manage_knowledge_base_content` permission, and the request requires the `read_write_content_snippets` OAuth scope.
     ///
     /// Remove a tag from a content snippet. Returns the tag that was removed, with null `applied_at` and `applied_by`. The authenticating teammate must have the `manage_knowledge_base_content` permission. Requires the `read_write_content_snippets` OAuth scope.
     pub fn detach_tag(
         &self,
-        content_snippet_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::content_snippets::DetachContentSnippetsTagParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Tag, crate::errors::SdkError> {
-        crate::methods::content_snippets::detach_content_snippets_tag(
-            &self.config,
-            content_snippet_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::content_snippets::detach_content_snippets_tag(&self.config, params, options)
     }
 }
 
@@ -2545,35 +1885,23 @@ impl DynamicContentNamespace {
     /// You can fetch a list of all dynamic content for a workspace, most recently updated first. Requires the `read_dynamic_content` scope.
     pub fn list(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::dynamic_content::ListDynamicContentsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DynamicContentList, crate::errors::SdkError> {
-        crate::methods::dynamic_content::list_dynamic_contents(
-            &self.config,
-            page,
-            per_page,
-            intercom_version,
-            options,
-        )
+        crate::methods::dynamic_content::list_dynamic_contents(&self.config, params, options)
     }
     /// Lists dynamic content for a workspace, ordered from most recently updated to least recently updated. Use `page` and `per_page` to paginate the results; access requires the `read_dynamic_content` scope.
     ///
     /// You can fetch a list of all dynamic content for a workspace, most recently updated first. Requires the `read_dynamic_content` scope.
     pub fn list_paginated(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::dynamic_content::ListDynamicContentsParams,
         options: Option<&crate::client::RequestOptions>,
         yield_fn: impl FnMut(&DynamicContent) -> bool,
     ) -> Result<(), crate::errors::SdkError> {
         crate::methods::dynamic_content::list_dynamic_contents_paginated(
             &self.config,
-            page,
-            per_page,
-            intercom_version,
+            params,
             options,
             yield_fn,
         )
@@ -2593,16 +1921,10 @@ impl DynamicContentNamespace {
     /// You can fetch a single dynamic content by its id. Requires the `read_dynamic_content` scope.
     pub fn get(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::dynamic_content::GetDynamicContentParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DynamicContent, crate::errors::SdkError> {
-        crate::methods::dynamic_content::get_dynamic_content(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::dynamic_content::get_dynamic_content(&self.config, params, options)
     }
     /// Updates an existing reusable dynamic content item. Provide only the fields you want to change; if you send `variations`, that array replaces the full set and any omitted existing variations are deleted. The authenticated user needs the `read_write_dynamic_content` scope.
     ///
@@ -2619,16 +1941,10 @@ impl DynamicContentNamespace {
     /// You can delete a single dynamic content by its id. Dynamic content that is still used in an article can't be deleted. Requires the `read_write_dynamic_content` scope.
     pub fn delete(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::dynamic_content::DeleteDynamicContentParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::dynamic_content::delete_dynamic_content(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::dynamic_content::delete_dynamic_content(&self.config, params, options)
     }
 }
 
@@ -2690,18 +2006,10 @@ impl ConversationsNamespace {
     /// {% admonition type="warning" name="Irreversible operation" %} Deleting a conversation is permanent and cannot be reversed. {% /admonition %} You can delete a single conversation. The behavior depends on the `retain_metrics` parameter: \- \*\*With `retain_metrics=true` (default)\*\*: Deletes the conversation while retaining reporting data. The conversation will still appear in reporting, though some data may be incomplete due to the deletion. \- \*\*With `retain_metrics=false`\*\*: Deletes the conversation and all associated reporting data. The conversation will be completely removed from both the inbox and all reporting. {% admonition type="info" name="Required scope for retain_metrics=false" %} Using `retain_metrics=false` requires the `delete_conversations_and_metrics` OAuth scope. {% /admonition %} For more info, see [this help center article](https://www.intercom.com/help/en/articles/13885146-deleting-a-conversation).
     pub fn delete(
         &self,
-        conversation_id: i64,
-        retain_metrics: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::DeleteConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationDeleted, crate::errors::SdkError> {
-        crate::methods::conversations::delete_conversation(
-            &self.config,
-            conversation_id,
-            retain_metrics,
-            intercom_version,
-            options,
-        )
+        crate::methods::conversations::delete_conversation(&self.config, params, options)
     }
     /// Searches conversations using filters on searchable conversation attributes. Provide a `query` filter expression and use pagination to control result size; pages default to 20 results and can contain up to 150\. Use the `starting_after` cursor from the response to fetch subsequent pages.
     ///
@@ -2718,157 +2026,90 @@ impl ConversationsNamespace {
     /// You can reply to a conversation with a message from an admin or on behalf of a contact, or with a note for admins. {% admonition type="warning" name="Bot replies to inbound email" %} By default, bot or Operator replies to an inbound email conversation aren't sent to your customer. The reply is stored as an unnotifiable bot comment, and no `seen` receipt is generated until an email is actually delivered. To send these replies as outbound emails, reach out to your accounts team to enable the email-reply feature flag for your workspace. {% /admonition %} {% admonition type="info" name="Managing a conversation" %} To close, open, snooze or assign a conversation, use Manage a conversation. {% /admonition %}
     pub fn reply(
         &self,
-        conversation_id: String,
-        intercom_version: Option<IntercomVersion>,
-        body: Option<ReplyConversationRequest>,
+        params: crate::methods::conversations::ReplyConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Conversation, crate::errors::SdkError> {
-        crate::methods::conversations::reply_conversation(
-            &self.config,
-            conversation_id,
-            intercom_version,
-            body,
-            options,
-        )
+        crate::methods::conversations::reply_conversation(&self.config, params, options)
     }
     /// Changes a conversation's state or assignment by closing, snoozing, opening, or assigning it to an admin or team. Choose the request variant for the action and provide its required fields, such as `snoozed_until` when snoozing. Use the reply operation to send a comment, note, or quick reply instead.
     ///
     /// For managing conversations you can: \- Close a conversation \- Snooze a conversation to reopen on a future date \- Open a conversation which is `snoozed` or `closed` \- Assign a conversation to an admin and/or team. {% admonition type="info" name="Sending messages" %} To send a comment, note or quick reply, use Reply to a conversation. {% /admonition %}
     pub fn manage(
         &self,
-        conversation_id: String,
-        intercom_version: Option<IntercomVersion>,
-        body: Option<crate::methods::conversations::ManageConversation>,
+        params: crate::methods::conversations::ManageConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Conversation, crate::errors::SdkError> {
-        crate::methods::conversations::manage_conversation(
-            &self.config,
-            conversation_id,
-            intercom_version,
-            body,
-            options,
-        )
+        crate::methods::conversations::manage_conversation(&self.config, params, options)
     }
     /// Adds a contact as a participant in a conversation on behalf of an admin or another contact. Identify the contact using an Intercom user ID, a user ID, or an email address in `customer`. If no contact exists for a supplied email address, the API creates a contact with the `lead` role.
     ///
     /// You can add participants who are contacts to a conversation, on behalf of either another contact or an admin. {% admonition type="warning" name="Contacts without an email" %} If you add a contact via the email parameter and there is no user/lead found on that workspace with he given email, then we will create a new contact with `role` set to `lead`. {% /admonition %}
     pub fn attach_contact(
         &self,
-        conversation_id: String,
-        intercom_version: Option<IntercomVersion>,
-        admin_id: Option<String>,
-        customer: Option<AttachContactToConversationRequestCustomer>,
+        params: crate::methods::conversations::AttachConversationsContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationParticipantsResponse, crate::errors::SdkError> {
-        crate::methods::conversations::attach_conversations_contact(
-            &self.config,
-            conversation_id,
-            intercom_version,
-            admin_id,
-            customer,
-            options,
-        )
+        crate::methods::conversations::attach_conversations_contact(&self.config, params, options)
     }
     /// Removes a contact from a group conversation on behalf of an admin. Supply the conversation and contact identifiers and the performing admin's ID. You cannot remove the last remaining contact from a conversation.
     ///
     /// You can remove participants who are contacts from a group conversation, on behalf of an admin. {% admonition type="warning" name="Removing the last participant" %} You cannot remove the last remaining contact from a conversation. {% /admonition %}
     pub fn detach_contact(
         &self,
-        conversation_id: String,
-        contact_id: String,
-        admin_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::DetachConversationsContactParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationParticipantsResponse, crate::errors::SdkError> {
-        crate::methods::conversations::detach_conversations_contact(
-            &self.config,
-            conversation_id,
-            contact_id,
-            admin_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::conversations::detach_conversations_contact(&self.config, params, options)
     }
     /// Lists pause and resume handling events for a conversation, including the teammate and timestamp for each event. Use this operation when you need to review when teammates paused or resumed handling. Access requires the `read_conversations` OAuth scope.
     ///
     /// List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation. Requires the `read_conversations` OAuth scope.
     pub fn list_handling_events(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::ListHandlingEventsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<HandlingEventList, crate::errors::SdkError> {
-        crate::methods::conversations::list_handling_events(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::conversations::list_handling_events(&self.config, params, options)
     }
     /// Lists human-in-the-loop events from Fin consultations on a conversation, ordered from oldest to newest. Use the events to review consultation steps and their associated data; a consultation appears only after it has ended. Access requires the `read_conversations` OAuth scope and permission to access the conversation.
     ///
     /// List the human-in-the-loop (HITL) events for a conversation. When Fin is unsure of an answer it can consult a teammate before replying, proposing a draft that the teammate approves, steers with free-text feedback, or takes over. Each consultation is returned as a series of events, oldest first, across every consultation on the conversation. Requires the `read_conversations` OAuth scope, and the caller must be able to access the conversation. Events are only recorded once a consultation has ended, so a consultation still awaiting a teammate does not appear. Which fields appear in `data` depends on `event_type`: | `event_type` | `data` fields | |---|---| | `fin_consultation_started` | `channel`, `rule_threshold_percent`, `confidence_percent`, `sharp_ask`, `ask_rationale`, `issue_summary`, `customer_question` | | `fin_draft_proposed` | `draft` | | `fin_teammate_input_received` | `round_index`, `teammate_input`, `reviewer_admin_id`, `regeneration_outcome` | | `fin_draft_revised` | `round_index`, `revised_draft`, `regeneration_outcome` | | `fin_consultation_finished` | `outcome`, `approved_draft_type`, `final_draft`, `sent_text`, `reviewer_admin_id`, `duration_seconds`, `rounds_count`, `payload_truncated` | A consultation always produces a `fin_consultation_started` and a `fin_consultation_finished` event. `fin_draft_proposed` appears when Fin proposed a draft. `fin_teammate_input_received` appears once per round of teammate feedback, and `fin_draft_revised` once per round where Fin produced a revised draft in response. Notes on interpreting the response: \- `hitl_cycle_id` identifies the consultation, so it is the same on every event of one consultation. It is not unique per event. A conversation can hold several consultations — a consultation that replaces an outstanding one finishes with an `outcome` of `superseded`. \- `conversation_part_id` links an event to a conversation part where one exists. It is `null` in ordinary cases: teammate feedback given through the…
     pub fn list_hitl_events(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::ListHitlEventsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<HitlEventList, crate::errors::SdkError> {
-        crate::methods::conversations::list_hitl_events(&self.config, id, intercom_version, options)
+        crate::methods::conversations::list_hitl_events(&self.config, params, options)
     }
     /// Lists internal side conversations and their conversation parts for a given conversation. Use `page` and `per_page` to paginate the results. Access requires the `read_conversations` OAuth scope.
     ///
     /// List side conversations for a given conversation. Side conversations are internal threads created by teammates from within a conversation. Each side conversation includes its conversation parts (messages). Results are paginated. Requires the `read_conversations` OAuth scope.
     pub fn list_side(
         &self,
-        id: String,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::ListSideConversationsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<SideConversationList, crate::errors::SdkError> {
-        crate::methods::conversations::list_side_conversations(
-            &self.config,
-            id,
-            page,
-            per_page,
-            intercom_version,
-            options,
-        )
+        crate::methods::conversations::list_side_conversations(&self.config, params, options)
     }
     /// Redacts a conversation part or the source message of a conversation. Choose the resource type and provide its identifiers; a conversation part must have a body, and a source message must have been created by a contact. Redacting a conversation also removes the associated HITL event data.
     ///
     /// You can redact a conversation part or the source message of a conversation (as seen in the source object). {% admonition type="info" name="Redacting parts and messages" %} If you are redacting a conversation part, it must have a `body`. If you are redacting a source message, it must have been created by a contact. We will return a `conversation_part_not_redactable` error if these criteria are not met. {% /admonition %}
     pub fn redact(
         &self,
-        intercom_version: Option<IntercomVersion>,
-        body: Option<RedactConversationRequest>,
+        params: crate::methods::conversations::RedactConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Conversation, crate::errors::SdkError> {
-        crate::methods::conversations::redact_conversation(
-            &self.config,
-            intercom_version,
-            body,
-            options,
-        )
+        crate::methods::conversations::redact_conversation(&self.config, params, options)
     }
     /// Merges a secondary conversation into a primary conversation, closing the secondary and linking it to the surviving primary thread. Supply the secondary conversation ID in the path and the primary conversation ID in `merge_into_conversation_id`; the merge requires `write_conversations`, and also `write_tickets` when the secondary conversation is a ticket. The response contains the primary conversation.
     ///
     /// Merge a secondary (source) conversation into a primary (target) conversation. The secondary conversation is closed and linked to the primary, which becomes the surviving thread. Returns the primary conversation on success. Requires `write_conversations` OAuth scope. When the secondary is a ticket, `write_tickets` scope is also required.
     pub fn merge(
         &self,
-        id: String,
-        merge_into_conversation_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::MergeConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Conversation, crate::errors::SdkError> {
-        crate::methods::conversations::merge_conversation(
-            &self.config,
-            id,
-            merge_into_conversation_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::conversations::merge_conversation(&self.config, params, options)
     }
     /// Converts an existing conversation into a ticket. Supply `ticket_type_id` to select the ticket type, and optionally provide `ticket_state_id` and `attributes` to set the ticket state and ticket attributes. The response contains the created ticket.
     ///
@@ -2885,20 +2126,10 @@ impl ConversationsNamespace {
     /// List all deleted conversation IDs. {% admonition type="warning" name="Pagination" %} You can use pagination to limit the number of results returned. The default is `20` results per page. You can navigate to next pages using the `page` param. {% /admonition %}
     pub fn list_deleted_ids(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        order: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations::ListDeletedConversationIdsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedConversationList, crate::errors::SdkError> {
-        crate::methods::conversations::list_deleted_conversation_ids(
-            &self.config,
-            page,
-            per_page,
-            order,
-            intercom_version,
-            options,
-        )
+        crate::methods::conversations::list_deleted_conversation_ids(&self.config, params, options)
     }
 }
 
@@ -2919,14 +2150,12 @@ impl ConversationsAttributesNamespace {
     /// You can fetch a list of all conversation attributes for your workspace.
     pub fn list(
         &self,
-        include_archived: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::ListConversationAttributesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttributeList, crate::errors::SdkError> {
         crate::methods::conversations_attributes::list_conversation_attributes(
             &self.config,
-            include_archived,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -2935,14 +2164,12 @@ impl ConversationsAttributesNamespace {
     /// Create a new conversation attribute.
     pub fn create(
         &self,
-        body: CreateConversationAttributeRequest,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::CreateConversationAttributeParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttribute, crate::errors::SdkError> {
         crate::methods::conversations_attributes::create_conversation_attribute(
             &self.config,
-            body,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -2951,14 +2178,12 @@ impl ConversationsAttributesNamespace {
     /// Retrieve a single conversation attribute by ID.
     pub fn get(
         &self,
-        id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::GetConversationAttributeParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttribute, crate::errors::SdkError> {
         crate::methods::conversations_attributes::get_conversation_attribute(
             &self.config,
-            id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -2981,14 +2206,12 @@ impl ConversationsAttributesNamespace {
     /// Archive a conversation attribute (soft delete). The attribute is marked as archived but not permanently deleted.
     pub fn delete(
         &self,
-        id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::DeleteConversationAttributeParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttribute, crate::errors::SdkError> {
         crate::methods::conversations_attributes::delete_conversation_attribute(
             &self.config,
-            id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -2997,16 +2220,12 @@ impl ConversationsAttributesNamespace {
     /// Add a new option to a list-type conversation attribute. Returns the full attribute with the updated options array.
     pub fn create_option(
         &self,
-        id: i64,
-        label: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::CreateConversationAttributeOptionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttribute, crate::errors::SdkError> {
         crate::methods::conversations_attributes::create_conversation_attribute_option(
             &self.config,
-            id,
-            label,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3015,18 +2234,12 @@ impl ConversationsAttributesNamespace {
     /// Update the label of a single option on a list-type conversation attribute. Returns the full attribute with the updated options array.
     pub fn update_option(
         &self,
-        id: i64,
-        option_id: String,
-        label: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::UpdateConversationAttributeOptionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttribute, crate::errors::SdkError> {
         crate::methods::conversations_attributes::update_conversation_attribute_option(
             &self.config,
-            id,
-            option_id,
-            label,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3035,16 +2248,12 @@ impl ConversationsAttributesNamespace {
     /// Archive a single option on a list-type conversation attribute (soft delete). The option remains in the response with `archived: true`. Returns the full attribute with the updated options array.
     pub fn delete_option(
         &self,
-        id: i64,
-        option_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::conversations_attributes::DeleteConversationAttributeOptionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<ConversationAttribute, crate::errors::SdkError> {
         crate::methods::conversations_attributes::delete_conversation_attribute_option(
             &self.config,
-            id,
-            option_id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3095,16 +2304,12 @@ impl CustomObjectInstancesNamespace {
     /// Delete a single Custom Object instance by external_id.
     pub fn delete_by_id(
         &self,
-        custom_object_type_identifier: String,
-        external_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::custom_object_instances::DeleteCustomObjectInstancesByIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CustomObjectInstanceDeleted, crate::errors::SdkError> {
         crate::methods::custom_object_instances::delete_custom_object_instances_by_id(
             &self.config,
-            custom_object_type_identifier,
-            external_id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3113,16 +2318,12 @@ impl CustomObjectInstancesNamespace {
     /// Fetch a Custom Object Instance by id.
     pub fn get_by_id(
         &self,
-        custom_object_type_identifier: String,
-        custom_object_instance_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::custom_object_instances::GetCustomObjectInstancesByIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CustomObjectInstance, crate::errors::SdkError> {
         crate::methods::custom_object_instances::get_custom_object_instances_by_id(
             &self.config,
-            custom_object_type_identifier,
-            custom_object_instance_id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3131,16 +2332,12 @@ impl CustomObjectInstancesNamespace {
     /// Delete a single Custom Object instance using the Intercom defined id.
     pub fn delete_by_external_id(
         &self,
-        custom_object_type_identifier: String,
-        custom_object_instance_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::custom_object_instances::DeleteCustomObjectInstancesByExternalIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CustomObjectInstanceDeleted, crate::errors::SdkError> {
         crate::methods::custom_object_instances::delete_custom_object_instances_by_external_id(
             &self.config,
-            custom_object_type_identifier,
-            custom_object_instance_id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3163,18 +2360,10 @@ impl DataAttributesNamespace {
     /// You can fetch a list of all data attributes belonging to a workspace for contacts or companies. {% admonition type="warning" %} Conversation attributes are no longer returned by this endpoint. Calling without a `model` parameter no longer includes them, and `model=conversation` returns a `422` error. Use `GET /conversations/attributes` instead. {% /admonition %}
     pub fn list(
         &self,
-        model: Option<crate::methods::data_attributes::ListDataAttributesEnum>,
-        include_archived: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_attributes::ListDataAttributesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataAttributeList, crate::errors::SdkError> {
-        crate::methods::data_attributes::list_data_attributes(
-            &self.config,
-            model,
-            include_archived,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_attributes::list_data_attributes(&self.config, params, options)
     }
     /// Creates a data attribute for a contact or company model. Provide `name`, `model`, and `data_type`; for a list attribute, also supply `options` with at least two entries.
     ///
@@ -3215,18 +2404,10 @@ impl DataConnectorsNamespace {
     /// Returns a paginated list of all data connectors for the workspace, ordered by most recently updated first. Data connectors allow workflows and AI agents to make HTTP requests to external APIs.
     pub fn list(
         &self,
-        per_page: Option<i64>,
-        starting_after: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::ListDataConnectorsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataConnectorList, crate::errors::SdkError> {
-        crate::methods::data_connectors::list_data_connectors(
-            &self.config,
-            per_page,
-            starting_after,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_connectors::list_data_connectors(&self.config, params, options)
     }
     /// Creates a new data connector for calling an external API. Provide `name` and any configuration fields; the connector starts in `draft` state. Configure its settings before setting it to `live`.
     ///
@@ -3243,34 +2424,20 @@ impl DataConnectorsNamespace {
     /// You can retrieve the full detail of a single data connector by its ID. The response includes configuration, data inputs, response fields, and object mappings.
     pub fn retrieve(
         &self,
-        id: String,
-        state_version: Option<crate::methods::data_connectors::RetrieveDataConnectorEnum>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::RetrieveDataConnectorParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataConnectorDetail, crate::errors::SdkError> {
-        crate::methods::data_connectors::retrieve_data_connector(
-            &self.config,
-            id,
-            state_version,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_connectors::retrieve_data_connector(&self.config, params, options)
     }
     /// Deletes an existing data connector. Use this operation only when the connector is in `draft` state and is not used by any workflows or AI agents. A successful response confirms whether the connector was deleted.
     ///
     /// Delete an existing data connector. The connector must be in `draft` state and must not be in use by any workflows or AI agents.
     pub fn delete(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::DeleteDataConnectorParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedDataConnectorObject, crate::errors::SdkError> {
-        crate::methods::data_connectors::delete_data_connector(
-            &self.config,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_connectors::delete_data_connector(&self.config, params, options)
     }
     /// Updates an existing data connector's configuration. Supply only the fields to change; set `state` to `live` or `draft` to change the connector's state. Updating `data_inputs` replaces all existing inputs.
     ///
@@ -3301,16 +2468,12 @@ impl DataConnectorsNamespace {
     /// Retrieve details for a specific data connector execution result. Always includes request/response bodies and the sanitised request URL.
     pub fn show_execution_result(
         &self,
-        data_connector_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::ShowDataConnectorExecutionResultParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataConnectorExecutionResult, crate::errors::SdkError> {
         crate::methods::data_connectors::show_data_connector_execution_result(
             &self.config,
-            data_connector_id,
-            id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3319,36 +2482,22 @@ impl DataConnectorsNamespace {
     /// Retrieve the version history of a data connector, newest first. Each entry is a point-in-time snapshot of the connector's configuration, with the status it has today and an optional note. Results are paginated. `pages.next` is omitted on the last page. A data connector that has never been published returns an empty `data` list. Requires the `read_data_connector_versions` or `read_write_data_connector_versions` OAuth scope.
     pub fn list_versions(
         &self,
-        id: String,
-        per_page: Option<i64>,
-        starting_after: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::ListDataConnectorVersionsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataConnectorVersionList, crate::errors::SdkError> {
-        crate::methods::data_connectors::list_data_connector_versions(
-            &self.config,
-            id,
-            per_page,
-            starting_after,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_connectors::list_data_connector_versions(&self.config, params, options)
     }
     /// Retrieves a single version snapshot of a data connector, including the connector configuration as it was at that version. Use the version's `entity_version_id` as `version_id`. Access requires a version-reading OAuth scope.
     ///
     /// Retrieve a single version of a data connector, including the connector configuration as it was at that version. Requires the `read_data_connector_versions` or `read_write_data_connector_versions` OAuth scope.
     pub fn retrieve_version(
         &self,
-        id: String,
-        version_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::RetrieveDataConnectorVersionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataConnectorVersion, crate::errors::SdkError> {
         crate::methods::data_connectors::retrieve_data_connector_version(
             &self.config,
-            id,
-            version_id,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3357,18 +2506,12 @@ impl DataConnectorsNamespace {
     /// Update the note on a data connector version. The note is the only field that can be changed. This does not publish the version or roll the connector back to it. Send an empty string to clear the note. Requires the `read_write_data_connector_versions` OAuth scope.
     pub fn update_version(
         &self,
-        id: String,
-        version_id: i64,
-        note: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_connectors::UpdateDataConnectorVersionParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataConnectorVersion, crate::errors::SdkError> {
         crate::methods::data_connectors::update_data_connector_version(
             &self.config,
-            id,
-            version_id,
-            note,
-            intercom_version,
+            params,
             options,
         )
     }
@@ -3401,38 +2544,20 @@ impl DataEventsNamespace {
     /// \> 🚧 \> \> Please note that you can only 'list' events that are less than 90 days old. Event counts and summaries will still include your events older than 90 days but you cannot 'list' these events individually if they are older than 90 days The events belonging to a customer can be listed by sending a GET request to `https://api.intercom.io/events` with a user or lead identifier along with a `type` parameter. The identifier parameter can be one of `user_id`, `email` or `intercom_user_id`. The `type` parameter value must be `user`. \- `https://api.intercom.io/events?type=user&user_id={user_id}` \- `https://api.intercom.io/events?type=user&email={email}` \- `https://api.intercom.io/events?type=user&intercom_user_id={id}` (this call can be used to list leads) The `email` parameter value should be [url encoded](http://en.wikipedia.org/wiki/Percent-encoding) when sending. You can optionally define the result page size as well with the `per_page` parameter.
     pub fn list(
         &self,
-        filter: crate::methods::data_events::ListDataEvents,
-        type_: String,
-        summary: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_events::ListDataEventsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataEventSummary, crate::errors::SdkError> {
-        crate::methods::data_events::list_data_events(
-            &self.config,
-            filter,
-            type_,
-            summary,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_events::list_data_events(&self.config, params, options)
     }
     /// Creates event summaries that track how often an event occurred and when it first and last occurred for a user. Supply the user's `user_id` and an `event_summaries` object containing event names, counts, and timestamps. Use past-tense verb-noun event names, such as `updated-plan`.
     ///
     /// Create event summaries for a user. Event summaries are used to track the number of times an event has occurred, the first time it occurred and the last time it occurred.
     pub fn summaries(
         &self,
-        intercom_version: Option<IntercomVersion>,
-        user_id: Option<String>,
-        event_summaries: Option<CreateDataEventSummariesRequestEventSummaries>,
+        params: crate::methods::data_events::DataEventSummariesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::data_events::data_event_summaries(
-            &self.config,
-            intercom_version,
-            user_id,
-            event_summaries,
-            options,
-        )
+        crate::methods::data_events::data_event_summaries(&self.config, params, options)
     }
 }
 
@@ -3453,66 +2578,40 @@ impl DataExportNamespace {
     /// To create your export job, you need to send a `POST` request to the export endpoint `https://api.intercom.io/export/content/data`. This endpoint exports \*\*message delivery and engagement data\*\* for outbound content (Emails, Posts, Custom Bots, Surveys, Tours, Series, and more). The exported data includes who received each message, when they received it, and how they engaged with it (opens, clicks, replies, completions, dismissals, unsubscribes, and bounces). It does not export raw message or conversation content. The only parameters you need to provide are the range of dates that you want exported. \>🚧 Limit of one active job \> \> You can only have one active job per workspace. You will receive a HTTP status code of 429 with the message Exceeded rate limit of 1 pending message data export jobs if you attempt to create a second concurrent job. \>❗️ Updated_at not included \> \> It should be noted that the timeframe only includes messages sent during the time period and not messages that were only updated during this period. For example, if a message was updated yesterday but sent two days ago, you would need to set the created_at_after date before the message was sent to include that in your retrieval job. \>📘 Date ranges are inclusive \> \> Requesting data for 2018-06-01 until 2018-06-30 will get all data for those days including those specified \- e.g. 2018-06-01 00:00:00 until 2018-06-30 23:59:99.
     pub fn create(
         &self,
-        created_at_after: i64,
-        created_at_before: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_export::CreateDataExportParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataExport, crate::errors::SdkError> {
-        crate::methods::data_export::create_data_export(
-            &self.config,
-            created_at_after,
-            created_at_before,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_export::create_data_export(&self.config, params, options)
     }
     /// Retrieves the status and download details for a content data export job. Use the `job_identifier` returned when you created the job to check its progress. Completed export data is available for two days after processing finishes.
     ///
     /// You can view the status of your job by sending a `GET` request to the URL `https://api.intercom.io/export/content/data/{job_identifier}` \- the `{job_identifier}` is the value returned in the response when you first created the export job. More on it can be seen in the Export Job Model. \> 🚧 Jobs expire after two days \> All jobs that have completed processing (and are thus available to download from the provided URL) will have an expiry limit of two days from when the export ob completed. After this, the data will no longer be available.
     pub fn get(
         &self,
-        job_identifier: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_export::GetDataExportParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataExport, crate::errors::SdkError> {
-        crate::methods::data_export::get_data_export(
-            &self.config,
-            job_identifier,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_export::get_data_export(&self.config, params, options)
     }
     /// Cancels a content data export job. Use the `job_identifier` returned when you created the job to identify which export to cancel. You can check the job's status afterward to see its current state.
     ///
     /// You can cancel your job
     pub fn cancel(
         &self,
-        job_identifier: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_export::CancelDataExportParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DataExport, crate::errors::SdkError> {
-        crate::methods::data_export::cancel_data_export(
-            &self.config,
-            job_identifier,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_export::cancel_data_export(&self.config, params, options)
     }
     /// Downloads the data for a completed content export job as a continuously streamed, gzipped CSV file. Use the `job_identifier` for a job with a completed status and send the `Accept: application/octet-stream` header. Download the file within two days of the job completing.
     ///
     /// When a job has a status of complete, and thus a filled download_url, you can download your data by hitting that provided URL, formatted like so: https://api.intercom.io/download/content/data/xyz1234. Your exported message data will be streamed continuously back down to you in a gzipped CSV format. \> 📘 Octet header required \> \> You will have to specify the header Accept: `application/octet-stream` when hitting this endpoint.
     pub fn download(
         &self,
-        job_identifier: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::data_export::DownloadDataExportParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<serde_json::Value, crate::errors::SdkError> {
-        crate::methods::data_export::download_data_export(
-            &self.config,
-            job_identifier,
-            intercom_version,
-            options,
-        )
+        crate::methods::data_export::download_data_export(&self.config, params, options)
     }
 }
 
@@ -3533,11 +2632,10 @@ impl JobsNamespace {
     /// Retrieve the status of job execution.
     pub fn status(
         &self,
-        job_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::jobs::JobsStatusParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Jobs, crate::errors::SdkError> {
-        crate::methods::jobs::jobs_status(&self.config, job_id, intercom_version, options)
+        crate::methods::jobs::jobs_status(&self.config, params, options)
     }
 }
 
@@ -3568,36 +2666,20 @@ impl MessagesNamespace {
     /// Retrieves the delivery status of a specific WhatsApp message by its message ID. Returns the current status, conversation details, and any error information if the message failed to deliver.
     pub fn retrieve_whats_app_status(
         &self,
-        message_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::messages::RetrieveWhatsAppMessageStatusParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<WhatsappMessageStatus, crate::errors::SdkError> {
-        crate::methods::messages::retrieve_whats_app_message_status(
-            &self.config,
-            message_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::messages::retrieve_whats_app_message_status(&self.config, params, options)
     }
     /// Lists paginated status events for WhatsApp messages sent through the Outbound module. Use `ruleset_id` to select the set of messages and `per_page` and `starting_after` to paginate the results. The API plan must allow access to this operation.
     ///
     /// Retrieves statuses of messages sent from the Outbound module. Currently, this API only supports WhatsApp messages. This endpoint returns paginated status events for WhatsApp messages sent via the Outbound module, providing information about delivery state and related message details.
     pub fn get_whats_app_status(
         &self,
-        ruleset_id: String,
-        per_page: Option<i64>,
-        starting_after: Option<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::messages::GetWhatsAppMessageStatusParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<WhatsappMessageStatusList, crate::errors::SdkError> {
-        crate::methods::messages::get_whats_app_message_status(
-            &self.config,
-            ruleset_id,
-            per_page,
-            starting_after,
-            intercom_version,
-            options,
-        )
+        crate::methods::messages::get_whats_app_message_status(&self.config, params, options)
     }
 }
 
@@ -3618,10 +2700,10 @@ impl NewsNamespace {
     /// You can fetch a list of all news items
     pub fn list_items(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::news::ListNewsItemsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<PaginatedResponse, crate::errors::SdkError> {
-        crate::methods::news::list_news_items(&self.config, intercom_version, options)
+        crate::methods::news::list_news_items(&self.config, params, options)
     }
     /// Creates a news item that can announce updates, company news, promotions, or events. Supply `title` and `sender_id`; the sender must be a teammate, and `state` can be set to draft or live. Assign the item to newsfeeds with `newsfeed_assignments`.
     ///
@@ -3638,16 +2720,10 @@ impl NewsNamespace {
     /// You can fetch the details of a single news item.
     pub fn retrieve_item(
         &self,
-        news_item_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::news::RetrieveNewsItemParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<NewsItem, crate::errors::SdkError> {
-        crate::methods::news::retrieve_news_item(
-            &self.config,
-            news_item_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::news::retrieve_news_item(&self.config, params, options)
     }
     /// Replaces the details of an existing news item. Provide the item identifier in `news_item_id` and submit the news item fields you want set. When you provide a body, include `title` and `sender_id`.
     pub fn update_item(
@@ -3662,58 +2738,40 @@ impl NewsNamespace {
     /// You can delete a single news item.
     pub fn delete_item(
         &self,
-        news_item_id: i64,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::news::DeleteNewsItemParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<DeletedObject, crate::errors::SdkError> {
-        crate::methods::news::delete_news_item(
-            &self.config,
-            news_item_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::news::delete_news_item(&self.config, params, options)
     }
     /// Lists the live news items assigned to a specific newsfeed. Supply `newsfeed_id` to select the feed whose items you want to retrieve. The response includes cursor-based page metadata and a total count.
     ///
     /// You can fetch a list of all news items that are live on a given newsfeed
     pub fn list_live_newsfeed_items(
         &self,
-        newsfeed_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::news::ListLiveNewsfeedItemsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<PaginatedResponse, crate::errors::SdkError> {
-        crate::methods::news::list_live_newsfeed_items(
-            &self.config,
-            newsfeed_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::news::list_live_newsfeed_items(&self.config, params, options)
     }
     /// Lists the newsfeeds available in the workspace. Use the cursor-based page metadata to navigate through the results. The response includes a total count and an array of newsfeed objects.
     ///
     /// You can fetch a list of all newsfeeds
     pub fn list_newsfeeds(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::news::ListNewsfeedsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<PaginatedResponse, crate::errors::SdkError> {
-        crate::methods::news::list_newsfeeds(&self.config, intercom_version, options)
+        crate::methods::news::list_newsfeeds(&self.config, params, options)
     }
     /// Retrieves the details of a single newsfeed. Use `newsfeed_id` to identify the feed. Newsfeeds cannot be edited through the API.
     ///
     /// You can fetch the details of a single newsfeed
     pub fn retrieve_newsfeed(
         &self,
-        newsfeed_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::news::RetrieveNewsfeedParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Newsfeed, crate::errors::SdkError> {
-        crate::methods::news::retrieve_newsfeed(
-            &self.config,
-            newsfeed_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::news::retrieve_newsfeed(&self.config, params, options)
     }
 }
 
@@ -3734,32 +2792,20 @@ impl SegmentsNamespace {
     /// You can fetch a list of all segments.
     pub fn list(
         &self,
-        include_count: Option<bool>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::segments::ListSegmentsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<SegmentList, crate::errors::SdkError> {
-        crate::methods::segments::list_segments(
-            &self.config,
-            include_count,
-            intercom_version,
-            options,
-        )
+        crate::methods::segments::list_segments(&self.config, params, options)
     }
     /// Retrieves the details of a segment, a group of contacts defined by its rules. Use `segment_id` to identify the segment you want to retrieve.
     ///
     /// You can fetch the details of a single segment.
     pub fn retrieve(
         &self,
-        segment_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::segments::RetrieveSegmentParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Segment, crate::errors::SdkError> {
-        crate::methods::segments::retrieve_segment(
-            &self.config,
-            segment_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::segments::retrieve_segment(&self.config, params, options)
     }
 }
 
@@ -3780,18 +2826,10 @@ impl SwitchNamespace {
     /// You can use the API to deflect phone calls to the Intercom Messenger. Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified. If custom attributes are specified, they will be added to the user or lead's custom data attributes.
     pub fn create_phone(
         &self,
-        phone: String,
-        intercom_version: Option<IntercomVersion>,
-        custom_attributes: Option<CustomAttributesRequest>,
+        params: crate::methods::switch::CreatePhoneSwitchParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<PhoneSwitch, crate::errors::SdkError> {
-        crate::methods::switch::create_phone_switch(
-            &self.config,
-            phone,
-            intercom_version,
-            custom_attributes,
-            options,
-        )
+        crate::methods::switch::create_phone_switch(&self.config, params, options)
     }
 }
 
@@ -3812,127 +2850,93 @@ impl CallsNamespace {
     /// Retrieve a paginated list of calls.
     pub fn list(
         &self,
-        page: Option<i64>,
-        per_page: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::calls::ListCallsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<CallList, crate::errors::SdkError> {
-        crate::methods::calls::list_calls(&self.config, page, per_page, intercom_version, options)
+        crate::methods::calls::list_calls(&self.config, params, options)
     }
     /// Retrieves a single call by its identifier. Use `call_id` to select the call whose details you need.
     ///
     /// Retrieve a single call by id.
     pub fn show(
         &self,
-        call_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::calls::ShowCallParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Call, crate::errors::SdkError> {
-        crate::methods::calls::show_call(&self.config, call_id, intercom_version, options)
+        crate::methods::calls::show_call(&self.config, params, options)
     }
     /// Retrieves a redirect to a signed URL for a call recording when one is available. Use `call_id` to identify the call whose recording you want to access.
     ///
     /// Redirects to a signed URL for the call's recording if it exists.
     pub fn show_recording(
         &self,
-        call_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::calls::ShowCallRecordingParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<(), crate::errors::SdkError> {
-        crate::methods::calls::show_call_recording(&self.config, call_id, intercom_version, options)
+        crate::methods::calls::show_call_recording(&self.config, params, options)
     }
     /// Retrieves the transcript for a call as a downloadable text file. Use `call_id` to identify the call whose transcript you need.
     ///
     /// Returns the transcript for the specified call as a downloadable text file.
     pub fn show_transcript(
         &self,
-        call_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::calls::ShowCallTranscriptParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<String, crate::errors::SdkError> {
-        crate::methods::calls::show_call_transcript(
-            &self.config,
-            call_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::calls::show_call_transcript(&self.config, params, options)
     }
     /// Lists calls associated with the specified conversation IDs and includes transcripts when available. Supply between 1 and 20 IDs in `conversation_ids` to retrieve the matching calls. Use this endpoint when you need call details and transcript availability for a set of conversations.
     ///
     /// Retrieve calls by a list of conversation ids and include transcripts when available. A maximum of 20 `conversation_ids` can be provided. If none are provided or more than 20 are provided, a 400 error is returned.
     pub fn list_with_transcripts(
         &self,
-        conversation_ids: Vec<String>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::calls::ListCallsWithTranscriptsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<crate::methods::calls::ListCallsWithTranscriptsResponse, crate::errors::SdkError>
     {
-        crate::methods::calls::list_calls_with_transcripts(
-            &self.config,
-            conversation_ids,
-            intercom_version,
-            options,
-        )
+        crate::methods::calls::list_calls_with_transcripts(&self.config, params, options)
     }
     /// Register a Fin Voice call with Intercom. This endpoint creates an external reference that links an external call identifier to an Intercom call and conversation. The call can be from different sources: \- AWS Connect (default) \- Five9 \- Zoom Phone
     pub fn register_fin_voice(
         &self,
-        phone_number: String,
-        call_id: String,
-        source: Option<RegisterFinVoiceCallRequestSourceEnum>,
-        data: Option<Option<serde_json::Value>>,
+        params: crate::methods::calls::RegisterFinVoiceCallParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AiCallResponse, crate::errors::SdkError> {
-        crate::methods::calls::register_fin_voice_call(
-            &self.config,
-            phone_number,
-            call_id,
-            source,
-            data,
-            options,
-        )
+        crate::methods::calls::register_fin_voice_call(&self.config, params, options)
     }
     /// Retrieve information about a Fin Voice call using the external reference ID.
     pub fn collect_fin_voice_by_id(
         &self,
-        id: i64,
+        params: crate::methods::calls::CollectFinVoiceCallByIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AiCallResponse, crate::errors::SdkError> {
-        crate::methods::calls::collect_fin_voice_call_by_id(&self.config, id, options)
+        crate::methods::calls::collect_fin_voice_call_by_id(&self.config, params, options)
     }
     /// Retrieve information about a Fin Voice call using the external call identifier.
     pub fn collect_fin_voice_by_external_id(
         &self,
-        external_id: String,
+        params: crate::methods::calls::CollectFinVoiceCallByExternalIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AiCallResponse, crate::errors::SdkError> {
-        crate::methods::calls::collect_fin_voice_call_by_external_id(
-            &self.config,
-            external_id,
-            options,
-        )
+        crate::methods::calls::collect_fin_voice_call_by_external_id(&self.config, params, options)
     }
     /// Retrieve information about a Fin Voice call using the phone number. Returns the most recent matched call for the given phone number, ordered by creation date.
     pub fn collect_fin_voice_by_phone_number(
         &self,
-        phone_number: String,
+        params: crate::methods::calls::CollectFinVoiceCallByPhoneNumberParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<AiCallResponse, crate::errors::SdkError> {
-        crate::methods::calls::collect_fin_voice_call_by_phone_number(
-            &self.config,
-            phone_number,
-            options,
-        )
+        crate::methods::calls::collect_fin_voice_call_by_phone_number(&self.config, params, options)
     }
     /// Retrieve information about Fin Voice calls associated with a conversation. Returns all matched calls for the given conversation ID. A conversation may have multiple associated calls.
     pub fn collect_fin_voice_by_conversation_id(
         &self,
-        conversation_id: String,
+        params: crate::methods::calls::CollectFinVoiceCallsByConversationIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Vec<AiCallResponse>, crate::errors::SdkError> {
         crate::methods::calls::collect_fin_voice_calls_by_conversation_id(
             &self.config,
-            conversation_id,
+            params,
             options,
         )
     }
@@ -3955,39 +2959,30 @@ impl TeamsNamespace {
     /// This will return a list of team objects for the App.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::teams::ListTeamsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TeamList, crate::errors::SdkError> {
-        crate::methods::teams::list_teams(&self.config, intercom_version, options)
+        crate::methods::teams::list_teams(&self.config, params, options)
     }
     /// Retrieves a team and the admins that belong to it. Use the `team_id` path parameter to specify the team whose details you need.
     ///
     /// You can fetch the details of a single team, containing an array of admins that belong to this team.
     pub fn retrieve(
         &self,
-        team_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::teams::RetrieveTeamParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Team, crate::errors::SdkError> {
-        crate::methods::teams::retrieve_team(&self.config, team_id, intercom_version, options)
+        crate::methods::teams::retrieve_team(&self.config, params, options)
     }
     /// Retrieves real-time activity metrics for admins in a specified team, including counts of open, idle, and snoozed conversations. The `realtime_monitoring` feature must be enabled for the workspace; use `idle_threshold` to set when an open conversation counts as idle.
     ///
     /// Returns real-time activity metrics for admins in the specified team. For each admin, the response includes counts of open, idle, and snoozed conversations. This endpoint requires the `realtime_monitoring` feature to be enabled for your workspace.
     pub fn get_metrics(
         &self,
-        team_id: String,
-        idle_threshold: Option<i64>,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::teams::GetTeamMetricsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TeamMetricList, crate::errors::SdkError> {
-        crate::methods::teams::get_team_metrics(
-            &self.config,
-            team_id,
-            idle_threshold,
-            intercom_version,
-            options,
-        )
+        crate::methods::teams::get_team_metrics(&self.config, params, options)
     }
 }
 
@@ -4008,10 +3003,10 @@ impl TicketStatesNamespace {
     /// You can get a list of all ticket states for a workspace.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ticket_states::ListTicketStatesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TicketStateList, crate::errors::SdkError> {
-        crate::methods::ticket_states::list_ticket_states(&self.config, intercom_version, options)
+        crate::methods::ticket_states::list_ticket_states(&self.config, params, options)
     }
 }
 
@@ -4074,10 +3069,10 @@ impl TicketTypesNamespace {
     /// You can get a list of all ticket types for a workspace.
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ticket_types::ListTicketTypesParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TicketTypeList, crate::errors::SdkError> {
-        crate::methods::ticket_types::list_ticket_types(&self.config, intercom_version, options)
+        crate::methods::ticket_types::list_ticket_types(&self.config, params, options)
     }
     /// Creates a new ticket type with its name, description, category, icon, and internal-use setting. Supply `name`; `category` accepts Customer, Back-office, or Tracker, and omitted `icon` and `is_internal` values default to 🎟️ and false. The created ticket type includes the default `_default_title_` and `_default_description_` attributes.
     ///
@@ -4094,16 +3089,10 @@ impl TicketTypesNamespace {
     /// You can fetch the details of a single ticket type.
     pub fn get(
         &self,
-        ticket_type_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::ticket_types::GetTicketTypeParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TicketType, crate::errors::SdkError> {
-        crate::methods::ticket_types::get_ticket_type(
-            &self.config,
-            ticket_type_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::ticket_types::get_ticket_type(&self.config, params, options)
     }
     /// Replaces the configurable details of an existing ticket type. Supply only the fields you want to change; `category` accepts Customer, Back-office, or Tracker, and omitted `icon` and `is_internal` values use their defined defaults when provided. The updated response includes the ticket type's current details.
     ///
@@ -4134,54 +3123,30 @@ impl TicketsNamespace {
     /// You can reply to a ticket with a message from an admin or on behalf of a contact, or with a note for admins.
     pub fn reply(
         &self,
-        ticket_id: String,
-        intercom_version: Option<IntercomVersion>,
-        skip_notifications: Option<bool>,
+        params: crate::methods::tickets::ReplyTicketParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TicketReply, crate::errors::SdkError> {
-        crate::methods::tickets::reply_ticket(
-            &self.config,
-            ticket_id,
-            intercom_version,
-            skip_notifications,
-            options,
-        )
+        crate::methods::tickets::reply_ticket(&self.config, params, options)
     }
     /// Links a conversation or customer ticket to an existing tracker ticket. Supply the tracker's `ticket_id` and the `conversation_id` to link; the tracker ticket can have up to 2,500 linked conversations. This operation requires the `write_tickets` OAuth scope.
     ///
     /// Link a conversation to an existing tracker ticket. The conversation can be a regular conversation or one that has been converted into a customer ticket. Use this when related conversations surface after a tracker ticket has already been created. The ticket in the path must be a tracker ticket, and `conversation_id` in the body is the conversation (or customer ticket) to link to it. This returns the linked conversation. A tracker ticket can have up to 2,500 linked conversations; once that limit is reached, further requests return `linked_conversation_limit_exceeded`. Requires the `write_tickets` OAuth scope.
     pub fn link_conversation(
         &self,
-        ticket_id: String,
-        conversation_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tickets::LinkTicketsConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Conversation, crate::errors::SdkError> {
-        crate::methods::tickets::link_tickets_conversation(
-            &self.config,
-            ticket_id,
-            conversation_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tickets::link_tickets_conversation(&self.config, params, options)
     }
     /// Unlinks a conversation or converted customer ticket from the tracker ticket it is linked to. Supply the tracker ticket identifier and the identifier of the linked conversation or customer ticket. This operation requires the `write_tickets` OAuth scope.
     ///
     /// Unlink a conversation (or converted customer ticket) from a tracker ticket it is currently linked to. The ticket in the path must be a tracker ticket. This returns the conversation that was unlinked. Requires the `write_tickets` OAuth scope.
     pub fn unlink_conversation(
         &self,
-        ticket_id: String,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tickets::UnlinkTicketConversationParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Conversation, crate::errors::SdkError> {
-        crate::methods::tickets::unlink_tickets_conversation(
-            &self.config,
-            ticket_id,
-            id,
-            intercom_version,
-            options,
-        )
+        crate::methods::tickets::unlink_ticket_conversation(&self.config, params, options)
     }
     /// Creates a ticket using a ticket type and one or more affected contacts. Supply `ticket_type_id` and `contacts`; you can also provide ticket attributes, assignment details, or a conversation to link. A 200 response returns the created ticket and its current state.
     ///
@@ -4218,22 +3183,20 @@ impl TicketsNamespace {
     /// You can fetch the details of a single ticket.
     pub fn get(
         &self,
-        ticket_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tickets::GetTicketParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Ticket, crate::errors::SdkError> {
-        crate::methods::tickets::get_ticket(&self.config, ticket_id, intercom_version, options)
+        crate::methods::tickets::get_ticket(&self.config, params, options)
     }
     /// Deletes a ticket permanently from the inbox, including its replies, attributes, uploads, and related content. <Callout type="warning"\>Deleting a ticket is permanent and cannot be reversed.</Callout\> The ticket remains in reporting, although some reporting data may be incomplete.
     ///
     /// {% admonition type="warning" name="Irreversible operation" %} Deleting a ticket is permanent and cannot be reversed. {% /admonition %} Deleting a ticket permanently removes it from the inbox. All sensitive data is deleted, including admin and user replies, ticket attributes, uploads, and related content. The ticket will still appear in reporting, though some data may be incomplete due to the deletion.
     pub fn delete(
         &self,
-        ticket_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::tickets::DeleteTicketParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TicketDeleted, crate::errors::SdkError> {
-        crate::methods::tickets::delete_ticket(&self.config, ticket_id, intercom_version, options)
+        crate::methods::tickets::delete_ticket(&self.config, params, options)
     }
     /// Changes a ticket to a different ticket type and sets a state for that type. The new ticket type must be in the same category as the current type, and matching attributes transfer automatically. Values supplied in `ticket_attributes` override transferred values.
     ///
@@ -4250,18 +3213,10 @@ impl TicketsNamespace {
     /// You can search for multiple tickets by the value of their attributes in order to fetch exactly which ones you want. To search for tickets, you send a `POST` request to `https://api.intercom.io/tickets/search`. This will accept a query object in the body which will define your filters. {% admonition type="warning" name="Optimizing search queries" %} Search queries can be complex, so optimizing them can help the performance of your search. Use the `AND` and `OR` operators to combine multiple filters to get the exact results you need and utilize pagination to limit the number of results returned. The default is `20` results per page. See the [pagination section](https://developers.intercom.com/docs/build-an-integration/learn-more/rest-apis/pagination/#example-search-conversations-request) for more details on how to use the `starting_after` param. {% /admonition %} ### Nesting & Limitations You can nest these filters in order to get even more granular insights that pinpoint exactly what you need. Example: (1 OR 2) AND (3 OR 4). There are some limitations to the amount of multiples there can be: \- There's a limit of max 2 nested filters \- There's a limit of max 15 filters for each AND or OR group ### Accepted Fields Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as `created_at` accepts a date, the `value` cannot be a string such as `"foobar"`). The `source.body` field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a `"I need support"` body \- the query should contain a `=` operator with the value `"support"` for such conversation to be returned. A query with a `=` operator and a `"need support"` value will not yield a result. | Field | Type | | :---------------------------------------- |…
     pub fn search(
         &self,
-        query: SearchRequestQuery,
-        intercom_version: Option<IntercomVersion>,
-        pagination: Option<Option<StartingAfterPaging>>,
+        params: crate::methods::tickets::SearchTicketsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<TicketList, crate::errors::SdkError> {
-        crate::methods::tickets::search_tickets(
-            &self.config,
-            query,
-            intercom_version,
-            pagination,
-            options,
-        )
+        crate::methods::tickets::search_tickets(&self.config, params, options)
     }
 }
 
@@ -4292,36 +3247,20 @@ impl VisitorsNamespace {
     /// You can fetch the details of a single visitor.
     pub fn retrieve_with_user_id(
         &self,
-        user_id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::visitors::RetrieveVisitorWithUserIdParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Visitor, crate::errors::SdkError> {
-        crate::methods::visitors::retrieve_visitor_with_user_id(
-            &self.config,
-            user_id,
-            intercom_version,
-            options,
-        )
+        crate::methods::visitors::retrieve_visitor_with_user_id(&self.config, params, options)
     }
     /// Converts a visitor into a contact with the specified `lead` or `user` role, merging the visitor into an existing contact when one matches. If no matching contact exists, the visitor's identifiers are replaced with the supplied contact identifiers. The response contains the resulting contact.
     ///
     /// You can merge a Visitor to a Contact of role type `lead` or `user`. \> 📘 What happens upon a visitor being converted? \> \> If the User exists, then the Visitor will be merged into it, the Visitor deleted and the User returned. If the User does not exist, the Visitor will be converted to a User, with the User identifiers replacing it's Visitor identifiers.
     pub fn convert(
         &self,
-        type_: String,
-        user: ConvertVisitorRequestUser,
-        visitor: ConvertVisitorRequestVisitor,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::visitors::ConvertVisitorParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Contact, crate::errors::SdkError> {
-        crate::methods::visitors::convert_visitor(
-            &self.config,
-            type_,
-            user,
-            visitor,
-            intercom_version,
-            options,
-        )
+        crate::methods::visitors::convert_visitor(&self.config, params, options)
     }
 }
 
@@ -4342,21 +3281,20 @@ impl BrandsNamespace {
     /// Retrieves all brands for the workspace, including the default brand. The default brand id always matches the workspace
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::brands::ListBrandsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<BrandList, crate::errors::SdkError> {
-        crate::methods::brands::list_brands(&self.config, intercom_version, options)
+        crate::methods::brands::list_brands(&self.config, params, options)
     }
     /// Retrieves a brand by its unique identifier. Use this operation to inspect a specific brand's configuration, including whether it is the workspace's default brand. The response includes the brand's associated help center and default email settings identifiers.
     ///
     /// Fetches a specific brand by its unique identifier
     pub fn retrieve(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::brands::RetrieveBrandParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<Brand, crate::errors::SdkError> {
-        crate::methods::brands::retrieve_brand(&self.config, id, intercom_version, options)
+        crate::methods::brands::retrieve_brand(&self.config, params, options)
     }
 }
 
@@ -4377,21 +3315,20 @@ impl EmailsNamespace {
     /// Lists all sender email address settings for the workspace
     pub fn list(
         &self,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::emails::ListEmailsParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<EmailList, crate::errors::SdkError> {
-        crate::methods::emails::list_emails(&self.config, intercom_version, options)
+        crate::methods::emails::list_emails(&self.config, params, options)
     }
     /// Retrieves a sender email address setting by its unique identifier. Use this operation to inspect an individual setting, including its verification status, associated brand, and forwarding details.
     ///
     /// Fetches a specific email setting by its unique identifier
     pub fn retrieve(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::emails::RetrieveEmailParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<EmailSetting, crate::errors::SdkError> {
-        crate::methods::emails::retrieve_email(&self.config, id, intercom_version, options)
+        crate::methods::emails::retrieve_email(&self.config, params, options)
     }
 }
 
@@ -4412,11 +3349,10 @@ impl WorkflowsNamespace {
     /// Export a workflow configuration by its ID. This endpoint returns the complete workflow definition including its steps, targeting rules, and attributes. This endpoint is designed for EU Data Act compliance, allowing customers to export their workflow configurations.
     pub fn export(
         &self,
-        id: String,
-        intercom_version: Option<IntercomVersion>,
+        params: crate::methods::workflows::ExportWorkflowParams,
         options: Option<&crate::client::RequestOptions>,
     ) -> Result<WorkflowExport, crate::errors::SdkError> {
-        crate::methods::workflows::export_workflow(&self.config, id, intercom_version, options)
+        crate::methods::workflows::export_workflow(&self.config, params, options)
     }
 }
 

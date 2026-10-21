@@ -6,6 +6,13 @@ use crate::client::{sdk_request, RequestOptions, RequestOpts};
 use crate::errors::{SdkError, SdkNetworkError};
 use crate::types::{DataExport, IntercomVersion};
 
+#[derive(Debug, Clone, Default)]
+pub struct CreateDataExportParams {
+    pub created_at_after: i64,
+    pub created_at_before: i64,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Creates an asynchronous export job for message delivery and engagement data about outbound content. Provide `created_at_after` and `created_at_before` as Unix timestamps; the inclusive date range selects messages by when they were sent, not when they were updated. Only one export job can be active per workspace.
 ///
 /// To create your export job, you need to send a `POST` request to the export endpoint `https://api.intercom.io/export/content/data`. This endpoint exports \*\*message delivery and engagement data\*\* for outbound content (Emails, Posts, Custom Bots, Surveys, Tours, Series, and more). The exported data includes who received each message, when they received it, and how they engaged with it (opens, clicks, replies, completions, dismissals, unsubscribes, and bounces). It does not export raw message or conversation content. The only parameters you need to provide are the range of dates that you want exported. \>🚧 Limit of one active job \> \> You can only have one active job per workspace. You will receive a HTTP status code of 429 with the message Exceeded rate limit of 1 pending message data export jobs if you attempt to create a second concurrent job. \>❗️ Updated_at not included \> \> It should be noted that the timeframe only includes messages sent during the time period and not messages that were only updated during this period. For example, if a message was updated yesterday but sent two days ago, you would need to set the created_at_after date before the message was sent to include that in your retrieval job. \>📘 Date ranges are inclusive \> \> Requesting data for 2018-06-01 until 2018-06-30 will get all data for those days including those specified \- e.g. 2018-06-01 00:00:00 until 2018-06-30 23:59:99.
@@ -18,11 +25,14 @@ use crate::types::{DataExport, IntercomVersion};
 ///   formatted as a unix timestamp.
 pub fn create_data_export(
     config: &ClientConfig,
-    created_at_after: i64,
-    created_at_before: i64,
-    intercom_version: Option<IntercomVersion>,
+    params: CreateDataExportParams,
     options: Option<&RequestOptions>,
 ) -> Result<DataExport, SdkError> {
+    let CreateDataExportParams {
+        created_at_after,
+        created_at_before,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -68,6 +78,12 @@ pub fn create_data_export(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct GetDataExportParams {
+    pub job_identifier: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Retrieves the status and download details for a content data export job. Use the `job_identifier` returned when you created the job to check its progress. Completed export data is available for two days after processing finishes.
 ///
 /// You can view the status of your job by sending a `GET` request to the URL `https://api.intercom.io/export/content/data/{job_identifier}` \- the `{job_identifier}` is the value returned in the response when you first created the export job. More on it can be seen in the Export Job Model. \> 🚧 Jobs expire after two days \> All jobs that have completed processing (and are thus available to download from the provided URL) will have an expiry limit of two days from when the export ob completed. After this, the data will no longer be available.
@@ -77,10 +93,13 @@ pub fn create_data_export(
 /// * `job_identifier` - job_identifier
 pub fn get_data_export(
     config: &ClientConfig,
-    job_identifier: String,
-    intercom_version: Option<IntercomVersion>,
+    params: GetDataExportParams,
     options: Option<&RequestOptions>,
 ) -> Result<DataExport, SdkError> {
+    let GetDataExportParams {
+        job_identifier,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -107,6 +126,12 @@ pub fn get_data_export(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct CancelDataExportParams {
+    pub job_identifier: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Cancels a content data export job. Use the `job_identifier` returned when you created the job to identify which export to cancel. You can check the job's status afterward to see its current state.
 ///
 /// You can cancel your job
@@ -116,10 +141,13 @@ pub fn get_data_export(
 /// * `job_identifier` - job_identifier
 pub fn cancel_data_export(
     config: &ClientConfig,
-    job_identifier: String,
-    intercom_version: Option<IntercomVersion>,
+    params: CancelDataExportParams,
     options: Option<&RequestOptions>,
 ) -> Result<DataExport, SdkError> {
+    let CancelDataExportParams {
+        job_identifier,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
@@ -146,6 +174,12 @@ pub fn cancel_data_export(
     .data)
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct DownloadDataExportParams {
+    pub job_identifier: String,
+    pub intercom_version: Option<IntercomVersion>,
+}
+
 /// Downloads the data for a completed content export job as a continuously streamed, gzipped CSV file. Use the `job_identifier` for a job with a completed status and send the `Accept: application/octet-stream` header. Download the file within two days of the job completing.
 ///
 /// When a job has a status of complete, and thus a filled download_url, you can download your data by hitting that provided URL, formatted like so: https://api.intercom.io/download/content/data/xyz1234. Your exported message data will be streamed continuously back down to you in a gzipped CSV format. \> 📘 Octet header required \> \> You will have to specify the header Accept: `application/octet-stream` when hitting this endpoint.
@@ -155,10 +189,13 @@ pub fn cancel_data_export(
 /// * `job_identifier` - job_identifier
 pub fn download_data_export(
     config: &ClientConfig,
-    job_identifier: String,
-    intercom_version: Option<IntercomVersion>,
+    params: DownloadDataExportParams,
     options: Option<&RequestOptions>,
 ) -> Result<serde_json::Value, SdkError> {
+    let DownloadDataExportParams {
+        job_identifier,
+        intercom_version,
+    } = params;
     let mut __headers: Vec<(String, String)> = Vec::with_capacity(1);
     if let Some(ref value) = intercom_version {
         __headers.push((
